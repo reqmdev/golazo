@@ -2,7 +2,7 @@
   "name": "golazo",
   "version": "1.0.0",
   "description": "Golazo — Modern Discord bot with full Discord API coverage (discord.js v14), MongoDB persistence, advanced command/component/event handling, and per-guild settings.",
-  "main": "src/index.js",
+  "main": "index.js",
   "engines": {
     "node": ">=20"
   },
