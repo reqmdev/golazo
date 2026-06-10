@@ -13,7 +13,7 @@ function startHealthServer(client) {
     const port = Number(process.env.GOLAZO_HEALTH_PORT);
 
     if (!port || port < 1) {
-        return null;
+        return Promise.resolve(null);
     }
 
     const startedAt = Date.now();

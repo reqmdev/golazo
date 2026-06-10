@@ -20,10 +20,10 @@ describe('health server', () => {
         }
     });
 
-    it('does not start when port is unset', () => {
+    it('does not start when port is unset', async () => {
         delete process.env.GOLAZO_HEALTH_PORT;
 
-        const server = startHealthServer({ user: null, guilds: { cache: { size: 0 } } });
+        const server = await startHealthServer({ user: null, guilds: { cache: { size: 0 } } });
 
         assert.equal(server, null);
     });
