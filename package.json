@@ -1,0 +1,64 @@
+{
+  "name": "golazo",
+  "version": "1.0.0",
+  "description": "Golazo — Modern Discord bot with full Discord API coverage (discord.js v14), MongoDB persistence, advanced command/component/event handling, and per-guild settings.",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "postinstall": "node scripts/sync-fonts.js && npm run build:graphics && node scripts/sync-canvas-assets.js",
+    "build:graphics": "node node_modules/typescript/bin/tsc -p tsconfig.graphics.json",
+    "sync-fonts": "node scripts/sync-fonts.js",
+    "sync-canvas-assets": "node scripts/sync-canvas-assets.js",
+    "sync-help-assets": "node scripts/sync-canvas-assets.js",
+    "migrate:name-lower": "node scripts/migrate-team-name-lower.js",
+    "register-commands": "node scripts/register-slash-commands.js",
+    "test": "npm run build:graphics && node --test src/database/transactions.test.js src/health/server.test.js src/metrics/registry.test.js src/utils/lruMap.test.js src/utils/interactionRateLimit.test.js src/utils/interactionError.test.js src/utils/redactSecrets.test.js src/utils/devCommands.test.js src/services/guildLifecycle.test.js src/i18n/i18n.test.js src/help/help.test.js src/dashboard/dashboard.test.js src/dashboard/design/design.test.js src/ui/ui.test.js src/ui/componentsV2.test.js src/canvas/canvas.test.js src/canvas/render.smoke.test.js src/graphics/graphics.smoke.test.js src/graphics/utils/contentBlock.test.js src/league/fixture/fixtureEngine.test.js src/league/match/matchResult.test.js src/league/algorithms/incrementalStandings.test.js src/league/algorithms/standingCalculator.test.js src/league/render/render.test.js src/league/render/constants/cacheConfig.test.js src/league/render/constants/layout.test.js src/league/discord/distributedLock.test.js src/league/discord/operationLock.test.js src/league/discord/interactionGuard.test.js src/league/discord/fixtureNav.test.js src/league/discord/scoreNav.test.js src/league/discord/standingsNav.test.js src/league/discord/teamListNav.test.js src/league/utils/formatAudit.test.js src/league/utils/validateLogoUrl.test.js src/league/utils/resolveTeamLogoUrl.test.js src/league/services/adminService.test.js src/league/constants/cardPageSize.test.js",
+    "prestart": "npm run build:graphics",
+    "prestart:prod": "npm run build:graphics",
+    "start": "nodemon .",
+    "start:prod": "node .",
+    "start:pm2": "pm2 start ecosystem.config.js",
+    "start:sharded": "node src/sharding/manager.js",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "discord.js",
+    "golazo",
+    "mongodb",
+    "mongoose",
+    "interactions",
+    "slash-commands"
+  ],
+  "author": "Golazo contributors",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stner/golazo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stner/golazo/issues"
+  },
+  "homepage": "https://github.com/stner/golazo#readme",
+  "dependencies": {
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@napi-rs/canvas": "^1.0.0",
+    "@resvg/resvg-js": "^2.6.2",
+    "colors": "^1.4.0",
+    "discord.js": "^14.26.4",
+    "dotenv": "^16.4.5",
+    "mongoose": "^8.13.0",
+    "opentype.js": "^2.0.0",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "nodemon": "^3.1.14",
+    "typescript": "^6.0.3"
+  }
+}

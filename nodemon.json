@@ -1,0 +1,11 @@
+{
+  "watch": ["src"],
+  "ext": "js,json",
+  "ignore": [
+    "src/assets/**",
+    "**/*.test.js",
+    "terminal.log"
+  ],
+  "delay": 600,
+  "signal": "SIGTERM"
+}

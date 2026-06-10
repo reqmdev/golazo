@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+.env
+.env.*
+!.env.example
+terminal.log
+.git
+.github
+*.md
+samples
+output
+dist
+.grok
+mcps
+terminals

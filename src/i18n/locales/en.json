@@ -1,0 +1,954 @@
+{
+  "errors": {
+    "INVALID_TEAM_NAME_MIN": "Team name must be at least 2 characters.",
+    "INVALID_TEAM_NAME_MAX": "Team name cannot exceed {max} characters.",
+    "INVALID_COLOR": "{label} must be a hex color like #1a472a.",
+    "LEAGUE_LOCKED_TEAMS_ADD": "Teams cannot be added to a league in its current status.",
+    "LEAGUE_LOCKED_TEAMS_REMOVE": "Teams cannot be removed from a league in its current status.",
+    "LEAGUE_LOCKED_TEAMS_EDIT": "Teams cannot be edited in a league with its current status.",
+    "LEAGUE_LOCKED_FIXTURE": "Cannot change fixtures for a completed or archived league.",
+    "LEAGUE_LOCKED_RESET": "Archived leagues cannot be reset.",
+    "FIXTURE_EXISTS_TEAMS_ADD": "Fixture has already been generated. Use `/league reset` first, then add teams.",
+    "FIXTURE_EXISTS_TEAMS_REMOVE": "Fixture has already been generated. Use `/league reset` first, then remove teams.",
+    "FIXTURE_EXISTS_ALREADY": "A fixture already exists. Use `/league fixture regenerate` to rebuild (only if no results entered).",
+    "FIXTURE_EXISTS_MATCHES": "Matches already exist for this league.",
+    "TEAM_LIMIT_MAX": "This league already has the maximum of {max} teams.",
+    "TEAM_LIMIT_FIXTURE_GENERATE": "Cannot generate fixtures: team count ({count}) exceeds league maximum ({max}).",
+    "TEAM_LIMIT_FIXTURE_REGENERATE": "Cannot regenerate fixtures: team count ({count}) exceeds league maximum ({max}).",
+    "TEAM_EXISTS_NAMED": "A team named **{name}** already exists in this league.",
+    "TEAM_EXISTS_OTHER": "Another team with that name already exists in this league.",
+    "TEAM_NOT_FOUND_NAME": "No active team named **{name}** was found in this league.",
+    "TEAM_NOT_FOUND_HOME": "Home team **{name}** not found in this league.",
+    "TEAM_NOT_FOUND_AWAY": "Away team **{name}** not found in this league.",
+    "NO_CHANGES": "No changes were provided to update the team.",
+    "FIXTURE_LOCKED": "Cannot regenerate fixtures while matches are live, completed, or walkovers exist.",
+    "FIXTURE_FAILED": "Could not generate fixtures for this league.",
+    "NOT_ENOUGH_TEAMS": "At least {min} teams are required. Currently: {count}.",
+    "NO_FIXTURE_GENERATE": "No fixture exists yet. Use `/league fixture generate` first.",
+    "NO_FIXTURE_VIEW": "No fixture has been generated for this league yet. Use `/league fixture generate` first.",
+    "INVALID_ROUND": "Round must be between 1 and {totalRounds}.",
+    "SETTINGS_LOCKED": "Cannot change scoring rules after match results have been entered.",
+    "INVALID_POINTS_LABEL": "{label} must be an integer between 0 and 20.",
+    "INVALID_POINTS_EMPTY": "Provide at least one of win, draw, or loss points to update.",
+    "INVALID_USER": "You must specify a user.",
+    "INVALID_USER_OWNER": "The league owner is already fully privileged.",
+    "PERMISSION_DENIED_MANAGE": "You must be the league owner or an admin to perform this action.",
+    "PERMISSION_DENIED_SCORE": "You are not allowed to report scores for this league.",
+    "PERMISSION_DENIED_ADMIN": "Only the league owner can manage admins.",
+    "INVALID_SLUG_EMPTY": "You must provide a valid league slug.",
+    "INVALID_SLUG_GENERATE": "Could not generate a valid slug from that name.",
+    "LEAGUE_NOT_FOUND": "No league found with slug `{slug}` in this server.",
+    "INVALID_NAME_MIN": "League name must be at least 2 characters.",
+    "INVALID_NAME_MAX": "League name cannot exceed 64 characters.",
+    "LEAGUE_LIMIT": "This server already has the maximum of {max} active leagues.",
+    "SLUG_EXISTS": "A league with slug `{slug}` already exists in this server.",
+    "INVALID_FORMAT": "Invalid league format. Use single or double round-robin.",
+    "ADMIN_WIPE_CONFIRM_REQUIRED": "Set `confirm` to **true** to wipe all league data in this server.",
+    "CONCURRENT_UPDATE": "Match was updated by someone else. Please try again.",
+    "STANDINGS_FAILED": "Result was saved but standings could not be updated. Run `/league rollback standings` to recover.",
+    "NO_FIXTURE_SCORE": "Generate the fixture before entering scores.",
+    "NO_FIXTURE_SCORE_CORRECT": "Generate the fixture before correcting scores.",
+    "NO_FIXTURE_FORFEIT": "Generate the fixture before recording a forfeit.",
+    "NO_FIXTURE_ROLLBACK": "No fixture exists for this league yet.",
+    "MATCH_NOT_FOUND": "Match not found.",
+    "MATCH_NOT_FOUND_SCHEDULED": "No scheduled match found for **{home}** vs **{away}**{roundHint}.",
+    "MATCH_NOT_FOUND_COMPLETED": "No completed match found for **{home}** vs **{away}**{roundHint}.",
+    "MATCH_ALREADY_PROCESSED": "This match already has a result. Use `/league score-correct` to fix it (admin only).",
+    "MATCH_NOT_CORRECTABLE": "Only completed or walkover matches can be corrected.",
+    "HOME_AWAY_MISMATCH": "Home/away teams do not match the scheduled fixture.",
+    "INVALID_SCORE": "{label} must be an integer between 0 and 99.",
+    "INVALID_TEAMS_BOTH": "You must provide both home and away team names.",
+    "INVALID_TEAMS_SAME": "Home and away teams must be different.",
+    "INVALID_FORFEIT_WINNER": "You must specify the winning team.",
+    "INVALID_FORFEIT_TEAMS": "Forfeit winner must be one of the match teams.",
+    "TEAM_MISMATCH": "The provided teams do not match this fixture.",
+    "TEAM_MISMATCH_FORFEIT": "The forfeit winner does not match this fixture.",
+    "AMBIGUOUS_MATCH_ROUND": "Multiple matches found in round **{round}** for these teams. Contact a league admin.",
+    "AMBIGUOUS_MATCH_ROUNDS": "Multiple {actionLabel}s found for these teams (rounds: {rounds}). Specify the `round` option.",
+    "INVALID_LOGO_URL_LENGTH": "Logo URL cannot exceed {max} characters.",
+    "INVALID_LOGO_URL_FORMAT": "Logo URL must be a valid HTTPS URL.",
+    "INVALID_LOGO_URL_HTTPS": "Logo URL must use HTTPS.",
+    "INVALID_LOGO_URL_HOSTNAME": "Logo URL must include a public hostname.",
+    "INVALID_LOGO_URL_PRIVATE": "Logo URL must point to a public host (private networks are blocked).",
+    "OPERATION_LOCKED": "Another league operation is in progress. Please wait a moment and try again.",
+    "MATCH_STATUS_NOT_ALLOWED": "This match status change is not supported.",
+    "GENERIC_LEAGUE_ERROR": "Something went wrong while processing the league command."
+  },
+  "handlers": {
+    "create": {
+      "permissionDenied": "You need **Manage Server** permission to create a league.",
+      "success": "League **{name}** created.",
+      "slug": "Slug: `{slug}`",
+      "format": "Format: `{format}`",
+      "status": "Status: `{status}`",
+      "nextStep": "Use `/league team add league:{slug}` to add teams."
+    },
+    "list": {
+      "empty": "No leagues found in this server. Use `/league create` to start one.",
+      "title": "Leagues ({count})",
+      "item": "• **{name}** (`{slug}`) — {status} — {format}",
+      "itemRich": "🏆 **{name}** · `{slug}` · {status} · {format}",
+      "hint": "_Type `league` in commands to use autocomplete._"
+    },
+    "announcements": {
+      "hint": "Round **{round}** · leg **{leg}**"
+    },
+    "match": {
+      "postpone": {
+        "success": "Match postponed — **{home}** vs **{away}** (Round {round})",
+        "detail": "New status: `{status}` · Round **{round}** · leg **{leg}**"
+      },
+      "cancel": {
+        "success": "Match cancelled — **{home}** vs **{away}** (Round {round})",
+        "detail": "New status: `{status}` · Round **{round}** · leg **{leg}**"
+      },
+      "resume": {
+        "success": "Match resumed — **{home}** vs **{away}** (Round {round})",
+        "detail": "New status: `{status}` · Round **{round}** · leg **{leg}**"
+      }
+    },
+    "fixture": {
+      "generate": {
+        "success": "Fixture generated for **{name}** (`{slug}`).",
+        "stats": "Teams: **{teamCount}** | Matches: **{matchCount}** | Rounds: **{totalRounds}**",
+        "status": "League status: `{status}`",
+        "nextStep": "Use `/league fixture show league:{slug}` — browse weeks with the buttons below the card."
+      },
+      "show": {
+        "noMatches": "No matches found for round **{round}** in `{slug}`.",
+        "title": "**{name}** — Round **{round}** / {totalRounds}{pageLabel}",
+        "visualAttached": "_Fixture card attached._",
+        "bye": "_Bye: {teams}_",
+        "navHint": "Use the buttons below to switch weeks."
+      },
+      "v2Subtitle": "Match schedule · tap the image to expand",
+      "v2Footer": "Golazo · /league fixture show",
+      "nav": {
+        "prevWeek": "Previous week",
+        "nextWeek": "Next week",
+        "weekLabel": "Week {round}/{total}",
+        "prevPage": "Previous page",
+        "nextPage": "Next page",
+        "pageLabel": "Page {page}/{total}"
+      },
+      "regenerate": {
+        "success": "Fixture regenerated for **{name}** (`{slug}`).",
+        "stats": "Version: **{version}** | Matches: **{matchCount}** | Rounds: **{totalRounds}**"
+      }
+    },
+    "team": {
+      "add": {
+        "success": "Team **{name}** (`{shortName}`) added to league `{slug}`."
+      },
+      "remove": {
+        "success": "Team **{name}** removed from league `{slug}`."
+      },
+      "edit": {
+        "success": "Team updated: **{name}** (`{shortName}`) in league `{slug}`."
+      },
+      "list": {
+        "empty": "No teams in league `{slug}` yet.",
+        "title": "**{name}** — Teams ({count}){pageLabel}",
+        "item": "• **{name}** (`{shortName}`) — captain: {captain}",
+        "nav": {
+          "pageLabel": "Page {page}/{total}"
+        }
+      }
+    },
+    "score": {
+      "saved": "Result saved — **{home}** {homeGoals}-{awayGoals} **{away}**",
+      "roundLeg": "Round **{round}** (leg {leg})",
+      "currentRound": "Current round: **{round}**"
+    },
+    "scoreEntry": {
+      "title": "**{name}** — Enter scores · Round **{round}** / {totalRounds}{pageLabel}",
+      "hint": "Pick a match below, then enter the goals in the popup.",
+      "noPermission": "You don't have permission to report scores in this league.",
+      "noMatches": "No matches found for round **{round}** in `{slug}`.",
+      "selectPlaceholder": "Choose a match to score…",
+      "selectEmpty": "No pending matches on this page",
+      "selectNoPending": "All matches on this page are scored",
+      "selectOption": "{home} vs {away}{leg}",
+      "selectLeg": " · Leg {leg}",
+      "modalTitle": "{home} vs {away}",
+      "savedToast": "✅ Score saved — fixture updated.",
+      "v2Footer": "Golazo · /league score",
+      "nav": {
+        "weekLabel": "Week {round}/{total}",
+        "pageLabel": "Page {page}/{total}"
+      }
+    },
+    "scoreCorrect": {
+      "corrected": "Result corrected — **{home}** {homeGoals}-{awayGoals} **{away}**",
+      "roundLeg": "Round **{round}** (leg {leg})",
+      "standingsRebuilt": "Standings rebuilt from all matches."
+    },
+    "forfeit": {
+      "recorded": "Forfeit recorded — **{winner}** wins walkover",
+      "score": "**{home}** {homeGoals}-{awayGoals} **{away}**",
+      "roundLeg": "Round **{round}** (leg {leg})",
+      "currentRound": "Current round: **{round}**"
+    },
+    "standings": {
+      "noFixture": "No fixture generated yet for this league.",
+      "title": "**{name}** — Standings{pageLabel}",
+      "v2Subtitle": "Live table · tap the image to expand",
+      "v2Footer": "Golazo · /league standings",
+      "nav": {
+        "pageLabel": "Page {page}/{total}"
+      }
+    },
+    "settings": {
+      "show": {
+        "title": "**{name}** settings",
+        "points": "Points: **{win}** / **{draw}** / **{loss}**",
+        "teams": "Teams: **{min}–{max}**",
+        "owner": "Owner: {owner}",
+        "admins": "Admins: {admins}",
+        "scoreReporters": "Score reporters: {reporters}",
+        "announcements": "Announcements: {channel}"
+      },
+      "points": {
+        "updated": "Points updated — **{win}** / **{draw}** / **{loss}**"
+      },
+      "permission": {
+        "updated": "Permissions updated for **{name}** (`{slug}`)."
+      },
+      "channel": {
+        "set": "Announcements channel set to {channel}.",
+        "cleared": "Announcements channel cleared."
+      }
+    },
+    "audit": {
+      "title": "**{name}** — Audit log (last {count})"
+    },
+    "rollback": {
+      "success": "Standings recovered for **{name}**.",
+      "stats": "Version: **{version}** | Entries: **{entries}**"
+    },
+    "reset": {
+      "success": "League **{name}** has been reset.",
+      "stats": "Removed **{matches}** matches · **{teams}** teams kept · Status: `{status}` · Season: **{season}**",
+      "nextStep": "Add or remove teams if needed, then run `/league fixture generate league:{slug}`."
+    }
+  },
+  "render": {
+    "standings": {
+      "subtitle": "Season {season} · Standings",
+      "badgeTeams": "{count} teams",
+      "badgePage": "Page {page}/{totalPages}",
+      "empty": "No standings yet. Enter results with /league score.",
+      "footerPage": "Page {page} of {totalPages}",
+      "columns": {
+        "rank": "#",
+        "team": "Team",
+        "played": "P",
+        "won": "W",
+        "drawn": "D",
+        "lost": "L",
+        "gf": "GF",
+        "ga": "GA",
+        "gd": "GD",
+        "points": "Pts",
+        "form": "Form"
+      }
+    },
+    "teams": {
+      "subtitle": "Squad · {status}",
+      "badgeTeams": "{count} teams",
+      "badgePage": "Page {page}/{totalPages}",
+      "footerPage": "Page {page} of {totalPages}",
+      "empty": "No teams registered yet.",
+      "unknownCaptain": "Unknown user",
+      "unknownRole": "Unknown role",
+      "columns": {
+        "team": "Team",
+        "captain": "Captain",
+        "role": "Role",
+        "colors": "Colors"
+      }
+    },
+    "fixture": {
+      "subtitle": "Round {round} of {totalRounds}",
+      "badgeMatches": "{count} matches",
+      "badgePage": "Page {page}/{totalPages}",
+      "footerPage": "Page {page} of {totalPages}",
+      "empty": "No matches scheduled for this round.",
+      "bye": "Bye: {teams}",
+      "leg": "Leg {leg}",
+      "played": "Played",
+      "upcoming": "Upcoming"
+    },
+    "matchResult": {
+      "roundLeg": "Round {round}",
+      "roundLegWithLeg": "Round {round} · Leg {leg}",
+      "fullTime": "Full Time",
+      "walkover": "Walkover",
+      "corrected": "Corrected",
+      "draw": "Draw",
+      "wins": "{name} wins"
+    }
+  },
+  "format": {
+    "standings": {
+      "empty": "No standings calculated yet. Enter match results with `/league score`.",
+      "header": "#  Team           O  G  B  M  A  Y  AV  P",
+      "unknownTeam": "???"
+    },
+    "fixture": {
+      "walkover": "Walkover",
+      "postponed": "Postponed",
+      "cancelled": "Cancelled",
+      "vs": "vs",
+      "home": "Home",
+      "away": "Away",
+      "line": "• {home} {score} {away}{legTag}",
+      "legTag": " (L{leg})"
+    },
+    "audit": {
+      "empty": "No audit entries yet.",
+      "entry": "• {when} — `{action}` — {actor} — {summary}"
+    }
+  },
+  "audit": {
+    "actions": {
+      "league.create": "League created",
+      "team.add": "Team added",
+      "team.remove": "Team removed",
+      "team.edit": "Team edited",
+      "fixture.generate": "Fixture generated",
+      "fixture.regenerate": "Fixture regenerated",
+      "match.submit": "Match result submitted",
+      "match.correct": "Match result corrected",
+      "match.forfeit": "Match forfeit recorded",
+      "standings.recover": "Standings recovered",
+      "league.reset": "League reset",
+      "settings.update": "Settings updated",
+      "permissions.update": "Permissions updated"
+    }
+  },
+  "bot": {
+    "NOT_BOT_OWNER": "You do not have the permission to run this command because you're not the owner of me!",
+    "NOT_BOT_DEVELOPER": "You do not have the permission to run this command because you're not a developer of me!",
+    "NOT_GUILD_OWNER": "You do not have the permission to run this command because you're not the guild owner!",
+    "CHANNEL_NOT_NSFW": "You cannot run this command in a non-NSFW channel!",
+    "MISSING_PERMISSIONS": "You do not have the permission to run this command, missing permissions.",
+    "COMPONENT_NOT_PUBLIC": "You are not the author of this button!",
+    "GUILD_COOLDOWN": "You are currently in cooldown, you have the ability to re-use this command again in `{cooldown}s`.",
+    "RENDER_RATE_LIMIT": "Too many render actions — try again in `{cooldown}s`.",
+    "welcome": {
+      "title": "Golazo joined your server",
+      "description": "Run football leagues on Discord — fixtures, scores, and standings in one place.",
+      "flowName": "Quick start",
+      "flowValue": "1. `/league create` — set up your league\n2. `/league team add` — register teams\n3. `/league fixture generate` — build the schedule",
+      "helpName": "Need help?",
+      "helpValue": "Run `/help` for the full interactive guide — 6-step league flow, commands, and tips.",
+      "footer": "Start with `/help` to explore all topics"
+    }
+  },
+  "commands": {
+    "language": {
+      "description": "Set your preferred language for Golazo bot messages.",
+      "optionLocale": "Language code (en or tr).",
+      "current": "Your language is set to **{locale}**.",
+      "updated": "Language updated to **{locale}**.",
+      "invalid": "Unsupported language. Choose `en` or `tr`.",
+      "guildUpdated": "Server language updated to **{locale}**.",
+      "guildReset": "Server language override cleared. Members will use their personal or Discord client language.",
+      "userReset": "Your language override cleared.",
+      "showActive": "Active language: **{locale}**",
+      "serverPermission": "You need **Manage Server** to change the server default language.",
+      "source": {
+        "user": "Source: your personal `/language` setting.",
+        "guild": "Source: this server's default language.",
+        "discord": "Source: your Discord client language.",
+        "default": "Source: Golazo default (English)."
+      },
+      "choices": {
+        "en": "English",
+        "tr": "Turkish"
+      }
+    },
+    "setprefix": {
+      "description": "Set the Golazo prefix for this guild.",
+      "optionPrefix": "The new prefix (max 5 characters). Omit to reset to default.",
+      "tooLong": "The prefix is too long! ({length} > 5)",
+      "missing": "You must provide the prefix!",
+      "reset": "Prefix reset to the default `{prefix}` for this guild.",
+      "updated": "Successfully updated the Golazo prefix for this guild to `{prefix}`."
+    },
+    "ping": {
+      "description": "Golazo ping — replies with websocket latency.",
+      "response": "**Pong!** {ms}ms"
+    },
+    "help": {
+      "description": "Interactive guide to Golazo and the league system.",
+      "messageDescription": "Interactive guide to Golazo and the league system.",
+      "noCommands": "No message commands loaded."
+    },
+    "dashboard": {
+      "description": "Interactive league management dashboard for this server.",
+      "optionLeague": "Jump directly to a league (slug)."
+    },
+    "reload": {
+      "description": "Reload all Golazo commands (developers only).",
+      "pleaseWait": "Please wait...",
+      "complete": "Reload complete.",
+      "slashSynced": "• Slash commands synced to Discord ({scope}): **{count}**",
+      "leagueOptions": "• League command top-level options/groups: **{count}** ({groups})",
+      "fixturePage": "• Fixture show page option: **{status}**",
+      "distributedLock": "• Distributed league lock: **{mode}**",
+      "cachesCleared": "• Render caches cleared (PNG + logo)",
+      "cacheState": "• Cache state: render **{renderSize}**, images **{imageSize}**",
+      "slashSyncedSimple": "Slash commands synced: **{count}**",
+      "cacheStateSimple": "Render cache: **{renderSize}** | Image cache: **{imageSize}**",
+      "fixturePageRegistered": "registered",
+      "fixturePageMissing": "missing",
+      "lockMongo": "MongoDB",
+      "lockInProcess": "in-process only",
+      "scopeGuild": "guild `{guildId}`",
+      "scopeGlobal": "global",
+      "error": "Something went wrong."
+    },
+    "league": {
+      "description": "Golazo football league management.",
+      "guildOnly": "This command can only be used in a server."
+    },
+    "admin": {
+      "description": "Golazo admin tools (developers only).",
+      "seed": {
+        "description": "Create a fake league with demo teams (max 20).",
+        "optionTeams": "Number of teams (2–20, default 20).",
+        "optionFixture": "Generate fixture after seeding (default true).",
+        "success": "Fake league **`{slug}`** created with **{teamCount}** teams.{fixtureLine}\nView: `/league fixture show league:{slug}`",
+        "fixtureLine": " Fixture: **{matchCount}** matches, **{totalRounds}** rounds.",
+        "noFixtureLine": " Fixture not generated."
+      },
+      "wipe": {
+        "description": "Delete all leagues, teams, matches, and standings in this server.",
+        "optionConfirm": "Must be true to confirm deletion.",
+        "success": "Wiped league data for this server: **{leagues}** leagues, **{teams}** teams, **{matches}** matches, **{standings}** standings, **{audits}** audit entries."
+      }
+    },
+    "eval": {
+      "description": "Execute JavaScript (owner only, Golazo debug).",
+      "optionCode": "The code to execute.",
+      "missingCode": "You must provide the code in order to execute it!",
+      "ok": "OK, no errors."
+    }
+  },
+  "common": {
+    "emDash": "—",
+    "none": "—",
+    "page": "page {page}",
+    "pageLabel": " (page {page})",
+    "v2LabelLeague": "League",
+    "v2LabelCode": "League code",
+    "v2LabelRound": "Round",
+    "v2LabelPage": "Page",
+    "v2ViewStandings": "Standings",
+    "v2ViewFixture": "Fixture",
+    "v2ViewScore": "Score Entry",
+    "v2ViewTeams": "Teams",
+    "v2ViewMatchResult": "Match Result",
+    "v2ViewRollback": "Standings Recovery",
+    "v2LabelTeams": "Team count",
+    "leg": "leg {leg}",
+    "legShort": "L{leg}",
+    "bye": "Bye",
+    "captain": "captain",
+    "home": "Home",
+    "away": "Away",
+    "unknown": "Unknown",
+    "corrected": "Corrected",
+    "pleaseWait": "Please wait...",
+    "somethingWentWrong": "Something went wrong.",
+    "roundHintInRound": " in round {round}",
+    "scheduledMatch": "scheduled match",
+    "completedMatch": "completed match",
+    "winPoints": "Win points",
+    "drawPoints": "Draw points",
+    "lossPoints": "Loss points",
+    "homeGoals": "Home goals",
+    "awayGoals": "Away goals",
+    "primaryColor": "Primary color",
+    "secondaryColor": "Secondary color"
+  },
+  "help": {
+    "bannerBrand": "Golazo · Help",
+    "trailerBrand": "GOLAZO",
+    "trailerTagline": "Discord league engine · Help center",
+    "stepBarIdle": "League flow · pick a step below",
+    "stepBarActive": "League flow · step {step}/6",
+    "selectPlaceholder": "📚 Pick a topic",
+    "menu": {
+      "overview": {
+        "label": "Start here",
+        "description": "6-step league flow",
+        "emoji": "🏠"
+      },
+      "league_step_1": {
+        "label": "1. Create",
+        "description": "New league and slug",
+        "emoji": "1️⃣"
+      },
+      "league_step_2": {
+        "label": "2. Teams",
+        "description": "Register squads",
+        "emoji": "2️⃣"
+      },
+      "league_step_3": {
+        "label": "3. Fixture",
+        "description": "Build schedule",
+        "emoji": "3️⃣"
+      },
+      "league_step_4": {
+        "label": "4. Show",
+        "description": "View matchweek",
+        "emoji": "4️⃣"
+      },
+      "league_step_5": {
+        "label": "5. Score",
+        "description": "Enter results",
+        "emoji": "5️⃣"
+      },
+      "league_step_6": {
+        "label": "6. Table",
+        "description": "Standings",
+        "emoji": "6️⃣"
+      },
+      "teams": {
+        "label": "Teams",
+        "description": "Add, edit, list",
+        "emoji": "👥"
+      },
+      "matches": {
+        "label": "Scores",
+        "description": "Result, fix, forfeit",
+        "emoji": "⚽"
+      },
+      "admin": {
+        "label": "Admin",
+        "description": "Settings and staff",
+        "emoji": "🛡️"
+      },
+      "commands": {
+        "label": "Bot",
+        "description": "Language and prefix",
+        "emoji": "⌨️"
+      },
+      "tips": {
+        "label": "Tips",
+        "description": "Quick answers",
+        "emoji": "💡"
+      }
+    },
+    "pages": {
+      "overview": {
+        "title": "Quick start",
+        "description": "Run a full league in 6 commands — or use `/dashboard` for the interactive panel. Pick a step from the menu below.",
+        "fieldCount": "3",
+        "field1Name": "🗺️ Flow",
+        "field1Value": "`/league create`\n`/league team add`\n`/league fixture generate`\n`/league fixture show`\n`/league score`\n`/league standings`\n`/league settings channel` (announcements)",
+        "field1Inline": "false",
+        "field2Name": "👤 Roles",
+        "field2Value": "Admin creates the league.\nOwner runs day-to-day tasks.\nScorer enters match results.",
+        "field2Inline": "false",
+        "field3Name": "🌐 Language",
+        "field3Value": "`/language set` for you\n`/language server set` for this server",
+        "field3Inline": "false",
+        "footer": "Use the menu below to switch topics",
+        "bannerTitle": "Golazo Help",
+        "bannerSubtitle": "6 steps, one league"
+      },
+      "league_step_1": {
+        "title": "Create league",
+        "description": "`/league create name: Sunday League`",
+        "fieldCount": "2",
+        "field1Name": "👤 Who",
+        "field1Value": "Manage Server permission",
+        "field1Inline": "false",
+        "field2Name": "⏭️ Next",
+        "field2Value": "Add teams and save the league **slug**.",
+        "field2Inline": "false",
+        "footer": "Step 1/6",
+        "bannerTitle": "Create league",
+        "bannerSubtitle": "Step 1/6"
+      },
+      "league_step_2": {
+        "title": "Add teams",
+        "description": "`/league team add league: slug name: FC Eagles`",
+        "fieldCount": "2",
+        "field1Name": "👤 Who",
+        "field1Value": "League owner or admin",
+        "field1Inline": "false",
+        "field2Name": "⚠️ Rule",
+        "field2Value": "Add all teams before generating the fixture. Minimum 2 teams.",
+        "field2Inline": "false",
+        "footer": "Step 2/6",
+        "bannerTitle": "Add teams",
+        "bannerSubtitle": "Step 2/6"
+      },
+      "league_step_3": {
+        "title": "Generate fixture",
+        "description": "`/league fixture generate league: slug`",
+        "fieldCount": "2",
+        "field1Name": "👤 Who",
+        "field1Value": "League owner or admin",
+        "field1Inline": "false",
+        "field2Name": "🔄 Reset",
+        "field2Value": "Use `fixture regenerate` if no scores exist, or `/league reset` to wipe everything.",
+        "field2Inline": "false",
+        "footer": "Step 3/6",
+        "bannerTitle": "Generate fixture",
+        "bannerSubtitle": "Step 3/6"
+      },
+      "league_step_4": {
+        "title": "View fixture",
+        "description": "`/league fixture show league: slug round: 1`",
+        "fieldCount": "2",
+        "field1Name": "👤 Who",
+        "field1Value": "Everyone",
+        "field1Inline": "false",
+        "field2Name": "🖼️ Visual",
+        "field2Value": "Fixture cards render automatically as a PNG with navigation buttons.",
+        "field2Inline": "false",
+        "footer": "Step 4/6",
+        "bannerTitle": "View fixture",
+        "bannerSubtitle": "Step 4/6"
+      },
+      "league_step_5": {
+        "title": "Report score",
+        "description": "`/league score league: slug` — opens the fixture card; pick a match and enter goals in the popup.",
+        "fieldCount": "3",
+        "field1Name": "👤 Who",
+        "field1Value": "Owner, admin, or scorer",
+        "field1Inline": "false",
+        "field2Name": "✏️ Fix",
+        "field2Value": "`score-correct` or `forfeit`",
+        "field2Inline": "false",
+        "field3Name": "🔁 Two legs",
+        "field3Value": "Add `round:` when the same teams meet twice.",
+        "field3Inline": "false",
+        "footer": "Step 5/6",
+        "bannerTitle": "Report score",
+        "bannerSubtitle": "Step 5/6"
+      },
+      "league_step_6": {
+        "title": "Standings",
+        "description": "`/league standings league: slug`",
+        "fieldCount": "2",
+        "field1Name": "👤 Who",
+        "field1Value": "Everyone",
+        "field1Inline": "false",
+        "field2Name": "♻️ Rebuild",
+        "field2Value": "Run `rollback standings` if the table looks wrong.",
+        "field2Inline": "false",
+        "footer": "Step 6/6",
+        "bannerTitle": "Standings",
+        "bannerSubtitle": "Step 6/6"
+      },
+      "teams": {
+        "title": "Teams",
+        "description": "Always pass `league: slug`. Use exact names from `team list` when scoring.",
+        "fieldCount": "4",
+        "field1Name": "➕ Add",
+        "field1Value": "`team add`",
+        "field1Inline": "true",
+        "field2Name": "✏️ Edit",
+        "field2Value": "`team edit`",
+        "field2Inline": "true",
+        "field3Name": "➖ Remove",
+        "field3Value": "`team remove`",
+        "field3Inline": "true",
+        "field4Name": "📋 List",
+        "field4Value": "`team list`",
+        "field4Inline": "true",
+        "footer": "short_name is limited to 4 characters on the table",
+        "bannerTitle": "Teams",
+        "bannerSubtitle": "Squad commands"
+      },
+      "matches": {
+        "title": "Scores",
+        "description": "Pick the command that matches the situation.",
+        "fieldCount": "3",
+        "field1Name": "✅ Result",
+        "field1Value": "`/league score`",
+        "field1Inline": "true",
+        "field2Name": "🔧 Fix",
+        "field2Value": "`/league score-correct`",
+        "field2Inline": "true",
+        "field3Name": "🚫 Forfeit",
+        "field3Value": "`/league forfeit`",
+        "field3Inline": "true",
+        "footer": "Same pairing twice? Set the round option.",
+        "bannerTitle": "Scores",
+        "bannerSubtitle": "3 commands"
+      },
+      "admin": {
+        "title": "Admin",
+        "description": "Owner-level tools for rules, staff, and recovery.",
+        "fieldCount": "4",
+        "field1Name": "📊 List",
+        "field1Value": "`/league list`",
+        "field1Inline": "true",
+        "field2Name": "⚙️ Settings",
+        "field2Value": "`settings show`",
+        "field2Inline": "true",
+        "field3Name": "📜 Audit",
+        "field3Value": "`audit`",
+        "field3Inline": "true",
+        "field4Name": "♻️ Rollback",
+        "field4Value": "`rollback standings`",
+        "field4Inline": "true",
+        "footer": "`reset` clears matches and standings; settings covers permissions and points",
+        "bannerTitle": "Admin",
+        "bannerSubtitle": "Owner tools"
+      },
+      "commands": {
+        "title": "Bot commands",
+        "description": "Outside `/league`.",
+        "fieldCount": "3",
+        "field1Name": "🌐 Language",
+        "field1Value": "`/language`",
+        "field1Inline": "true",
+        "field2Name": "⌨️ Prefix",
+        "field2Value": "`/setprefix`",
+        "field2Inline": "true",
+        "field3Name": "🏓 Ping",
+        "field3Value": "`/ping`",
+        "field3Inline": "true",
+        "footer": "`/help` opens this guide",
+        "bannerTitle": "Bot",
+        "bannerSubtitle": "Utilities"
+      },
+      "tips": {
+        "title": "Tips",
+        "description": "Short answers to common questions.",
+        "fieldCount": "3",
+        "field1Name": "🖼️ PNG cards",
+        "field1Value": "Fixture, standings, and score commands include visual cards by default.",
+        "field1Inline": "false",
+        "field2Name": "🌍 Language",
+        "field2Value": "Your `/language` setting overrides the server default.",
+        "field2Inline": "false",
+        "field3Name": "❔ No match found",
+        "field3Value": "Check team names, the round option, and that a fixture exists.",
+        "field3Inline": "false",
+        "footer": "New league? Start with Step 1 in the menu.",
+        "bannerTitle": "Tips",
+        "bannerSubtitle": "FAQ"
+      }
+    },
+    "brandAuthor": "Golazo"
+  },
+  "dashboard": {
+    "hub": {
+      "title": "Golazo server control panel",
+      "subtitle": "{guild} · server control panel",
+      "empty": "No leagues yet. Create one below if you have **Manage Server**.",
+      "leagueCount": "**{count}/{max}** leagues in this server",
+      "leagueRound": "Round {round}/{total}",
+      "leagueNoFixture": "No fixture yet",
+      "selectLeague": "Select a league…",
+      "create": "Create league",
+      "created": "League **{name}** created (`{slug}`)."
+    },
+    "league": {
+      "title": "{name}",
+      "summary": "**{teams}** teams (min {min}, max {max})",
+      "round": "Round **{round}/{total}**",
+      "noFixture": "Fixture not generated",
+      "statusLabel": "Status",
+      "formatLabel": "Format",
+      "hintRegistration": "Add teams, then open **Fixture** from the panel menu.",
+      "hintActive": "Use **Score** for results or **Standings** for the table.",
+      "selectPanel": "Choose a panel…",
+      "back": "Server dashboard",
+      "backToLeague": "League overview",
+      "status": {
+        "draft": "Draft",
+        "registration": "Registration",
+        "active": "Active",
+        "completed": "Completed",
+        "archived": "Archived"
+      },
+      "format": {
+        "single_round_robin": "Single round-robin",
+        "double_round_robin": "Double round-robin"
+      }
+    },
+    "panels": {
+      "teams": {
+        "title": "Teams",
+        "desc": "Register and manage squads"
+      },
+      "fixture": {
+        "title": "Fixture",
+        "desc": "Browse rounds and match schedule"
+      },
+      "score": {
+        "title": "Scores",
+        "desc": "Submit and track match results"
+      },
+      "standings": {
+        "title": "Standings",
+        "desc": "League table and rankings"
+      },
+      "settings": {
+        "title": "Settings",
+        "desc": "Points, permissions, announcements"
+      },
+      "matchOps": {
+        "title": "Match status",
+        "desc": "Postpone, cancel, resume, forfeit"
+      },
+      "admin": {
+        "title": "Audit & recovery",
+        "desc": "Audit log, rollback, league reset"
+      },
+      "unknown": "Panel"
+    },
+    "design": {
+      "breadcrumb": {
+        "hub": "Server dashboard",
+        "league": "{slug}"
+      },
+      "labels": {
+        "league": "League",
+        "teams": "Teams",
+        "round": "Round",
+        "status": "Status",
+        "format": "Format"
+      },
+      "stats": {
+        "leagues": "leagues",
+        "teams": "teams",
+        "round": "round",
+        "status": "status",
+        "format": "format"
+      },
+      "sections": {
+        "points": "Points",
+        "teams": "Team limits",
+        "permissions": "Permissions",
+        "announcements": "Announcements",
+        "panels": "Panels",
+        "leagues": "Your leagues"
+      },
+      "table": {
+        "status": "Status",
+        "name": "Name",
+        "slug": "Slug",
+        "round": "Round",
+        "panel": "Panel",
+        "description": "Description",
+        "setting": "Setting",
+        "value": "Value",
+        "when": "When",
+        "action": "Action",
+        "actor": "Actor",
+        "summary": "Summary"
+      },
+      "callout": {
+        "hubHint": "Pick a league from the menu or create a new one.",
+        "emptyLeagues": "No leagues yet — use **Create league** below.",
+        "registration": "Add teams in **Teams**, then generate the fixture.",
+        "active": "Use **Scores** for results or **Standings** for the table.",
+        "scoreCanReport": "Select a match below, then enter the score in the modal.",
+        "scoreViewOnly": "You can view scores; only reporters and admins can submit.",
+        "matchSelected": "Selected: **{home}** vs **{away}** · `{status}`",
+        "resetConfirm": "This will wipe all matches and standings. Teams are kept."
+      }
+    },
+    "breadcrumb": {
+      "league": "League `{slug}`"
+    },
+    "roles": {
+      "viewer": "Your role: viewer",
+      "scorer": "Your role: score reporter",
+      "admin": "Your role: league admin",
+      "owner": "Your role: league owner",
+      "manager": "Your role: server manager"
+    },
+    "teams": {
+      "add": "Add team",
+      "remove": "Remove team",
+      "generate": "Generate fixture",
+      "generated": "**{name}** fixture ready — **{matchCount}** matches, **{totalRounds}** rounds."
+    },
+    "settings": {
+      "editPoints": "Edit points",
+      "pickUser": "Pick a member for permissions…",
+      "pickChannel": "Set announcements channel…",
+      "pickPermAction": "Permission action for {user}:",
+      "addAdmin": "Add admin",
+      "removeAdmin": "Remove admin",
+      "addScorer": "Add scorer",
+      "removeScorer": "Remove scorer"
+    },
+    "matchOps": {
+      "round": "Current round: **{round}/{total}**",
+      "hint": "Select a match, then use the action buttons.",
+      "selectMatch": "Choose a match…",
+      "option": "{home} vs {away} · R{round} · {status}",
+      "postpone": "Postpone",
+      "cancel": "Cancel",
+      "resume": "Resume",
+      "forfeit": "Forfeit",
+      "noMatches": "No matches available for status changes."
+    },
+    "admin": {
+      "refresh": "Refresh log",
+      "rollback": "Recover standings",
+      "reset": "Reset league",
+      "resetConfirm": "Confirm reset",
+      "resetCancel": "Cancel",
+      "noAudit": "No audit entries yet.",
+      "rollbackDone": "Standings recovered for **{name}**."
+    },
+    "modal": {
+      "createTitle": "Create league",
+      "createName": "League name",
+      "createSlug": "Slug (optional)",
+      "createFormat": "Format (optional)",
+      "addTeamTitle": "Add team",
+      "removeTeamTitle": "Remove team",
+      "teamName": "Team name",
+      "teamShort": "Short name (optional)",
+      "pointsTitle": "Edit points",
+      "pointsWin": "Win points",
+      "pointsDraw": "Draw points",
+      "pointsLoss": "Loss points",
+      "forfeitTitle": "Record forfeit",
+      "forfeitWinner": "Winning team name"
+    },
+    "errors": {
+      "guildOnly": "Dashboard only works inside a server.",
+      "manageGuild": "You need **Manage Server** to create a league.",
+      "adminOnly": "League admin permissions required."
+    }
+  },
+  "ui": {
+    "author": "Golazo",
+    "footerDefault": "Golazo Bot",
+    "emoji": {
+      "brand": "⚽",
+      "success": "✅",
+      "error": "❌",
+      "warning": "⚠️",
+      "info": "ℹ️",
+      "league": "🏆",
+      "team": "👥",
+      "fixture": "📅",
+      "score": "⚽",
+      "standings": "📊",
+      "settings": "⚙️",
+      "matchOps": "🛠️",
+      "language": "🌐",
+      "cooldown": "⏳",
+      "code": "🏷️",
+      "page": "📄"
+    }
+  }
+}

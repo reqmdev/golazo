@@ -1,0 +1,260 @@
+{
+  "language": {
+    "description": "Bot dilini ayarla.",
+    "options": {
+      "set": {
+        "description": "Kendi dilini seç.",
+        "options": {
+          "locale": {
+            "description": "Dil: en veya tr."
+          }
+        }
+      },
+      "show": {
+        "description": "Hangi dil kullanıldığını göster."
+      },
+      "reset": {
+        "description": "Kişisel dil ayarını kaldır."
+      },
+      "server": {
+        "description": "Sunucu varsayılan dilini yönet.",
+        "options": {
+          "set": {
+            "description": "Sunucu için varsayılan dili ayarla.",
+            "options": {
+              "locale": {
+                "description": "Dil: en veya tr."
+              }
+            }
+          },
+          "reset": {
+            "description": "Sunucu dil ayarını kaldır."
+          }
+        }
+      }
+    }
+  },
+  "setprefix": {
+    "description": "Mesaj komutu önekini ayarla.",
+    "options": {
+      "prefix": {
+        "description": "Yeni önek (en fazla 5 harf). Boş bırakırsan varsayılan gelir."
+      }
+    }
+  },
+  "ping": {
+    "description": "Bot gecikmesini göster."
+  },
+  "help": {
+    "description": "Golazo yardım menüsü."
+  },
+  "dashboard": {
+    "description": "Interaktif lig yönetim paneli.",
+    "options": {
+      "league": {
+        "description": "Doğrudan bir lige git (kod)."
+      }
+    }
+  },
+  "reload": {
+    "description": "Komutları yeniden yükle (geliştirici)."
+  },
+  "eval": {
+    "description": "Kod çalıştır (sadece bot sahibi).",
+    "options": {
+      "code": {
+        "description": "Çalıştırılacak kod."
+      }
+    }
+  },
+  "league": {
+    "description": "Futbol ligi yönetimi.",
+    "options": {
+      "create": {
+        "description": "Yeni lig oluştur.",
+        "options": {
+          "name": { "description": "Lig adı." },
+          "slug": { "description": "Lig kodu (boşsa otomatik)." },
+          "format": { "description": "Lig formatı." }
+        }
+      },
+      "list": {
+        "description": "Sunucudaki ligleri listele."
+      },
+      "fixture": {
+        "description": "Fikstür işlemleri.",
+        "options": {
+          "generate": {
+            "description": "Fikstür oluştur.",
+            "options": {
+              "league": { "description": "Lig kodu (ör. super-lig)." }
+            }
+          },
+          "show": {
+            "description": "Güncel haftanın maçlarını göster (haftalar arası butonlarla gezin).",
+            "options": {
+              "league": { "description": "Lig kodu." },
+              "visual": { "description": "Görsel kart ekle (PNG)." }
+            }
+          },
+          "regenerate": {
+            "description": "Fikstürü yeniden oluştur (skor yoksa).",
+            "options": {
+              "league": { "description": "Lig kodu." }
+            }
+          }
+        }
+      },
+      "team": {
+        "description": "Takım işlemleri.",
+        "options": {
+          "add": {
+            "description": "Takım ekle.",
+            "options": {
+              "league": { "description": "Lig kodu." },
+              "name": { "description": "Takım adı." },
+              "short_name": { "description": "Kısa ad (tabloda, max 4 harf)." },
+              "captain": { "description": "Kaptan (Discord kullanıcısı)." },
+              "role": { "description": "Takım rolü (isteğe bağlı)." },
+              "primary_color": { "description": "Renk (ör. #1a472a)." },
+              "logo_url": { "description": "Logo linki (isteğe bağlı)." }
+            }
+          },
+          "remove": {
+            "description": "Takım sil.",
+            "options": {
+              "league": { "description": "Lig kodu." },
+              "name": { "description": "Takım adı." }
+            }
+          },
+          "edit": {
+            "description": "Takımı düzenle.",
+            "options": {
+              "league": { "description": "Lig kodu." },
+              "name": { "description": "Mevcut takım adı." },
+              "new_name": { "description": "Yeni takım adı." },
+              "short_name": { "description": "Yeni kısa ad." },
+              "captain": { "description": "Yeni kaptan." },
+              "role": { "description": "Yeni rol." },
+              "primary_color": { "description": "Yeni renk." },
+              "logo_url": { "description": "Yeni logo linki." }
+            }
+          },
+          "list": {
+            "description": "Takımları listele.",
+            "options": {
+              "league": { "description": "Lig kodu." },
+              "page": { "description": "Çok takım varsa sayfa numarası." },
+              "visual": { "description": "Görsel kart ekle." }
+            }
+          }
+        }
+      },
+      "score": {
+        "description": "Maç skoru gir.",
+        "options": {
+          "league": { "description": "Lig kodu." },
+          "home": { "description": "Ev sahibi takım." },
+          "away": { "description": "Deplasman takımı." },
+          "home_goals": { "description": "Ev sahibi gol." },
+          "away_goals": { "description": "Deplasman golü." },
+          "round": { "description": "Hafta no (gerekirse)." },
+          "visual": { "description": "Görsel kart ekle." }
+        }
+      },
+      "score-correct": {
+        "description": "Skoru düzelt (yönetici).",
+        "options": {
+          "league": { "description": "Lig kodu." },
+          "home": { "description": "Ev sahibi takım." },
+          "away": { "description": "Deplasman takımı." },
+          "home_goals": { "description": "Yeni ev sahibi gol." },
+          "away_goals": { "description": "Yeni deplasman golü." },
+          "round": { "description": "Hafta no (gerekirse)." },
+          "reason": { "description": "Not (isteğe bağlı)." },
+          "visual": { "description": "Görsel kart ekle." }
+        }
+      },
+      "forfeit": {
+        "description": "Hükmen sonuç gir (yönetici).",
+        "options": {
+          "league": { "description": "Lig kodu." },
+          "home": { "description": "Ev sahibi takım." },
+          "away": { "description": "Deplasman takımı." },
+          "winner": { "description": "Kazanan takım." },
+          "round": { "description": "Hafta no (gerekirse)." },
+          "visual": { "description": "Görsel kart ekle." }
+        }
+      },
+      "standings": {
+        "description": "Puan tablosunu göster.",
+        "options": {
+          "league": { "description": "Lig kodu." },
+          "page": { "description": "Sayfa no." },
+          "visual": { "description": "Görsel kart ekle." }
+        }
+      },
+      "settings": {
+        "description": "Lig ayarları.",
+        "options": {
+          "show": {
+            "description": "Ayarları göster.",
+            "options": {
+              "league": { "description": "Lig kodu." }
+            }
+          },
+          "points": {
+            "description": "Puan kurallarını değiştir (skor yokken).",
+            "options": {
+              "league": { "description": "Lig kodu." },
+              "win": { "description": "Galibiyet puanı." },
+              "draw": { "description": "Beraberlik puanı." },
+              "loss": { "description": "Mağlubiyet puanı." }
+            }
+          },
+          "permission": {
+            "description": "Yetkili ekle veya çıkar.",
+            "options": {
+              "league": { "description": "Lig kodu." },
+              "user": { "description": "Kullanıcı." },
+              "role": { "description": "Yetki tipi." },
+              "action": { "description": "Ekle veya kaldır." }
+            }
+          },
+          "channel": {
+            "description": "Duyuru kanalını ayarla.",
+            "options": {
+              "league": { "description": "Lig kodu." },
+              "announcements": { "description": "Duyuru kanalı (boş = kaldır)." }
+            }
+          }
+        }
+      },
+      "audit": {
+        "description": "İşlem geçmişini göster.",
+        "options": {
+          "league": { "description": "Lig kodu." },
+          "limit": { "description": "Kaç kayıt (varsayılan 10)." }
+        }
+      },
+      "rollback": {
+        "description": "Lig verisini onar.",
+        "options": {
+          "standings": {
+            "description": "Puan tablosunu yeniden hesapla.",
+            "options": {
+              "league": { "description": "Lig kodu." },
+              "visual": { "description": "Görsel kart ekle." }
+            }
+          }
+        }
+      },
+      "reset": {
+        "description": "Ligi sıfırla — maçları ve puan durumunu siler, takımları korur.",
+        "options": {
+          "league": { "description": "Lig kodu." }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,954 @@
+{
+  "errors": {
+    "INVALID_TEAM_NAME_MIN": "Takım adı en az 2 karakter olmalıdır.",
+    "INVALID_TEAM_NAME_MAX": "Takım adı en fazla {max} karakter olabilir.",
+    "INVALID_COLOR": "{label} #1a472a gibi bir hex renk olmalıdır.",
+    "LEAGUE_LOCKED_TEAMS_ADD": "Lig mevcut durumundayken takım eklenemez.",
+    "LEAGUE_LOCKED_TEAMS_REMOVE": "Lig mevcut durumundayken takım çıkarılamaz.",
+    "LEAGUE_LOCKED_TEAMS_EDIT": "Lig mevcut durumundayken takım düzenlenemez.",
+    "LEAGUE_LOCKED_FIXTURE": "Tamamlanmış veya arşivlenmiş bir ligde fikstür değiştirilemez.",
+    "LEAGUE_LOCKED_RESET": "Arşivlenmiş ligler sıfırlanamaz.",
+    "FIXTURE_EXISTS_TEAMS_ADD": "Fikstür zaten oluşturulmuş. Önce `/league reset` kullan, sonra takım ekle.",
+    "FIXTURE_EXISTS_TEAMS_REMOVE": "Fikstür zaten oluşturulmuş. Önce `/league reset` kullan, sonra takım çıkar.",
+    "FIXTURE_EXISTS_ALREADY": "Fikstür zaten var. Skor yoksa `/league fixture regenerate` kullan.",
+    "FIXTURE_EXISTS_MATCHES": "Bu ligde zaten maçlar mevcut.",
+    "TEAM_LIMIT_MAX": "Bu ligde zaten maksimum {max} takım var.",
+    "TEAM_LIMIT_FIXTURE_GENERATE": "Fikstür oluşturulamıyor: takım sayısı ({count}) lig limitini ({max}) aşıyor.",
+    "TEAM_LIMIT_FIXTURE_REGENERATE": "Fikstür yeniden oluşturulamıyor: takım sayısı ({count}) lig limitini ({max}) aşıyor.",
+    "TEAM_EXISTS_NAMED": "Bu ligde **{name}** adında bir takım zaten var.",
+    "TEAM_EXISTS_OTHER": "Bu isimde başka bir takım zaten mevcut.",
+    "TEAM_NOT_FOUND_NAME": "Bu ligde **{name}** adında aktif bir takım bulunamadı.",
+    "TEAM_NOT_FOUND_HOME": "Ev sahibi takım **{name}** bu ligde bulunamadı.",
+    "TEAM_NOT_FOUND_AWAY": "Deplasman takımı **{name}** bu ligde bulunamadı.",
+    "NO_CHANGES": "Takımı güncellemek için herhangi bir değişiklik belirtilmedi.",
+    "FIXTURE_LOCKED": "Canlı, tamamlanmış veya hükmen bitmiş maçlar varken fikstür yeniden oluşturulamaz.",
+    "FIXTURE_FAILED": "Bu lig için fikstür oluşturulamadı.",
+    "NOT_ENOUGH_TEAMS": "En az {min} takım gerekli. Şu an: {count}.",
+    "NO_FIXTURE_GENERATE": "Önce fikstür oluştur: `/league fixture generate`",
+    "NO_FIXTURE_VIEW": "Bu ligde fikstür yok. Önce `/league fixture generate`",
+    "INVALID_ROUND": "Hafta 1 ile {totalRounds} arasında olmalıdır.",
+    "SETTINGS_LOCKED": "Maç sonuçları girildikten sonra puanlama kuralları değiştirilemez.",
+    "INVALID_POINTS_LABEL": "{label} 0 ile 20 arasında bir tam sayı olmalıdır.",
+    "INVALID_POINTS_EMPTY": "Güncellemek için galibiyet, beraberlik veya mağlubiyet puanlarından en az birini belirtin.",
+    "INVALID_USER": "Bir kullanıcı belirtmelisiniz.",
+    "INVALID_USER_OWNER": "Lig sahibi zaten tam yetkiye sahip.",
+    "PERMISSION_DENIED_MANAGE": "Bu işlem için lig sahibi veya yönetici olmalısınız.",
+    "PERMISSION_DENIED_SCORE": "Bu ligde skor bildirme yetkiniz yok.",
+    "PERMISSION_DENIED_ADMIN": "Yalnızca lig sahibi yöneticileri yönetebilir.",
+    "INVALID_SLUG_EMPTY": "Geçerli bir lig slug'ı belirtmelisiniz.",
+    "INVALID_SLUG_GENERATE": "Bu isimden geçerli bir slug oluşturulamadı.",
+    "LEAGUE_NOT_FOUND": "Bu sunucuda `{slug}` slug'ına sahip bir lig bulunamadı.",
+    "INVALID_NAME_MIN": "Lig adı en az 2 karakter olmalıdır.",
+    "INVALID_NAME_MAX": "Lig adı en fazla 64 karakter olabilir.",
+    "LEAGUE_LIMIT": "Bu sunucuda zaten maksimum {max} aktif lig var.",
+    "SLUG_EXISTS": "Bu sunucuda `{slug}` slug'ına sahip bir lig zaten mevcut.",
+    "INVALID_FORMAT": "Geçersiz lig formatı. Tek veya çift devreli round-robin kullanın.",
+    "ADMIN_WIPE_CONFIRM_REQUIRED": "Bu sunucudaki tüm lig verisini silmek için `confirm` seçeneğini **true** yapın.",
+    "CONCURRENT_UPDATE": "Maç başka biri tarafından güncellendi. Lütfen tekrar deneyin.",
+    "STANDINGS_FAILED": "Skor kaydedildi ama tablo güncellenemedi. `/league rollback standings` dene.",
+    "NO_FIXTURE_SCORE": "Skor girmek için önce fikstür oluşturun.",
+    "NO_FIXTURE_SCORE_CORRECT": "Skor düzeltmek için önce fikstür oluşturun.",
+    "NO_FIXTURE_FORFEIT": "Hükmen sonuç kaydetmek için önce fikstür oluşturun.",
+    "NO_FIXTURE_ROLLBACK": "Bu ligde henüz fikstür yok.",
+    "MATCH_NOT_FOUND": "Maç bulunamadı.",
+    "MATCH_NOT_FOUND_SCHEDULED": "**{home}** - **{away}** için planlanmış maç bulunamadı{roundHint}.",
+    "MATCH_NOT_FOUND_COMPLETED": "**{home}** - **{away}** için tamamlanmış maç bulunamadı{roundHint}.",
+    "MATCH_ALREADY_PROCESSED": "Bu maçın skoru zaten var. Düzeltmek için `/league score-correct` (yönetici).",
+    "MATCH_NOT_CORRECTABLE": "Yalnızca tamamlanmış veya hükmen bitmiş maçlar düzeltilebilir.",
+    "HOME_AWAY_MISMATCH": "Ev sahibi/deplasman takımları planlanan fikstürle uyuşmuyor.",
+    "INVALID_SCORE": "{label} 0 ile 99 arasında bir tam sayı olmalıdır.",
+    "INVALID_TEAMS_BOTH": "Hem ev sahibi hem de deplasman takım adını belirtmelisiniz.",
+    "INVALID_TEAMS_SAME": "Ev sahibi ve deplasman takımları farklı olmalıdır.",
+    "INVALID_FORFEIT_WINNER": "Kazanan takımı belirtmelisiniz.",
+    "INVALID_FORFEIT_TEAMS": "Hükmen galip, maçtaki takımlardan biri olmalıdır.",
+    "TEAM_MISMATCH": "Belirtilen takımlar bu fikstürle uyuşmuyor.",
+    "TEAM_MISMATCH_FORFEIT": "Hükmen galip bu fikstürle uyuşmuyor.",
+    "AMBIGUOUS_MATCH_ROUND": "Bu takımlar için **{round}**. haftada birden fazla maç bulundu. Bir lig yöneticisiyle iletişime geçin.",
+    "AMBIGUOUS_MATCH_ROUNDS": "Bu takımlar için birden fazla {actionLabel} bulundu (haftalar: {rounds}). `round` seçeneğini belirtin.",
+    "INVALID_LOGO_URL_LENGTH": "Logo URL'si en fazla {max} karakter olabilir.",
+    "INVALID_LOGO_URL_FORMAT": "Logo URL'si geçerli bir HTTPS adresi olmalıdır.",
+    "INVALID_LOGO_URL_HTTPS": "Logo URL'si HTTPS kullanmalıdır.",
+    "INVALID_LOGO_URL_HOSTNAME": "Logo URL'si herkese açık bir alan adı içermelidir.",
+    "INVALID_LOGO_URL_PRIVATE": "Logo URL'si herkese açık bir adrese işaret etmelidir (özel ağlar engellenir).",
+    "OPERATION_LOCKED": "Başka bir lig işlemi devam ediyor. Lütfen biraz bekleyip tekrar deneyin.",
+    "MATCH_STATUS_NOT_ALLOWED": "Bu maç durumu değişikliği desteklenmiyor.",
+    "GENERIC_LEAGUE_ERROR": "Bir hata oluştu. Tekrar dene."
+  },
+  "handlers": {
+    "create": {
+      "permissionDenied": "Lig açmak için **Sunucuyu Yönet** gerekir.",
+      "success": "**{name}** ligi oluşturuldu.",
+      "slug": "Kod: `{slug}`",
+      "format": "Format: `{format}`",
+      "status": "Durum: `{status}`",
+      "nextStep": "Sıradaki adım: `/league team add league:{slug}`"
+    },
+    "list": {
+      "empty": "Bu sunucuda lig yok. `/league create` ile başla.",
+      "title": "Ligler ({count})",
+      "item": "• **{name}** (`{slug}`) — {status} — {format}",
+      "itemRich": "🏆 **{name}** · `{slug}` · {status} · {format}",
+      "hint": "_Komutlarda `league` yazarken otomatik tamamlama çıkar._"
+    },
+    "announcements": {
+      "hint": "Hafta **{round}** · devre **{leg}**"
+    },
+    "match": {
+      "postpone": {
+        "success": "Maç ertelendi — **{home}** vs **{away}** (Hafta {round})",
+        "detail": "Yeni durum: `{status}` · Hafta **{round}** · devre **{leg}**"
+      },
+      "cancel": {
+        "success": "Maç iptal edildi — **{home}** vs **{away}** (Hafta {round})",
+        "detail": "Yeni durum: `{status}` · Hafta **{round}** · devre **{leg}**"
+      },
+      "resume": {
+        "success": "Maç yeniden planlandı — **{home}** vs **{away}** (Hafta {round})",
+        "detail": "Yeni durum: `{status}` · Hafta **{round}** · devre **{leg}**"
+      }
+    },
+    "fixture": {
+      "generate": {
+        "success": "**{name}** (`{slug}`) için fikstür oluşturuldu.",
+        "stats": "Takımlar: **{teamCount}** | Maçlar: **{matchCount}** | Haftalar: **{totalRounds}**",
+        "status": "Lig durumu: `{status}`",
+        "nextStep": "Fikstürü gör: `/league fixture show league:{slug}` — haftalar arası kartın altındaki butonlarla gezin."
+      },
+      "show": {
+        "noMatches": "`{slug}` liginde **{round}**. hafta için maç bulunamadı.",
+        "title": "**{name}** — Hafta **{round}** / {totalRounds}{pageLabel}",
+        "visualAttached": "Görsel eklendi.",
+        "bye": "_Bay: {teams}_",
+        "navHint": "Haftalar arasında geçmek için alttaki butonları kullan."
+      },
+      "v2Subtitle": "Maç programı · görsele dokunarak büyüt",
+      "v2Footer": "Golazo · /league fixture show",
+      "nav": {
+        "prevWeek": "Önceki hafta",
+        "nextWeek": "Sonraki hafta",
+        "weekLabel": "Hafta {round}/{total}",
+        "prevPage": "Önceki sayfa",
+        "nextPage": "Sonraki sayfa",
+        "pageLabel": "Sayfa {page}/{total}"
+      },
+      "regenerate": {
+        "success": "**{name}** (`{slug}`) için fikstür yeniden oluşturuldu.",
+        "stats": "Sürüm: **{version}** | Maçlar: **{matchCount}** | Haftalar: **{totalRounds}**"
+      }
+    },
+    "team": {
+      "add": {
+        "success": "**{name}** (`{shortName}`) takımı `{slug}` ligine eklendi."
+      },
+      "remove": {
+        "success": "**{name}** takımı `{slug}` liginden çıkarıldı."
+      },
+      "edit": {
+        "success": "Takım güncellendi: **{name}** (`{shortName}`) — `{slug}`"
+      },
+      "list": {
+        "empty": "`{slug}` liginde henüz takım yok.",
+        "title": "**{name}** — Takımlar ({count}){pageLabel}",
+        "item": "• **{name}** (`{shortName}`) — kaptan: {captain}",
+        "nav": {
+          "pageLabel": "Sayfa {page}/{total}"
+        }
+      }
+    },
+    "score": {
+      "saved": "Sonuç kaydedildi — **{home}** {homeGoals}-{awayGoals} **{away}**",
+      "roundLeg": "Hafta **{round}** (devre {leg})",
+      "currentRound": "Güncel hafta: **{round}**"
+    },
+    "scoreEntry": {
+      "title": "**{name}** — Skor gir · Hafta **{round}** / {totalRounds}{pageLabel}",
+      "hint": "Aşağıdan maçı seç, açılan pencerede skorları yaz.",
+      "noPermission": "Bu ligde skor girme yetkin yok.",
+      "noMatches": "`{slug}` liginde **{round}**. hafta için maç bulunamadı.",
+      "selectPlaceholder": "Skor gireceğin maçı seç…",
+      "selectEmpty": "Bu sayfada bekleyen maç yok",
+      "selectNoPending": "Bu sayfadaki maçların skoru girilmiş",
+      "selectOption": "{home} - {away}{leg}",
+      "selectLeg": " · D{leg}",
+      "modalTitle": "{home} - {away}",
+      "savedToast": "✅ Skor kaydedildi — fikstür güncellendi.",
+      "v2Footer": "Golazo · /league score",
+      "nav": {
+        "weekLabel": "Hafta {round}/{total}",
+        "pageLabel": "Sayfa {page}/{total}"
+      }
+    },
+    "scoreCorrect": {
+      "corrected": "Sonuç düzeltildi — **{home}** {homeGoals}-{awayGoals} **{away}**",
+      "roundLeg": "Hafta **{round}** (devre {leg})",
+      "standingsRebuilt": "Puan tablosu yenilendi."
+    },
+    "forfeit": {
+      "recorded": "Hükmen sonuç kaydedildi — **{winner}** hükmen galip",
+      "score": "**{home}** {homeGoals}-{awayGoals} **{away}**",
+      "roundLeg": "Hafta **{round}** (devre {leg})",
+      "currentRound": "Güncel hafta: **{round}**"
+    },
+    "standings": {
+      "noFixture": "Bu lig için henüz fikstür oluşturulmadı.",
+      "title": "**{name}** — Puan Durumu{pageLabel}",
+      "v2Subtitle": "Güncel sıralama · görsele dokunarak büyüt",
+      "v2Footer": "Golazo · /league standings",
+      "nav": {
+        "pageLabel": "Sayfa {page}/{total}"
+      }
+    },
+    "settings": {
+      "show": {
+        "title": "**{name}** ayarları",
+        "points": "Puanlar: **{win}** / **{draw}** / **{loss}**",
+        "teams": "Takımlar: **{min}–{max}**",
+        "owner": "Sahip: {owner}",
+        "admins": "Yöneticiler: {admins}",
+        "scoreReporters": "Skor bildirenler: {reporters}",
+        "announcements": "Duyurular: {channel}"
+      },
+      "points": {
+        "updated": "Puanlar güncellendi — **{win}** / **{draw}** / **{loss}**"
+      },
+      "permission": {
+        "updated": "**{name}** (`{slug}`) için yetkiler güncellendi."
+      },
+      "channel": {
+        "set": "Duyuru kanalı {channel} olarak ayarlandı.",
+        "cleared": "Duyuru kanalı temizlendi."
+      }
+    },
+    "audit": {
+      "title": "**{name}** — Denetim kaydı (son {count})"
+    },
+    "rollback": {
+      "success": "**{name}** için puan durumu kurtarıldı.",
+      "stats": "Sürüm: **{version}** | Kayıt: **{entries}**"
+    },
+    "reset": {
+      "success": "**{name}** ligi sıfırlandı.",
+      "stats": "**{matches}** maç silindi · **{teams}** takım korundu · Durum: `{status}` · Sezon: **{season}**",
+      "nextStep": "Gerekirse takım ekle/çıkar, ardından `/league fixture generate league:{slug}` çalıştır."
+    }
+  },
+  "render": {
+    "standings": {
+      "subtitle": "Sezon {season} · Puan Durumu",
+      "badgeTeams": "{count} takım",
+      "badgePage": "Sayfa {page}/{totalPages}",
+      "empty": "Henüz puan durumu yok. Sonuçları /league score ile girin.",
+      "footerPage": "Sayfa {page} / {totalPages}",
+      "columns": {
+        "rank": "#",
+        "team": "Takım",
+        "played": "O",
+        "won": "G",
+        "drawn": "B",
+        "lost": "M",
+        "gf": "A",
+        "ga": "Y",
+        "gd": "AV",
+        "points": "P",
+        "form": "Form"
+      }
+    },
+    "teams": {
+      "subtitle": "Kadro · {status}",
+      "badgeTeams": "{count} takım",
+      "badgePage": "Sayfa {page}/{totalPages}",
+      "footerPage": "Sayfa {page} / {totalPages}",
+      "empty": "Henüz takım yok.",
+      "unknownCaptain": "Bilinmeyen kullanıcı",
+      "unknownRole": "Bilinmeyen rol",
+      "columns": {
+        "team": "Takım",
+        "captain": "Kaptan",
+        "role": "Rol",
+        "colors": "Renkler"
+      }
+    },
+    "fixture": {
+      "subtitle": "Hafta {round} / {totalRounds}",
+      "badgeMatches": "{count} maç",
+      "badgePage": "Sayfa {page}/{totalPages}",
+      "footerPage": "Sayfa {page} / {totalPages}",
+      "empty": "Bu hafta için planlanmış maç yok.",
+      "bye": "Bay: {teams}",
+      "leg": "Devre {leg}",
+      "played": "Oynandı",
+      "upcoming": "Bekliyor"
+    },
+    "matchResult": {
+      "roundLeg": "Hafta {round}",
+      "roundLegWithLeg": "Hafta {round} · Devre {leg}",
+      "fullTime": "Maç Sonu",
+      "walkover": "Hükmen",
+      "corrected": "Düzeltildi",
+      "draw": "Beraberlik",
+      "wins": "{name} kazandı"
+    }
+  },
+  "format": {
+    "standings": {
+      "empty": "Henüz puan durumu hesaplanmadı. Maç sonuçlarını `/league score` ile girin.",
+      "header": "#  Takım          O  G  B  M  A  Y  AV  P",
+      "unknownTeam": "???"
+    },
+    "fixture": {
+      "walkover": "Hükmen",
+      "postponed": "Ertelendi",
+      "cancelled": "İptal",
+      "vs": "vs",
+      "home": "Ev Sahibi",
+      "away": "Deplasman",
+      "line": "• {home} {score} {away}{legTag}",
+      "legTag": " (D{leg})"
+    },
+    "audit": {
+      "empty": "Henüz denetim kaydı yok.",
+      "entry": "• {when} — `{action}` — {actor} — {summary}"
+    }
+  },
+  "audit": {
+    "actions": {
+      "league.create": "Lig oluşturuldu",
+      "team.add": "Takım eklendi",
+      "team.remove": "Takım çıkarıldı",
+      "team.edit": "Takım düzenlendi",
+      "fixture.generate": "Fikstür oluşturuldu",
+      "fixture.regenerate": "Fikstür yeniden oluşturuldu",
+      "match.submit": "Maç sonucu girildi",
+      "match.correct": "Maç sonucu düzeltildi",
+      "match.forfeit": "Hükmen sonuç kaydedildi",
+      "standings.recover": "Puan durumu kurtarıldı",
+      "league.reset": "Lig sıfırlandı",
+      "settings.update": "Ayarlar güncellendi",
+      "permissions.update": "Yetkiler güncellendi"
+    }
+  },
+  "bot": {
+    "NOT_BOT_OWNER": "Bu komutu çalıştırma yetkiniz yok çünkü benim sahibi değilsiniz!",
+    "NOT_BOT_DEVELOPER": "Bu komutu çalıştırma yetkiniz yok çünkü benim geliştiricisi değilsiniz!",
+    "NOT_GUILD_OWNER": "Bu komutu çalıştırma yetkiniz yok çünkü sunucu sahibi değilsiniz!",
+    "CHANNEL_NOT_NSFW": "Bu komutu NSFW olmayan bir kanalda çalıştıramazsınız!",
+    "MISSING_PERMISSIONS": "Bu komutu çalıştırma yetkiniz yok, gerekli izinler eksik.",
+    "COMPONENT_NOT_PUBLIC": "Bu düğmenin sahibi siz değilsiniz!",
+    "GUILD_COOLDOWN": "Şu anda bekleme süresindesiniz, bu komutu tekrar `{cooldown}s` sonra kullanabilirsiniz.",
+    "RENDER_RATE_LIMIT": "Çok fazla görsel işlemi — `{cooldown}s` sonra tekrar deneyin.",
+    "welcome": {
+      "title": "Golazo sunucunuza katıldı",
+      "description": "Discord'da futbol ligleri — fikstür, skor ve puan durumu tek yerde.",
+      "flowName": "Hızlı başlangıç",
+      "flowValue": "1. `/league create` — ligi kur\n2. `/league team add` — takımları ekle\n3. `/league fixture generate` — programı oluştur",
+      "helpName": "Yardım mı lazım?",
+      "helpValue": "Tam rehber için `/help` yaz — 6 adımlık lig akışı, komutlar ve ipuçları.",
+      "footer": "Tüm konular için `/help` ile başla"
+    }
+  },
+  "commands": {
+    "language": {
+      "description": "Bot dilini ayarla.",
+      "optionLocale": "Dil: en veya tr.",
+      "current": "Dilin: **{locale}**",
+      "updated": "Dil **{locale}** yapıldı.",
+      "invalid": "Sadece `en` veya `tr` seçebilirsin.",
+      "guildUpdated": "Sunucu dili **{locale}** yapıldı.",
+      "guildReset": "Sunucu dili kaldırıldı.",
+      "userReset": "Kişisel dil ayarın kaldırıldı.",
+      "showActive": "Bot dili: **{locale}**",
+      "serverPermission": "Sunucu dilini değiştirmek için **Sunucuyu Yönet** gerekir.",
+      "source": {
+        "user": "Kaynak: senin `/language` ayarın",
+        "guild": "Kaynak: sunucu varsayılanı",
+        "discord": "Kaynak: Discord dili",
+        "default": "Kaynak: varsayılan (İngilizce)"
+      },
+      "choices": {
+        "en": "İngilizce",
+        "tr": "Türkçe"
+      }
+    },
+    "setprefix": {
+      "description": "Mesaj komutu önekini ayarla.",
+      "optionPrefix": "Yeni önek (max 5). Boş = varsayılan.",
+      "tooLong": "Önek çok uzun ({length} > 5).",
+      "missing": "Önek yazmalısın.",
+      "reset": "Önek varsayılana döndü: `{prefix}`",
+      "updated": "Önek `{prefix}` yapıldı."
+    },
+    "ping": {
+      "description": "Bot gecikmesini göster.",
+      "response": "**Pong!** {ms}ms"
+    },
+    "help": {
+      "description": "Yardım menüsü.",
+      "messageDescription": "Yardım menüsü.",
+      "noCommands": "Mesaj komutu yok."
+    },
+    "dashboard": {
+      "description": "Sunucu için interaktif lig yönetim paneli.",
+      "optionLeague": "Doğrudan bir lige git (kod)."
+    },
+    "reload": {
+      "description": "Tüm Golazo komutlarını yeniden yükle (yalnızca geliştiriciler).",
+      "pleaseWait": "Lütfen bekleyin...",
+      "complete": "Yeniden yükleme tamamlandı.",
+      "slashSynced": "• Slash komutları Discord'a senkronize edildi ({scope}): **{count}**",
+      "leagueOptions": "• League komutu üst düzey seçenek/gruplar: **{count}** ({groups})",
+      "fixturePage": "• Fikstür göster sayfa seçeneği: **{status}**",
+      "distributedLock": "• Dağıtık lig kilidi: **{mode}**",
+      "cachesCleared": "• Render önbellekleri temizlendi (PNG + logo)",
+      "cacheState": "• Önbellek durumu: render **{renderSize}**, görseller **{imageSize}**",
+      "slashSyncedSimple": "Slash komutları senkronize edildi: **{count}**",
+      "cacheStateSimple": "Render önbelleği: **{renderSize}** | Görsel önbelleği: **{imageSize}**",
+      "fixturePageRegistered": "kayıtlı",
+      "fixturePageMissing": "eksik",
+      "lockMongo": "MongoDB",
+      "lockInProcess": "yalnızca işlem içi",
+      "scopeGuild": "sunucu `{guildId}`",
+      "scopeGlobal": "global",
+      "error": "Bir şeyler ters gitti."
+    },
+    "league": {
+      "description": "Futbol ligi yönetimi.",
+      "guildOnly": "Bu komut sadece sunucuda çalışır."
+    },
+    "admin": {
+      "description": "Golazo admin araçları (yalnızca geliştiriciler).",
+      "seed": {
+        "description": "Demo takımlarla sahte lig oluştur (en fazla 20).",
+        "optionTeams": "Takım sayısı (2–20, varsayılan 20).",
+        "optionFixture": "Takımlardan sonra fikstür oluştur (varsayılan evet).",
+        "success": "Sahte lig **`{slug}`** oluşturuldu — **{teamCount}** takım.{fixtureLine}\nGörüntüle: `/league fixture show league:{slug}`",
+        "fixtureLine": " Fikstür: **{matchCount}** maç, **{totalRounds}** hafta.",
+        "noFixtureLine": " Fikstür oluşturulmadı."
+      },
+      "wipe": {
+        "description": "Bu sunucudaki tüm lig, takım, maç ve puan durumunu sil.",
+        "optionConfirm": "Silmeyi onaylamak için true olmalı.",
+        "success": "Sunucu lig verisi silindi: **{leagues}** lig, **{teams}** takım, **{matches}** maç, **{standings}** puan tablosu, **{audits}** denetim kaydı."
+      }
+    },
+    "eval": {
+      "description": "JavaScript çalıştır (yalnızca sahip, Golazo hata ayıklama).",
+      "optionCode": "Çalıştırılacak kod.",
+      "missingCode": "Çalıştırmak için kod belirtmelisiniz!",
+      "ok": "Tamam, hata yok."
+    }
+  },
+  "common": {
+    "emDash": "—",
+    "none": "—",
+    "page": "sayfa {page}",
+    "pageLabel": " (sayfa {page})",
+    "v2LabelLeague": "Lig",
+    "v2LabelCode": "Lig kodu",
+    "v2LabelRound": "Hafta",
+    "v2LabelPage": "Sayfa",
+    "v2ViewStandings": "Puan Durumu",
+    "v2ViewFixture": "Fikstür",
+    "v2ViewScore": "Skor Girişi",
+    "v2ViewTeams": "Takımlar",
+    "v2ViewMatchResult": "Maç Sonucu",
+    "v2ViewRollback": "Tablo Kurtarma",
+    "v2LabelTeams": "Takım sayısı",
+    "leg": "devre {leg}",
+    "legShort": "D{leg}",
+    "bye": "Bay",
+    "captain": "kaptan",
+    "home": "Ev Sahibi",
+    "away": "Deplasman",
+    "unknown": "Bilinmiyor",
+    "corrected": "Düzeltildi",
+    "pleaseWait": "Lütfen bekleyin...",
+    "somethingWentWrong": "Bir şeyler ters gitti.",
+    "roundHintInRound": " {round}. haftada",
+    "scheduledMatch": "planlanmış maç",
+    "completedMatch": "tamamlanmış maç",
+    "winPoints": "Galibiyet puanı",
+    "drawPoints": "Beraberlik puanı",
+    "lossPoints": "Mağlubiyet puanı",
+    "homeGoals": "Ev sahibi golleri",
+    "awayGoals": "Deplasman golleri",
+    "primaryColor": "Birincil renk",
+    "secondaryColor": "İkincil renk"
+  },
+  "help": {
+    "bannerBrand": "Golazo · Yardım",
+    "trailerBrand": "GOLAZO",
+    "trailerTagline": "Discord lig motoru · Yardım merkezi",
+    "stepBarIdle": "Lig akışı · alttan adım seç",
+    "stepBarActive": "Lig akışı · adım {step}/6",
+    "selectPlaceholder": "📚 Konu seç",
+    "menu": {
+      "overview": {
+        "label": "Başlangıç",
+        "description": "6 adımlık lig akışı",
+        "emoji": "🏠"
+      },
+      "league_step_1": {
+        "label": "1. Oluştur",
+        "description": "Yeni lig ve kod",
+        "emoji": "1️⃣"
+      },
+      "league_step_2": {
+        "label": "2. Takımlar",
+        "description": "Kadro kaydı",
+        "emoji": "2️⃣"
+      },
+      "league_step_3": {
+        "label": "3. Fikstür",
+        "description": "Program oluştur",
+        "emoji": "3️⃣"
+      },
+      "league_step_4": {
+        "label": "4. Göster",
+        "description": "Haftayı gör",
+        "emoji": "4️⃣"
+      },
+      "league_step_5": {
+        "label": "5. Skor",
+        "description": "Sonuç gir",
+        "emoji": "5️⃣"
+      },
+      "league_step_6": {
+        "label": "6. Tablo",
+        "description": "Puan durumu",
+        "emoji": "6️⃣"
+      },
+      "teams": {
+        "label": "Takımlar",
+        "description": "Ekle, düzenle, listele",
+        "emoji": "👥"
+      },
+      "matches": {
+        "label": "Skorlar",
+        "description": "Sonuç, düzelt, hükmen",
+        "emoji": "⚽"
+      },
+      "admin": {
+        "label": "Yönetim",
+        "description": "Ayar ve yetki",
+        "emoji": "🛡️"
+      },
+      "commands": {
+        "label": "Bot",
+        "description": "Dil ve önek",
+        "emoji": "⌨️"
+      },
+      "tips": {
+        "label": "İpuçları",
+        "description": "Kısa cevaplar",
+        "emoji": "💡"
+      }
+    },
+    "pages": {
+      "overview": {
+        "title": "Hızlı başlangıç",
+        "description": "Tam bir ligi 6 komutla yönet — veya `/dashboard` ile interaktif paneli kullan. Adımlar için alttaki menüyü kullan.",
+        "fieldCount": "3",
+        "field1Name": "🗺️ Akış",
+        "field1Value": "`/league create`\n`/league team add`\n`/league fixture generate`\n`/league fixture show`\n`/league score`\n`/league standings`\n`/league settings channel` (duyuru kanalı)",
+        "field1Inline": "false",
+        "field2Name": "👤 Roller",
+        "field2Value": "Admin ligi kurar.\nSahip günlük işleri yönetir.\nSkorcu maç sonuçlarını girer.",
+        "field2Inline": "false",
+        "field3Name": "🌐 Dil",
+        "field3Value": "`/language set` sana özel\n`/language server set` sunucu için",
+        "field3Inline": "false",
+        "footer": "Konu değiştirmek için alttaki menüyü kullan",
+        "bannerTitle": "Golazo Yardım",
+        "bannerSubtitle": "6 adım, bir lig"
+      },
+      "league_step_1": {
+        "title": "Lig oluştur",
+        "description": "`/league create name: Pazar Ligi`",
+        "fieldCount": "2",
+        "field1Name": "👤 Kim",
+        "field1Value": "Sunucuyu Yönet yetkisi",
+        "field1Inline": "false",
+        "field2Name": "⏭️ Sonra",
+        "field2Value": "Takımları ekle ve lig **kodunu** kaydet.",
+        "field2Inline": "false",
+        "footer": "Adım 1/6",
+        "bannerTitle": "Lig oluştur",
+        "bannerSubtitle": "Adım 1/6"
+      },
+      "league_step_2": {
+        "title": "Takım ekle",
+        "description": "`/league team add league: kod name: FC Kartallar`",
+        "fieldCount": "2",
+        "field1Name": "👤 Kim",
+        "field1Value": "Lig sahibi veya admin",
+        "field1Inline": "false",
+        "field2Name": "⚠️ Kural",
+        "field2Value": "Tüm takımları fikstürden önce ekle. En az 2 takım gerekir.",
+        "field2Inline": "false",
+        "footer": "Adım 2/6",
+        "bannerTitle": "Takım ekle",
+        "bannerSubtitle": "Adım 2/6"
+      },
+      "league_step_3": {
+        "title": "Fikstür oluştur",
+        "description": "`/league fixture generate league: kod`",
+        "fieldCount": "2",
+        "field1Name": "👤 Kim",
+        "field1Value": "Lig sahibi veya admin",
+        "field1Inline": "false",
+        "field2Name": "🔄 Sıfırla",
+        "field2Value": "Skor yoksa `fixture regenerate`, her şeyi silmek için `/league reset`.",
+        "field2Inline": "false",
+        "footer": "Adım 3/6",
+        "bannerTitle": "Fikstür oluştur",
+        "bannerSubtitle": "Adım 3/6"
+      },
+      "league_step_4": {
+        "title": "Fikstürü gör",
+        "description": "`/league fixture show league: kod round: 1`",
+        "fieldCount": "2",
+        "field1Name": "👤 Kim",
+        "field1Value": "Herkes",
+        "field1Inline": "false",
+        "field2Name": "🖼️ Görsel",
+        "field2Value": "Fikstür kartları otomatik PNG olarak gelir; gezinme düğmeleriyle sayfa değiştir.",
+        "field2Inline": "false",
+        "footer": "Adım 4/6",
+        "bannerTitle": "Fikstürü gör",
+        "bannerSubtitle": "Adım 4/6"
+      },
+      "league_step_5": {
+        "title": "Skor gir",
+        "description": "`/league score league: kod` — fikstür kartı açılır; maçı menüden seçip skoru yazarsın.",
+        "fieldCount": "3",
+        "field1Name": "👤 Kim",
+        "field1Value": "Sahip, admin veya skorcu",
+        "field1Inline": "false",
+        "field2Name": "✏️ Düzelt",
+        "field2Value": "`score-correct` veya `forfeit`",
+        "field2Inline": "false",
+        "field3Name": "🔁 Çift devre",
+        "field3Value": "Aynı takımlar iki kez karşılaşıyorsa `round:` ekle.",
+        "field3Inline": "false",
+        "footer": "Adım 5/6",
+        "bannerTitle": "Skor gir",
+        "bannerSubtitle": "Adım 5/6"
+      },
+      "league_step_6": {
+        "title": "Puan durumu",
+        "description": "`/league standings league: kod`",
+        "fieldCount": "2",
+        "field1Name": "👤 Kim",
+        "field1Value": "Herkes",
+        "field1Inline": "false",
+        "field2Name": "♻️ Yenile",
+        "field2Value": "Tablo bozuksa `rollback standings` çalıştır.",
+        "field2Inline": "false",
+        "footer": "Adım 6/6",
+        "bannerTitle": "Puan durumu",
+        "bannerSubtitle": "Adım 6/6"
+      },
+      "teams": {
+        "title": "Takımlar",
+        "description": "Her zaman `league: kod` yaz. Skorda listedeki adları kullan.",
+        "fieldCount": "4",
+        "field1Name": "➕ Ekle",
+        "field1Value": "`team add`",
+        "field1Inline": "true",
+        "field2Name": "✏️ Düzenle",
+        "field2Value": "`team edit`",
+        "field2Inline": "true",
+        "field3Name": "➖ Sil",
+        "field3Value": "`team remove`",
+        "field3Inline": "true",
+        "field4Name": "📋 Listele",
+        "field4Value": "`team list`",
+        "field4Inline": "true",
+        "footer": "short_name tabloda en fazla 4 karakter",
+        "bannerTitle": "Takımlar",
+        "bannerSubtitle": "Kadro komutları"
+      },
+      "matches": {
+        "title": "Skorlar",
+        "description": "Duruma uygun komutu seç.",
+        "fieldCount": "3",
+        "field1Name": "✅ Sonuç",
+        "field1Value": "`/league score`",
+        "field1Inline": "true",
+        "field2Name": "🔧 Düzelt",
+        "field2Value": "`/league score-correct`",
+        "field2Inline": "true",
+        "field3Name": "🚫 Hükmen",
+        "field3Value": "`/league forfeit`",
+        "field3Inline": "true",
+        "footer": "Aynı eşleşme iki kez mi? round seçeneğini kullan.",
+        "bannerTitle": "Skorlar",
+        "bannerSubtitle": "3 komut"
+      },
+      "admin": {
+        "title": "Yönetim",
+        "description": "Kural, kadro ve kurtarma araçları.",
+        "fieldCount": "4",
+        "field1Name": "📊 Liste",
+        "field1Value": "`/league list`",
+        "field1Inline": "true",
+        "field2Name": "⚙️ Ayar",
+        "field2Value": "`settings show`",
+        "field2Inline": "true",
+        "field3Name": "📜 Log",
+        "field3Value": "`audit`",
+        "field3Inline": "true",
+        "field4Name": "♻️ Onar",
+        "field4Value": "`rollback standings`",
+        "field4Inline": "true",
+        "footer": "`reset` maçları ve puan durumunu siler; settings yetki ve puan ayarlarını kapsar",
+        "bannerTitle": "Yönetim",
+        "bannerSubtitle": "Sahip araçları"
+      },
+      "commands": {
+        "title": "Bot komutları",
+        "description": "`/league` dışı komutlar.",
+        "fieldCount": "3",
+        "field1Name": "🌐 Dil",
+        "field1Value": "`/language`",
+        "field1Inline": "true",
+        "field2Name": "⌨️ Önek",
+        "field2Value": "`/setprefix`",
+        "field2Inline": "true",
+        "field3Name": "🏓 Ping",
+        "field3Value": "`/ping`",
+        "field3Inline": "true",
+        "footer": "`/help` bu menüyü açar",
+        "bannerTitle": "Bot",
+        "bannerSubtitle": "Araçlar"
+      },
+      "tips": {
+        "title": "İpuçları",
+        "description": "Sık sorulanlara kısa yanıtlar.",
+        "fieldCount": "3",
+        "field1Name": "🖼️ PNG kart",
+        "field1Value": "Fikstür, tablo ve skor komutları varsayılan olarak görsel kart içerir.",
+        "field1Inline": "false",
+        "field2Name": "🌍 Dil",
+        "field2Value": "`/language` ayarın sunucu varsayılanının üstündedir.",
+        "field2Inline": "false",
+        "field3Name": "❔ Maç bulunamadı",
+        "field3Value": "Takım adlarını, round seçeneğini ve fikstürün varlığını kontrol et.",
+        "field3Inline": "false",
+        "footer": "Yeni lig mi? Menüden Adım 1 ile başla.",
+        "bannerTitle": "İpuçları",
+        "bannerSubtitle": "SSS"
+      }
+    },
+    "brandAuthor": "Golazo"
+  },
+  "dashboard": {
+    "hub": {
+      "title": "Golazo sunucu kontrol paneli",
+      "subtitle": "{guild} · sunucu kontrol paneli",
+      "empty": "Henüz lig yok. **Sunucuyu Yönet** yetkin varsa alttan oluştur.",
+      "leagueCount": "Bu sunucuda **{count}/{max}** lig",
+      "leagueRound": "Hafta {round}/{total}",
+      "leagueNoFixture": "Fikstür yok",
+      "selectLeague": "Lig seç…",
+      "create": "Lig oluştur",
+      "created": "**{name}** ligi oluşturuldu (`{slug}`)."
+    },
+    "league": {
+      "title": "{name}",
+      "summary": "**{teams}** takım (min {min}, max {max})",
+      "round": "Hafta **{round}/{total}**",
+      "noFixture": "Fikstür oluşturulmadı",
+      "statusLabel": "Durum",
+      "formatLabel": "Format",
+      "hintRegistration": "Takımları ekle, sonra panel menüsünden **Fikstür**'ü aç.",
+      "hintActive": "Sonuç için **Skor**, tablo için **Puan durumu**.",
+      "selectPanel": "Panel seç…",
+      "back": "Sunucu paneli",
+      "backToLeague": "Lig özeti",
+      "status": {
+        "draft": "Taslak",
+        "registration": "Kayıt",
+        "active": "Aktif",
+        "completed": "Tamamlandı",
+        "archived": "Arşiv"
+      },
+      "format": {
+        "single_round_robin": "Tek devreli",
+        "double_round_robin": "Çift devreli"
+      }
+    },
+    "panels": {
+      "teams": {
+        "title": "Takımlar",
+        "desc": "Takım kaydı ve yönetimi"
+      },
+      "fixture": {
+        "title": "Fikstür",
+        "desc": "Haftalar ve maç programı"
+      },
+      "score": {
+        "title": "Skorlar",
+        "desc": "Maç sonuçlarını gir ve takip et"
+      },
+      "standings": {
+        "title": "Puan durumu",
+        "desc": "Lig tablosu ve sıralama"
+      },
+      "settings": {
+        "title": "Ayarlar",
+        "desc": "Puanlar, yetkiler, duyurular"
+      },
+      "matchOps": {
+        "title": "Maç durumu",
+        "desc": "Ertele, iptal, devam, hükmen"
+      },
+      "admin": {
+        "title": "Audit & kurtarma",
+        "desc": "Audit günlüğü, geri alma, sıfırlama"
+      },
+      "unknown": "Panel"
+    },
+    "design": {
+      "breadcrumb": {
+        "hub": "Sunucu paneli",
+        "league": "{slug}"
+      },
+      "labels": {
+        "league": "Lig",
+        "teams": "Takım",
+        "round": "Hafta",
+        "status": "Durum",
+        "format": "Format"
+      },
+      "stats": {
+        "leagues": "lig",
+        "teams": "takım",
+        "round": "hafta",
+        "status": "durum",
+        "format": "format"
+      },
+      "sections": {
+        "points": "Puanlar",
+        "teams": "Takım limitleri",
+        "permissions": "Yetkiler",
+        "announcements": "Duyurular",
+        "panels": "Paneller",
+        "leagues": "Liglerin"
+      },
+      "table": {
+        "status": "Durum",
+        "name": "Ad",
+        "slug": "Slug",
+        "round": "Hafta",
+        "panel": "Panel",
+        "description": "Açıklama",
+        "setting": "Ayar",
+        "value": "Değer",
+        "when": "Zaman",
+        "action": "İşlem",
+        "actor": "Kullanıcı",
+        "summary": "Özet"
+      },
+      "callout": {
+        "hubHint": "Menüden lig seç veya yeni lig oluştur.",
+        "emptyLeagues": "Henüz lig yok — alttan **Lig oluştur**.",
+        "registration": "**Takımlar**'dan ekle, ardından fikstür oluştur.",
+        "active": "Sonuç için **Skorlar**, tablo için **Puan durumu**.",
+        "scoreCanReport": "Aşağıdan maçı seç, açılan pencerede skorları yaz.",
+        "scoreViewOnly": "Skorları görebilirsin; giriş sadece skorcu/admin.",
+        "matchSelected": "Seçili: **{home}** - **{away}** · `{status}`",
+        "resetConfirm": "Tüm maçlar ve puan durumu silinir. Takımlar kalır."
+      }
+    },
+    "breadcrumb": {
+      "league": "Lig `{slug}`"
+    },
+    "roles": {
+      "viewer": "Rolün: izleyici",
+      "scorer": "Rolün: skorcu",
+      "admin": "Rolün: lig admini",
+      "owner": "Rolün: lig sahibi",
+      "manager": "Rolün: sunucu yöneticisi"
+    },
+    "teams": {
+      "add": "Takım ekle",
+      "remove": "Takım sil",
+      "generate": "Fikstür oluştur",
+      "generated": "**{name}** fikstürü hazır — **{matchCount}** maç, **{totalRounds}** hafta."
+    },
+    "settings": {
+      "editPoints": "Puanları düzenle",
+      "pickUser": "Yetki için üye seç…",
+      "pickChannel": "Duyuru kanalı seç…",
+      "pickPermAction": "{user} için yetki işlemi:",
+      "addAdmin": "Admin ekle",
+      "removeAdmin": "Admin kaldır",
+      "addScorer": "Skorcu ekle",
+      "removeScorer": "Skorcu kaldır"
+    },
+    "matchOps": {
+      "round": "Güncel hafta: **{round}/{total}**",
+      "hint": "Maç seç, ardından işlem butonlarını kullan.",
+      "selectMatch": "Maç seç…",
+      "option": "{home} - {away} · H{round} · {status}",
+      "postpone": "Ertele",
+      "cancel": "İptal",
+      "resume": "Devam",
+      "forfeit": "Hükmen",
+      "noMatches": "Durum değiştirilebilecek maç yok."
+    },
+    "admin": {
+      "refresh": "Günlüğü yenile",
+      "rollback": "Puan durumunu kurtar",
+      "reset": "Ligi sıfırla",
+      "resetConfirm": "Sıfırlamayı onayla",
+      "resetCancel": "Vazgeç",
+      "noAudit": "Henüz audit kaydı yok.",
+      "rollbackDone": "**{name}** puan durumu kurtarıldı."
+    },
+    "modal": {
+      "createTitle": "Lig oluştur",
+      "createName": "Lig adı",
+      "createSlug": "Kod (opsiyonel)",
+      "createFormat": "Format (opsiyonel)",
+      "addTeamTitle": "Takım ekle",
+      "removeTeamTitle": "Takım sil",
+      "teamName": "Takım adı",
+      "teamShort": "Kısa ad (opsiyonel)",
+      "pointsTitle": "Puanları düzenle",
+      "pointsWin": "Galibiyet puanı",
+      "pointsDraw": "Beraberlik puanı",
+      "pointsLoss": "Mağlubiyet puanı",
+      "forfeitTitle": "Hükmen sonuç",
+      "forfeitWinner": "Kazanan takım adı"
+    },
+    "errors": {
+      "guildOnly": "Panel sadece sunucuda çalışır.",
+      "manageGuild": "Lig oluşturmak için **Sunucuyu Yönet** gerekir.",
+      "adminOnly": "Lig admin yetkisi gerekir."
+    }
+  },
+  "ui": {
+    "author": "Golazo",
+    "footerDefault": "Golazo Bot",
+    "emoji": {
+      "brand": "⚽",
+      "success": "✅",
+      "error": "❌",
+      "warning": "⚠️",
+      "info": "ℹ️",
+      "league": "🏆",
+      "team": "👥",
+      "fixture": "📅",
+      "score": "⚽",
+      "standings": "📊",
+      "settings": "⚙️",
+      "matchOps": "🛠️",
+      "language": "🌐",
+      "cooldown": "⏳",
+      "code": "🏷️",
+      "page": "📄"
+    }
+  }
+}

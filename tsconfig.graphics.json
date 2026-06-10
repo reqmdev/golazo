@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "lib": ["ES2022"],
+    "rootDir": "src/graphics",
+    "outDir": "dist/graphics",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "moduleResolution": "node16",
+    "ignoreDeprecations": "6.0",
+    "resolveJsonModule": true
+  },
+  "include": ["src/graphics/**/*.ts"],
+  "exclude": ["src/graphics/**/__tests__/**"]
+}

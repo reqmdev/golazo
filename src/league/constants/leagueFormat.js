@@ -1,0 +1,8 @@
+const LEAGUE_FORMAT = {
+    SINGLE_ROUND_ROBIN: 'single_round_robin',
+    DOUBLE_ROUND_ROBIN: 'double_round_robin'
+};
+
+const DEFAULT_LEAGUE_FORMAT = LEAGUE_FORMAT.SINGLE_ROUND_ROBIN;
+
+module.exports = { LEAGUE_FORMAT, DEFAULT_LEAGUE_FORMAT };
