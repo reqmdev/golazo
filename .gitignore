@@ -11,7 +11,9 @@ terminal.log
 *.log
 
 # Build output (regenerated via npm run build:graphics / postinstall)
-dist/
+dist/*
+!dist/graphics/
+!dist/graphics/**
 
 # Local dev artifacts
 terminals/

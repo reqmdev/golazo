@@ -1,0 +1,1 @@
+{"version":3,"file":"StepRail.d.ts","sourceRoot":"","sources":["../../../src/graphics/components/StepRail.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,KAAK,EAAE,MAAM,eAAe,CAAC;AAE3C,wBAAgB,QAAQ,CAAC,KAAK,EAAE;IAC9B,KAAK,EAAE,MAAM,CAAC;IACd,CAAC,EAAE,MAAM,CAAC;IACV,UAAU,EAAE,MAAM,CAAC;IACnB,MAAM,EAAE,MAAM,CAAC;IACf,KAAK,EAAE,KAAK,CAAC;CACd,wCAwEA"}

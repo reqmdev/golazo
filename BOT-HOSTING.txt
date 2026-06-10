@@ -4,31 +4,46 @@ Bot-Hosting.net setup (read this if the bot crashes on start)
 ERROR: Cannot find module '/home/container/index.js'
 → Your files are not in the right place OR the startup file is wrong.
 
-FIX A — Startup tab (easiest)
------------------------------
-1. Open your server → Startup tab
-2. Find "Bot Node.js file" (or similar)
-3. Set it to:  src/index.js
-4. Save → Restart
+ERROR: SyntaxError in node_modules/typescript/lib/_tsc.js (Unexpected end of input)
+→ npm install was interrupted OR node_modules is corrupted. The repo ships pre-built
+  dist/graphics so TypeScript does not need to compile on the server.
 
-FIX B — Files in a subfolder
-----------------------------
+FIX — Startup tab (most important)
+----------------------------------
+1. Open your server → Startup tab
+2. Set the main command to (NOT "npm start"):
+   cd /home/container && if [ -f package.json ]; then npm install --no-fund --no-audit; fi && node .
+3. If there is a "Bot Node.js file" field, set it to: index.js
+4. Save → Stop → delete the node_modules folder (Files tab) → Start once
+
+Why not "npm start"?
+- npm start runs nodemon (dev dependency) and tries to rebuild graphics on every start.
+- node . runs the bot directly (production mode).
+
+FIX — Files in a subfolder
+--------------------------
 If you uploaded a zip, files may be in /home/container/Golazo/ instead of /home/container/
 1. Files tab → open the Golazo folder
 2. Select all files → Move → enter: ..
 3. Delete empty folder and zip
 4. Restart
 
-FIX C — Fresh upload from GitHub
---------------------------------
+FIX — Fresh upload from GitHub
+------------------------------
 1. Delete all files in /home/container (or create new server)
 2. Upload latest zip from https://github.com/reqmdev/golazo (Code → Download ZIP)
-3. Unarchive → move files to /home/container root (see FIX B)
+3. Unarchive → move files to /home/container root (see above)
 4. Startup command:
-   cd /home/container && if [ -f package.json ]; then npm install --no-fund --no-audit; fi && node src/index.js
-5. Startup → Bot Node.js file: src/index.js (if using ${STARTUP_FILE})
+   cd /home/container && if [ -f package.json ]; then npm install --no-fund --no-audit; fi && node .
 5. Settings/Variables → add CLIENT_TOKEN, MONGODB_URI, GOLAZO_OWNER_ID
 6. Start
+
+FIX — Corrupted node_modules (TypeScript / build errors)
+--------------------------------------------------------
+1. Stop the server (do not restart in a loop)
+2. Files tab → delete the entire node_modules folder
+3. Confirm dist/graphics/adapters/index.js exists in your files (comes with the GitHub zip)
+4. Start once and wait for npm install to finish completely before touching Restart
 
 Required environment variables
 ------------------------------

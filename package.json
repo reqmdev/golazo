@@ -7,8 +7,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "postinstall": "node -e \"require('fs').writeFileSync('index.js',\\\"require('./src/index.js');\\\\n\\\")\" && node scripts/sync-fonts.js && npm run build:graphics && node scripts/sync-canvas-assets.js",
-    "build:graphics": "node node_modules/typescript/bin/tsc -p tsconfig.graphics.json",
+    "postinstall": "node -e \"require('fs').writeFileSync('index.js',\\\"require('./src/index.js');\\\\n\\\")\" && node scripts/sync-fonts.js && node scripts/build-graphics.js && node scripts/sync-canvas-assets.js",
+    "build:graphics": "node scripts/build-graphics.js",
     "sync-fonts": "node scripts/sync-fonts.js",
     "sync-canvas-assets": "node scripts/sync-canvas-assets.js",
     "sync-help-assets": "node scripts/sync-canvas-assets.js",
@@ -19,6 +19,7 @@
     "prestart:prod": "npm run build:graphics",
     "start": "nodemon .",
     "start:prod": "node .",
+    "start:bot-hosting": "node .",
     "start:pm2": "pm2 start ecosystem.config.js",
     "start:sharded": "node src/sharding/manager.js",
     "docker:up": "docker compose up -d --build",
@@ -54,11 +55,11 @@
     "dotenv": "^16.4.5",
     "mongoose": "^8.13.0",
     "opentype.js": "^2.0.0",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
     "@types/node": "^25.9.2",
-    "nodemon": "^3.1.14",
-    "typescript": "^6.0.3"
+    "nodemon": "^3.1.14"
   }
 }
