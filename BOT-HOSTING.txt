@@ -1,0 +1,37 @@
+Bot-Hosting.net setup (read this if the bot crashes on start)
+================================================================
+
+ERROR: Cannot find module '/home/container/index.js'
+→ Your files are not in the right place OR the startup file is wrong.
+
+FIX A — Startup tab (easiest)
+-----------------------------
+1. Open your server → Startup tab
+2. Find "Bot Node.js file" (or similar)
+3. Set it to:  src/index.js
+4. Save → Restart
+
+FIX B — Files in a subfolder
+----------------------------
+If you uploaded a zip, files may be in /home/container/Golazo/ instead of /home/container/
+1. Files tab → open the Golazo folder
+2. Select all files → Move → enter: ..
+3. Delete empty folder and zip
+4. Restart
+
+FIX C — Fresh upload from GitHub
+--------------------------------
+1. Delete all files in /home/container (or create new server)
+2. Upload latest zip from https://github.com/reqmdev/golazo (Code → Download ZIP)
+3. Unarchive → move files to /home/container root (see FIX B)
+4. Startup → Bot Node.js file: index.js
+5. Settings/Variables → add CLIENT_TOKEN, MONGODB_URI, GOLAZO_OWNER_ID
+6. Start
+
+Required environment variables
+------------------------------
+CLIENT_TOKEN=
+MONGODB_URI=mongodb+srv://...@cluster.mongodb.net/golazo?retryWrites=true&w=majority
+GOLAZO_OWNER_ID=your_discord_user_id
+GOLAZO_ENABLE_DEV_COMMANDS=false
+GOLAZO_DEV_MODE=false
