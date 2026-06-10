@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "postinstall": "node scripts/ensure-entry.js && node scripts/sync-fonts.js && npm run build:graphics && node scripts/sync-canvas-assets.js",
+    "postinstall": "node -e \"require('fs').writeFileSync('index.js',\\\"require('./src/index.js');\\\\n\\\")\" && node scripts/sync-fonts.js && npm run build:graphics && node scripts/sync-canvas-assets.js",
     "build:graphics": "node node_modules/typescript/bin/tsc -p tsconfig.graphics.json",
     "sync-fonts": "node scripts/sync-fonts.js",
     "sync-canvas-assets": "node scripts/sync-canvas-assets.js",

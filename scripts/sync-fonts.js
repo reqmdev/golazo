@@ -5,6 +5,15 @@ const https = require('https');
 const ROOT = path.join(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'src', 'assets', 'fonts');
 
+function ensureEntryShim() {
+    const entryPath = path.join(ROOT, 'index.js');
+
+    if (!fs.existsSync(entryPath)) {
+        fs.writeFileSync(entryPath, "require('./src/index.js');\n", 'utf8');
+        console.log('[sync-fonts] created index.js (bot hosting entry shim)');
+    }
+}
+
 const FONT_SOURCES = [
     {
         package: '@fontsource/inter',
@@ -167,6 +176,8 @@ async function syncFonts() {
     const ttfCount = await syncTtfFonts();
     console.log(`[sync-fonts] copied ${copied} woff2 file(s), synced ${ttfCount} ttf file(s) to ${OUT_DIR}`);
 }
+
+ensureEntryShim();
 
 syncFonts().catch((err) => {
     console.error('[sync-fonts] failed:', err);
