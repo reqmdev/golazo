@@ -46,8 +46,11 @@ const StandingsCard_1 = require("../cards/StandingsCard");
 const FixtureCard_1 = require("../cards/FixtureCard");
 const TeamsCard_1 = require("../cards/TeamsCard");
 const HelpFooterCard_1 = require("../cards/HelpFooterCard");
+function projectRoot() {
+    return path.join(__dirname, '..', '..', '..');
+}
 function getLogoFetcher() {
-    const fetchModule = path.join(process.cwd(), 'src', 'league', 'utils', 'validateLogoUrl.js');
+    const fetchModule = path.join(projectRoot(), 'src', 'league', 'utils', 'validateLogoUrl.js');
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { fetchLogoBuffer } = require(fetchModule);
     return fetchLogoBuffer;

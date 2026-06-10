@@ -1,6 +1,7 @@
 const { info, error, success } = require('../../utils/Console');
 const { clearModuleCache } = require('../../utils/clearModuleCache');
 const { readdirSync } = require('fs');
+const { appPath } = require('../../utils/appRoot');
 const DiscordBot = require('../DiscordBot');
 const Event = require('../../structure/Event');
 
@@ -20,8 +21,8 @@ class EventsHandler {
     load = () => {
         let total = 0;
 
-        for (const directory of readdirSync('./src/events/')) {
-            for (const file of readdirSync('./src/events/' + directory).filter((f) => f.endsWith('.js'))) {
+        for (const directory of readdirSync(appPath('src', 'events'))) {
+            for (const file of readdirSync(appPath('src', 'events', directory)).filter((f) => f.endsWith('.js'))) {
                 try {
                     /**
                      * @type {Event['data']}

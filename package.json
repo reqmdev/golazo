@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "postinstall": "node -e \"require('fs').writeFileSync('index.js',\\\"require('./src/index.js');\\\\n\\\")\" && node scripts/sync-fonts.js && node scripts/build-graphics.js && node scripts/sync-canvas-assets.js",
+    "postinstall": "node scripts/ensure-entry.js && node scripts/sync-fonts.js && node scripts/build-graphics.js && node scripts/sync-canvas-assets.js",
     "build:graphics": "node scripts/build-graphics.js",
     "sync-fonts": "node scripts/sync-fonts.js",
     "sync-canvas-assets": "node scripts/sync-canvas-assets.js",

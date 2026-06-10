@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { appPath } = require('./appRoot');
 const { redactSecrets } = require('./redactSecrets');
 const { incrementCounter } = require('../metrics/registry');
 
@@ -16,7 +17,7 @@ async function reportError(err, context = 'uncaught') {
     const line = `[${timestamp}] [${context}] ${message}\n`;
 
     try {
-        fs.appendFile('./terminal.log', line, 'utf-8', () => {});
+        fs.appendFile(appPath('terminal.log'), line, 'utf-8', () => {});
     } catch {
         // ignore log write failures
     }

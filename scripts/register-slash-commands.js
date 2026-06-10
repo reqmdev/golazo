@@ -2,9 +2,13 @@
  * Push slash command definitions to Discord (no bot login required).
  * Usage: node scripts/register-slash-commands.js
  */
+const { ensureAppRoot, appPath } = require('../src/utils/appRoot');
+ensureAppRoot();
+
 require('dotenv').config();
 const { REST, Routes } = require('discord.js');
 const { readdirSync } = require('fs');
+const path = require('path');
 const config = require('../src/config');
 const { applySlashLocalizations } = require('../src/i18n/discordLocalizations');
 
@@ -15,9 +19,9 @@ async function main() {
 
     const commands = [];
 
-    for (const directory of readdirSync('./src/commands/')) {
-        for (const file of readdirSync(`./src/commands/${directory}`).filter((f) => f.endsWith('.js'))) {
-            const module = require(`../src/commands/${directory}/${file}`);
+    for (const directory of readdirSync(appPath('src', 'commands'))) {
+        for (const file of readdirSync(appPath('src', 'commands', directory)).filter((f) => f.endsWith('.js'))) {
+            const module = require(path.join(appPath('src', 'commands', directory, file)));
             if (module.__type__ === 1 && module.command) {
                 commands.push(applySlashLocalizations(module.command));
             }

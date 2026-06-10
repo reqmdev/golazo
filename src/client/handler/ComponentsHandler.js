@@ -1,6 +1,7 @@
 const { info, error, success } = require('../../utils/Console');
 const { clearModuleCache } = require('../../utils/clearModuleCache');
 const { readdirSync } = require('fs');
+const { appPath } = require('../../utils/appRoot');
 const DiscordBot = require('../DiscordBot');
 const Component = require('../../structure/Component');
 const AutocompleteComponent = require('../../structure/AutocompleteComponent');
@@ -17,8 +18,8 @@ class ComponentsHandler {
     }
 
     load = () => {
-        for (const directory of readdirSync('./src/components/')) {
-            for (const file of readdirSync('./src/components/' + directory).filter((f) => f.endsWith('.js'))) {
+        for (const directory of readdirSync(appPath('src', 'components'))) {
+            for (const file of readdirSync(appPath('src', 'components', directory)).filter((f) => f.endsWith('.js'))) {
                 try {
                     /**
                      * @type {Component['data'] | AutocompleteComponent['data']}

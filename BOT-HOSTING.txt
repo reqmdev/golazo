@@ -2,10 +2,18 @@ Bot / Pterodactyl hosting setup (Bot-Hosting.net, Wispbyte, etc.)
 ==================================================================
 
 ERROR: Cannot find module '/home/container/src/index.js' (Wispbyte)
-→ Startup file is fine — your bot files are NOT in /home/container yet.
-1. Files tab → you must see package.json and src/index.js at the root (not inside Golazo/)
-2. Startup → JS file / Bot file: index.js  (recommended; also works: src/index.js)
-3. If using Git: set repo to https://github.com/reqmdev/golazo and enable auto-update, then Start once
+→ The panel looks for that exact path. Your files may be inside /home/container/Golazo/.
+  Pick ONE fix:
+  A) Move everything from Golazo/ up to /home/container/ (Files → select all → Move → ..)
+  B) Set JS file to: Golazo/src/index.js  (if you keep the subfolder)
+  C) Set JS file to: Golazo/index.js  (works after npm install — recommended if stuck in Golazo/)
+
+Wispbyte / picky panels
+-----------------------
+- JS file: src/index.js  (when package.json is in /home/container)
+- JS file: Golazo/src/index.js  (when the GitHub zip left a Golazo folder)
+- Golazo v1.0+ auto-detects package.json and fixes working directory — no manual cd needed
+- After upload: Stop → delete node_modules → Start once (let npm install finish)
 
 ERROR: Cannot find module '/home/container/index.js'
 → Your files are not in the right place OR the startup file is wrong.

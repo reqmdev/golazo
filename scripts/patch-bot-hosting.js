@@ -59,10 +59,7 @@ patch(serverPath, [
     ]
 ]);
 
-const entryPath = path.join(root, 'index.js');
-if (!fs.existsSync(entryPath)) {
-    fs.writeFileSync(entryPath, "require('./src/index.js');\n", 'utf8');
-    console.log('[ok] created index.js');
-}
+const { ensureEntryShim } = require('./ensure-entry');
+ensureEntryShim();
 
 console.log('[done] Run: node src/index.js');

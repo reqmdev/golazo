@@ -14,8 +14,12 @@ interface RendererOptions {
   accentColor?: string;
 }
 
+function projectRoot(): string {
+  return path.join(__dirname, '..', '..', '..');
+}
+
 function getLogoFetcher(): (url: string) => Promise<Buffer | null> {
-  const fetchModule = path.join(process.cwd(), 'src', 'league', 'utils', 'validateLogoUrl.js');
+  const fetchModule = path.join(projectRoot(), 'src', 'league', 'utils', 'validateLogoUrl.js');
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { fetchLogoBuffer } = require(fetchModule);
   return fetchLogoBuffer;

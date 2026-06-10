@@ -2,6 +2,7 @@ const { REST, Routes } = require('discord.js');
 const { info, error, success } = require('../../utils/Console');
 const { clearModuleCache } = require('../../utils/clearModuleCache');
 const { readdirSync } = require('fs');
+const { appPath } = require('../../utils/appRoot');
 const DiscordBot = require('../DiscordBot');
 const ApplicationCommand = require('../../structure/ApplicationCommand');
 const MessageCommand = require('../../structure/MessageCommand');
@@ -20,12 +21,12 @@ class CommandsHandler {
     }
 
     load = () => {
-        for (const directory of readdirSync('./src/commands/')) {
+        for (const directory of readdirSync(appPath('src', 'commands'))) {
             if (!isDevCommandsEnabled() && directory === 'Developer') {
                 continue;
             }
 
-            for (const file of readdirSync('./src/commands/' + directory).filter((f) => f.endsWith('.js'))) {
+            for (const file of readdirSync(appPath('src', 'commands', directory)).filter((f) => f.endsWith('.js'))) {
                 try {
                     /**
                      * @type {ApplicationCommand['data'] | MessageCommand['data']}

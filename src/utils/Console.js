@@ -1,8 +1,9 @@
 require('colors');
 const fs = require('fs');
+const { appPath } = require('./appRoot');
 
 const useJsonLogs = process.env.GOLAZO_LOG_FORMAT === 'json';
-const logStream = fs.createWriteStream('./terminal.log', { flags: 'a' });
+const logStream = fs.createWriteStream(appPath('terminal.log'), { flags: 'a' });
 
 /**
  * @param {string} line

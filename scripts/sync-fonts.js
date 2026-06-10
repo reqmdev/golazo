@@ -2,17 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-const ROOT = path.join(__dirname, '..');
+const { getAppRoot } = require('../src/utils/appRoot');
+const ROOT = getAppRoot();
 const OUT_DIR = path.join(ROOT, 'src', 'assets', 'fonts');
 
-function ensureEntryShim() {
-    const entryPath = path.join(ROOT, 'index.js');
-
-    if (!fs.existsSync(entryPath)) {
-        fs.writeFileSync(entryPath, "require('./src/index.js');\n", 'utf8');
-        console.log('[sync-fonts] created index.js (bot hosting entry shim)');
-    }
-}
+const { ensureEntryShim } = require('./ensure-entry');
 
 const FONT_SOURCES = [
     {

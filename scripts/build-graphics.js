@@ -3,7 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const root = path.join(__dirname, '..');
+const { getAppRoot } = require('../src/utils/appRoot');
+const root = getAppRoot();
 const distMarker = path.join(root, 'dist', 'graphics', 'adapters', 'index.js');
 const tscBin = path.join(root, 'node_modules', 'typescript', 'bin', 'tsc');
 const tscLib = path.join(root, 'node_modules', 'typescript', 'lib', '_tsc.js');

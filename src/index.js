@@ -1,3 +1,6 @@
+const { ensureAppRoot, appPath } = require('./utils/appRoot');
+ensureAppRoot();
+
 require('dotenv').config();
 const fs = require('fs');
 const DiscordBot = require('./client/DiscordBot');
@@ -5,7 +8,7 @@ const { disconnectMongo } = require('./database/connect');
 const { reportError } = require('./utils/errorReporter');
 const { startHealthServer, stopHealthServer } = require('./health/server');
 
-fs.writeFileSync('./terminal.log', '', 'utf-8');
+fs.writeFileSync(appPath('terminal.log'), '', 'utf-8');
 const client = new DiscordBot();
 
 module.exports = client;
