@@ -66,6 +66,16 @@ npm run start:prod
 
 See [`.env.example`](.env.example) for the full list.
 
+### Cloud (Render / Railway / Fly)
+
+1. Connect the GitHub repo in your hosting dashboard.
+2. Set **secret** environment variables: `CLIENT_TOKEN`, `MONGODB_URI`, `GOLAZO_OWNER_ID`.
+3. Use **Web** service (not static) — the bot exposes `/health` on the platform `PORT`.
+4. Build: `npm ci && npm run build:graphics && node scripts/sync-fonts.js && node scripts/sync-canvas-assets.js`
+5. Start: `node .`
+
+Included configs: [`render.yaml`](render.yaml), [`railway.toml`](railway.toml), [`Procfile`](Procfile).
+
 ### Docker
 
 ```bash

@@ -1,0 +1,41 @@
+# Render.com — https://render.com/docs/blueprint-spec
+# Dashboard: New > Blueprint > connect this repo, then set secret env vars.
+
+services:
+  - type: web
+    name: golazo
+    runtime: node
+    plan: starter
+    region: frankfurt
+    buildCommand: npm ci && npm run build:graphics && node scripts/sync-fonts.js && node scripts/sync-canvas-assets.js
+    startCommand: node .
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GOLAZO_LOG_FORMAT
+        value: json
+      - key: GOLAZO_ENABLE_DEV_COMMANDS
+        value: "false"
+      - key: GOLAZO_DEV_MODE
+        value: "false"
+      - key: GOLAZO_MESSAGE_COMMANDS
+        value: "false"
+      - key: GOLAZO_RENDER_RATE_LIMIT_ENABLED
+        value: "true"
+      - key: GOLAZO_GUILD_LEAVE_DATA_POLICY
+        value: cache_only
+      - key: GOLAZO_INCREMENTAL_STANDINGS
+        value: "false"
+      - key: RENDER_ENGINE
+        value: svg
+      - key: CLIENT_TOKEN
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: GOLAZO_OWNER_ID
+        sync: false
+      - key: GOLAZO_DEVELOPER_IDS
+        sync: false
+      - key: GOLAZO_ERROR_WEBHOOK
+        sync: false

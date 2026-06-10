@@ -2,6 +2,7 @@ const http = require('http');
 const mongoose = require('mongoose');
 const { renderPrometheus, setGauge } = require('../metrics/registry');
 const { getRenderCacheStats } = require('../league/render/core/RenderCache');
+const { resolveHealthPort } = require('./resolveHealthPort');
 
 /** @type {import('http').Server | null} */
 let server = null;
@@ -10,9 +11,9 @@ let server = null;
  * @param {import('../client/DiscordBot')} client
  */
 function startHealthServer(client) {
-    const port = Number(process.env.GOLAZO_HEALTH_PORT);
+    const port = resolveHealthPort();
 
-    if (!port || port < 1) {
+    if (!port) {
         return Promise.resolve(null);
     }
 

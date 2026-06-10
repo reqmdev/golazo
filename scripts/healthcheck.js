@@ -1,4 +1,6 @@
-const port = Number(process.env.GOLAZO_HEALTH_PORT) || 8080;
+const { resolveHealthPort } = require('../src/health/resolveHealthPort');
+
+const port = resolveHealthPort() || 8080;
 
 fetch(`http://127.0.0.1:${port}/health`)
     .then((response) => process.exit(response.ok ? 0 : 1))

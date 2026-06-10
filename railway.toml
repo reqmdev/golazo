@@ -1,0 +1,10 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm ci && npm run build:graphics && node scripts/sync-fonts.js && node scripts/sync-canvas-assets.js"
+
+[deploy]
+startCommand = "node ."
+healthcheckPath = "/health"
+healthcheckTimeout = 120
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
