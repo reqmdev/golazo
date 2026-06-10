@@ -24,7 +24,9 @@ FIX C — Fresh upload from GitHub
 1. Delete all files in /home/container (or create new server)
 2. Upload latest zip from https://github.com/reqmdev/golazo (Code → Download ZIP)
 3. Unarchive → move files to /home/container root (see FIX B)
-4. Startup → Bot Node.js file: index.js
+4. Startup command:
+   cd /home/container && if [ -f package.json ]; then npm install --no-fund --no-audit; fi && node src/index.js
+5. Startup → Bot Node.js file: src/index.js (if using ${STARTUP_FILE})
 5. Settings/Variables → add CLIENT_TOKEN, MONGODB_URI, GOLAZO_OWNER_ID
 6. Start
 
