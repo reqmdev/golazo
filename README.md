@@ -1,6 +1,6 @@
 # Golazo ⚽
 
-[![CI](https://github.com/stner/golazo/actions/workflows/ci.yml/badge.svg)](https://github.com/stner/golazo/actions/workflows/ci.yml)
+[![CI](https://github.com/reqmdev/golazo/actions/workflows/ci.yml/badge.svg)](https://github.com/reqmdev/golazo/actions/workflows/ci.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](package.json)
 
@@ -42,7 +42,7 @@ Type `league` in any `/league` command — autocomplete lists leagues in your se
 ### Setup
 
 ```bash
-git clone https://github.com/stner/golazo.git
+git clone https://github.com/reqmdev/golazo.git
 cd golazo
 cp .env.example .env
 # Edit .env — set CLIENT_TOKEN, MONGODB_URI, GOLAZO_OWNER_ID

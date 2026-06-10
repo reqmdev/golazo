@@ -38,12 +38,12 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stner/golazo.git"
+    "url": "git+https://github.com/reqmdev/golazo.git"
   },
   "bugs": {
-    "url": "https://github.com/stner/golazo/issues"
+    "url": "https://github.com/reqmdev/golazo/issues"
   },
-  "homepage": "https://github.com/stner/golazo#readme",
+  "homepage": "https://github.com/reqmdev/golazo#readme",
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
