@@ -11,7 +11,8 @@ const RENDER_PREFIX_NAMESPACES = {
     'lfx:': 'fixture',
     'lsc:': 'score',
     'lst:': 'standings',
-    'ltm:': 'team_list'
+    'ltm:': 'team_list',
+    'lcl:': 'champions',
 };
 
 /**
@@ -78,7 +79,8 @@ class ComponentsListener {
                         || interaction.customId.startsWith('lfx:')
                         || interaction.customId.startsWith('lsc:')
                         || interaction.customId.startsWith('lst:')
-                        || interaction.customId.startsWith('ltm:')) {
+                        || interaction.customId.startsWith('ltm:')
+                        || interaction.customId.startsWith('lcl:')) {
                         if (!(await enforceRenderRateLimit(interaction, client, interaction.customId))) {
                             return;
                         }
@@ -111,6 +113,12 @@ class ComponentsListener {
                     if (interaction.customId.startsWith('ltm:')) {
                         const { handleTeamListNavButton } = require('../../league/discord/teamListNav');
                         await handleTeamListNavButton(client, interaction);
+                        return;
+                    }
+
+                    if (interaction.customId.startsWith('lcl:')) {
+                        const { handleChampionsNavButton } = require('../../league/discord/championsNav');
+                        await handleChampionsNavButton(client, interaction);
                         return;
                     }
 

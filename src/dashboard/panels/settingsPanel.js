@@ -36,6 +36,18 @@ async function buildSettingsPanelPayload(input) {
                     .setEmoji('🎯'),
             ),
             new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId(encodeDashboardId(DASHBOARD_VIEWS.SETTINGS, SETTINGS_ACTIONS.CL_ENABLE, slug))
+                    .setLabel(tr('handlers.champions.settings.enable'))
+                    .setStyle(ButtonStyle.Success)
+                    .setDisabled(Boolean(league.championsLeague?.enabled)),
+                new ButtonBuilder()
+                    .setCustomId(encodeDashboardId(DASHBOARD_VIEWS.SETTINGS, SETTINGS_ACTIONS.CL_DISABLE, slug))
+                    .setLabel(tr('handlers.champions.settings.disable'))
+                    .setStyle(ButtonStyle.Danger)
+                    .setDisabled(!league.championsLeague?.enabled),
+            ),
+            new ActionRowBuilder().addComponents(
                 new UserSelectMenuBuilder()
                     .setCustomId(encodeDashboardId(DASHBOARD_VIEWS.SETTINGS, SETTINGS_ACTIONS.PERM_USER, slug))
                     .setPlaceholder(tr('dashboard.settings.pickUser'))
@@ -97,6 +109,15 @@ async function buildSettingsPanelPayload(input) {
                         channel: league.channels?.announcementsChannelId
                             ? `<#${league.channels.announcementsChannelId}>`
                             : emDash,
+                    }),
+                ],
+                [
+                    tr('dashboard.design.sections.championsLeague'),
+                    tr('handlers.champions.settings.summary', {
+                        enabled: league.championsLeague?.enabled
+                            ? tr('common.yes')
+                            : tr('common.no'),
+                        spots: league.championsLeague?.qualifyingSpots || 4,
                     }),
                 ],
             ],

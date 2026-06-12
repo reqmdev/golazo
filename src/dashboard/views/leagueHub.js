@@ -20,6 +20,7 @@ const PANEL_OPTIONS = [
     { value: DASHBOARD_VIEWS.FIXTURE, labelKey: 'dashboard.panels.fixture.title', descKey: 'dashboard.panels.fixture.desc', emoji: '📅' },
     { value: DASHBOARD_VIEWS.SCORE, labelKey: 'dashboard.panels.score.title', descKey: 'dashboard.panels.score.desc', emoji: '⚽' },
     { value: DASHBOARD_VIEWS.STANDINGS, labelKey: 'dashboard.panels.standings.title', descKey: 'dashboard.panels.standings.desc', emoji: '📊' },
+    { value: DASHBOARD_VIEWS.CHAMPIONS, labelKey: 'dashboard.panels.champions.title', descKey: 'dashboard.panels.champions.desc', emoji: '🏆', requiresCl: true },
     { value: DASHBOARD_VIEWS.SETTINGS, labelKey: 'dashboard.panels.settings.title', descKey: 'dashboard.panels.settings.desc', emoji: '⚙️' },
     { value: DASHBOARD_VIEWS.MATCH_OPS, labelKey: 'dashboard.panels.matchOps.title', descKey: 'dashboard.panels.matchOps.desc', emoji: '🛠️' },
     { value: DASHBOARD_VIEWS.ADMIN, labelKey: 'dashboard.panels.admin.title', descKey: 'dashboard.panels.admin.desc', emoji: '📋' },
@@ -29,7 +30,7 @@ const PANEL_OPTIONS = [
  * @param {(key: string, params?: object) => string} tr
  * @param {import('../design/layout').EmojiBudget} budget
  */
-function buildPanelTable(tr, budget) {
+function buildPanelTable(tr, budget, options = PANEL_OPTIONS) {
     const emoji = budget.takeCandidate(['🧭', { key: 'page' }]);
     const titleLine = emoji
         ? `${emoji} ${tr('dashboard.design.sections.panels')}`
@@ -40,7 +41,7 @@ function buildPanelTable(tr, budget) {
             { header: tr('dashboard.design.table.panel'), maxWidth: 22 },
             { header: tr('dashboard.design.table.description'), maxWidth: 40 },
         ],
-        PANEL_OPTIONS.map((option) => [
+        options.map((option) => [
             `${option.emoji} ${tr(option.labelKey)}`,
             tr(option.descKey),
         ]),
@@ -74,11 +75,15 @@ async function buildLeagueHubPayload(input) {
         hint = tr('dashboard.league.hintActive');
     }
 
+    const visiblePanels = PANEL_OPTIONS.filter(
+        (option) => !option.requiresCl || league.championsLeague?.enabled,
+    );
+
     const panelSelect = new StringSelectMenuBuilder()
         .setCustomId(encodeDashboardId(DASHBOARD_VIEWS.LEAGUE, LEAGUE_ACTIONS.PANEL, slug))
         .setPlaceholder(tr('dashboard.league.selectPanel'))
         .addOptions(
-            PANEL_OPTIONS.map((option) => ({
+            visiblePanels.map((option) => ({
                 label: tr(option.labelKey).slice(0, 100),
                 description: tr(option.descKey).slice(0, 100),
                 value: option.value,
@@ -102,7 +107,7 @@ async function buildLeagueHubPayload(input) {
         guildName: guildName || '',
         slug,
         chromeBuilder: (budget) => buildLeagueInfoBlock(tr, league, teamCount, budget),
-        bodyBuilder: (budget) => buildPanelTable(tr, budget),
+        bodyBuilder: (budget) => buildPanelTable(tr, budget, visiblePanels),
         hint,
         footerRole: viewer.roleKey,
         actionRows: [

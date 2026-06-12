@@ -10,6 +10,7 @@ const DASHBOARD_VIEWS = {
     SETTINGS: 'set',
     MATCH_OPS: 'mt',
     ADMIN: 'adm',
+    CHAMPIONS: 'cl',
 };
 
 const HUB_ACTIONS = {
@@ -33,6 +34,8 @@ const SETTINGS_ACTIONS = {
     PERM_USER: 'pu',
     PERM_APPLY: 'pa',
     CHANNEL: 'ch',
+    CL_ENABLE: 'clen',
+    CL_DISABLE: 'cldis',
 };
 
 const MATCH_OPS_ACTIONS = {
@@ -56,12 +59,26 @@ const STANDINGS_ACTIONS = {
     PAGE_LABEL: 'pg',
 };
 
+const CHAMPIONS_ACTIONS = {
+    STATUS: 'st',
+    GROUPS: 'gs',
+    BRACKET: 'br',
+    ENABLE: 'en',
+    DISABLE: 'dis',
+};
+
+const CL_SETTINGS_ACTIONS = {
+    TOGGLE: 'tg',
+    SPOTS: 'sp',
+};
+
 const PANEL_OPTIONS = [
     DASHBOARD_VIEWS.LEAGUE,
     DASHBOARD_VIEWS.TEAMS,
     DASHBOARD_VIEWS.FIXTURE,
     DASHBOARD_VIEWS.SCORE,
     DASHBOARD_VIEWS.STANDINGS,
+    DASHBOARD_VIEWS.CHAMPIONS,
     DASHBOARD_VIEWS.SETTINGS,
     DASHBOARD_VIEWS.MATCH_OPS,
     DASHBOARD_VIEWS.ADMIN,
@@ -85,6 +102,8 @@ module.exports = {
     MATCH_OPS_ACTIONS,
     ADMIN_ACTIONS,
     STANDINGS_ACTIONS,
+    CHAMPIONS_ACTIONS,
+    CL_SETTINGS_ACTIONS,
     PANEL_OPTIONS,
     MODAL_IDS,
 };

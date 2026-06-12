@@ -516,6 +516,72 @@ module.exports = new ApplicationCommand({
                 description: 'Reset a league — clears matches and standings, keeps teams.',
                 type: ApplicationCommandOptionType.Subcommand,
                 options: [leagueSlugOption]
+            },
+            {
+                name: 'champions',
+                description: 'Champions League tournament (optional, starts when season ends).',
+                type: ApplicationCommandOptionType.SubcommandGroup,
+                options: [
+                    {
+                        name: 'status',
+                        description: 'View Champions League status and qualification preview.',
+                        type: ApplicationCommandOptionType.Subcommand,
+                        options: [leagueSlugOption],
+                    },
+                    {
+                        name: 'standings',
+                        description: 'View group stage standings.',
+                        type: ApplicationCommandOptionType.Subcommand,
+                        options: [leagueSlugOption],
+                    },
+                    {
+                        name: 'bracket',
+                        description: 'View knockout bracket.',
+                        type: ApplicationCommandOptionType.Subcommand,
+                        options: [leagueSlugOption],
+                    },
+                    {
+                        name: 'settings',
+                        description: 'Champions League settings.',
+                        type: ApplicationCommandOptionType.SubcommandGroup,
+                        options: [
+                            {
+                                name: 'show',
+                                description: 'Show Champions League settings.',
+                                type: ApplicationCommandOptionType.Subcommand,
+                                options: [leagueSlugOption],
+                            },
+                            {
+                                name: 'enable',
+                                description: 'Enable Champions League for this league.',
+                                type: ApplicationCommandOptionType.Subcommand,
+                                options: [leagueSlugOption],
+                            },
+                            {
+                                name: 'disable',
+                                description: 'Disable Champions League (only before tournament starts).',
+                                type: ApplicationCommandOptionType.Subcommand,
+                                options: [leagueSlugOption],
+                            },
+                            {
+                                name: 'spots',
+                                description: 'Set how many top teams qualify (2–16).',
+                                type: ApplicationCommandOptionType.Subcommand,
+                                options: [
+                                    leagueSlugOption,
+                                    {
+                                        name: 'count',
+                                        description: 'Number of qualifying spots.',
+                                        type: ApplicationCommandOptionType.Integer,
+                                        required: true,
+                                        min_value: 2,
+                                        max_value: 16,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
             }
         ]
     },

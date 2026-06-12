@@ -36,6 +36,25 @@ const matchSchema = new Schema({
         type: String,
         default: null
     },
+    tournamentId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Tournament',
+        default: null,
+        index: true,
+    },
+    tieId: {
+        type: String,
+        default: null,
+    },
+    knockoutRound: {
+        type: String,
+        default: null,
+    },
+    tieBreak: {
+        penaltiesHome: { type: Number, default: null },
+        penaltiesAway: { type: Number, default: null },
+        decidedBy: { type: String, default: null },
+    },
     homeTeamId: {
         type: Schema.Types.ObjectId,
         ref: 'Team',
@@ -80,8 +99,13 @@ matchSchema.index({ leagueId: 1, round: 1, leg: 1 });
 matchSchema.index({ leagueId: 1, status: 1 });
 matchSchema.index(
     { leagueId: 1, leg: 1, round: 1, homeTeamId: 1, awayTeamId: 1 },
-    { unique: true }
+    { unique: true, partialFilterExpression: { tournamentId: null } }
 );
-matchSchema.index({ leagueId: 1, homeTeamId: 1, awayTeamId: 1, status: 1, round: 1 });
+matchSchema.index(
+    { tournamentId: 1, tieId: 1, leg: 1 },
+    { unique: true, partialFilterExpression: { tournamentId: { $type: 'objectId' }, tieId: { $type: 'string' } } }
+);
+matchSchema.index({ tournamentId: 1, knockoutRound: 1, status: 1 });
+matchSchema.index({ leagueId: 1, tournamentId: 1, groupId: 1 });
 
 module.exports = matchSchema;

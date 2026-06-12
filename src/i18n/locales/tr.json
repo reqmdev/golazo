@@ -72,6 +72,14 @@
     "INVALID_LOGO_URL_PRIVATE": "Logo URL'si herkese açık bir adrese işaret etmelidir (özel ağlar engellenir).",
     "OPERATION_LOCKED": "Başka bir lig işlemi devam ediyor. Lütfen biraz bekleyip tekrar deneyin.",
     "MATCH_STATUS_NOT_ALLOWED": "Bu maç durumu değişikliği desteklenmiyor.",
+    "MATCH_STATUS_NOT_ALLOWED": "Bu maç durumu değişikliği desteklenmiyor.",
+    "CL_NOT_ENABLED": "Bu lig için Şampiyonlar Ligi etkin değil.",
+    "CL_ALREADY_ACTIVE": "Aktif turnuva varken ayarlar değiştirilemez.",
+    "CL_LEAGUE_NOT_COMPLETED": "Şampiyonlar Ligi için lig sezonunun bitmesi gerekir.",
+    "CL_INSUFFICIENT_TEAMS": "Şampiyonlar Ligi için yeterli takım yok (en az 2).",
+    "CL_TIE_UNRESOLVED": "Bu eleme eşleşmesi henüz tamamlanmadı.",
+    "CL_INVALID_SPOTS": "Kalifikasyon kontenjanı 2 ile 16 arasında olmalı.",
+    "CL_NO_GROUP_STAGE": "Bu turnuvada grup aşaması yok.",
     "GENERIC_LEAGUE_ERROR": "Bir hata oluştu. Tekrar dene."
   },
   "handlers": {
@@ -230,6 +238,52 @@
       "success": "**{name}** ligi sıfırlandı.",
       "stats": "**{matches}** maç silindi · **{teams}** takım korundu · Durum: `{status}` · Sezon: **{season}**",
       "nextStep": "Gerekirse takım ekle/çıkar, ardından `/league fixture generate league:{slug}` çalıştır."
+    },
+    "champions": {
+      "settings": {
+        "title": "Şampiyonlar Ligi ayarları",
+        "enabled": "Sezon bitince üst sıradaki takımlar için Şampiyonlar Ligi etkin.",
+        "summary": "Etkin: **{enabled}** · Kalifikasyon: **{spots}** takım",
+        "spots": "Kalifikasyon kontenjanı: **{spots}**",
+        "enable": "Şampiyonlar Ligi'ni etkinleştir",
+        "disable": "Şampiyonlar Ligi'ni devre dışı bırak",
+        "enabledSuccess": "Şampiyonlar Ligi etkinleştirildi. Lig sezonu bitince otomatik başlayacak.",
+        "disabledSuccess": "Şampiyonlar Ligi devre dışı bırakıldı.",
+        "spotsUpdated": "Kalifikasyon kontenjanı **{spots}** olarak ayarlandı."
+      },
+      "status": {
+        "pending": "Kura bekleniyor",
+        "group_stage": "Grup aşaması",
+        "knockout": "Eleme aşaması",
+        "completed": "Tamamlandı",
+        "cancelled": "İptal edildi"
+      },
+      "phase": {
+        "group": "Grup aşaması"
+      },
+      "round": {
+        "playoff": "Play-off",
+        "r16": "Son 16",
+        "qf": "Çeyrek final",
+        "sf": "Yarı final",
+        "final": "Final"
+      },
+      "nav": {
+        "status": "Durum",
+        "groups": "Gruplar",
+        "bracket": "Ağaç"
+      },
+      "bracket": {
+        "empty": "Henüz eleme ağacı yok."
+      },
+      "bye": "bay",
+      "winnerSet": "Şampiyon belli oldu",
+      "winner": "Şampiyon: **{team}**",
+      "awaitingSeasonEnd": "Lig sezonu bitince otomatik başlar.",
+      "pendingStart": "Sezon bitti — turnuva hazırlanıyor.",
+      "qualificationPreview": "Güncel kalifikasyon önizlemesi:\n{teams}",
+      "notEnabledHint": "Sezon sonrası üst takımlar için Ayarlar'dan Şampiyonlar Ligi'ni etkinleştir.",
+      "groupTitle": "Grup {group}"
     }
   },
   "render": {
@@ -460,6 +514,9 @@
     "home": "Ev Sahibi",
     "away": "Deplasman",
     "unknown": "Bilinmiyor",
+    "yes": "Evet",
+    "no": "Hayır",
+    "tbd": "Belirsiz",
     "corrected": "Düzeltildi",
     "pleaseWait": "Lütfen bekleyin...",
     "somethingWentWrong": "Bir şeyler ters gitti.",
@@ -807,6 +864,10 @@
         "title": "Audit & kurtarma",
         "desc": "Audit günlüğü, geri alma, sıfırlama"
       },
+      "champions": {
+        "title": "Şampiyonlar Ligi",
+        "desc": "Grup aşaması ve eleme turnuvası"
+      },
       "unknown": "Panel"
     },
     "design": {
@@ -833,6 +894,7 @@
         "teams": "Takım limitleri",
         "permissions": "Yetkiler",
         "announcements": "Duyurular",
+        "championsLeague": "Şampiyonlar Ligi",
         "panels": "Paneller",
         "leagues": "Liglerin"
       },
@@ -886,6 +948,9 @@
       "removeAdmin": "Admin kaldır",
       "addScorer": "Skorcu ekle",
       "removeScorer": "Skorcu kaldır"
+    },
+    "champions": {
+      "configure": "Şampiyonlar Ligi'ni yapılandır"
     },
     "matchOps": {
       "round": "Güncel hafta: **{round}/{total}**",

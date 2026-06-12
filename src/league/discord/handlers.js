@@ -9,6 +9,7 @@ const LeagueSettingsService = require('../services/LeagueSettingsService');
 const RollbackService = require('../services/RollbackService');
 const ResetService = require('../services/ResetService');
 const AuditService = require('../services/AuditService');
+const TournamentService = require('../services/TournamentService');
 const PermissionService = require('../services/PermissionService');
 const { sendLeagueReply } = require('../utils/discord');
 
@@ -510,6 +511,10 @@ async function handleSettings(interaction, subcommand, ctx) {
                     channel: league.channels?.announcementsChannelId
                         ? `<#${league.channels.announcementsChannelId}>`
                         : emDash
+                }),
+                tr('handlers.champions.settings.summary', {
+                    enabled: league.championsLeague?.enabled ? tr('common.yes') : tr('common.no'),
+                    spots: league.championsLeague?.qualifyingSpots || 4,
                 })
             )
         });
@@ -693,6 +698,101 @@ async function handleMatch(interaction, subcommand, ctx) {
 /**
  * @param {import('discord.js').ChatInputCommandInteraction} interaction
  * @param {string} subcommand
+ * @param {string | null} settingsGroup
+ * @param {{ locale: string, tr: Function, client: import('../../client/DiscordBot') }} ctx
+ */
+async function handleChampions(interaction, subcommand, settingsGroup, ctx) {
+    const { tr, client } = ctx;
+    const { guildId, actorId } = guildContext(interaction);
+    const slug = leagueSlug(interaction);
+    const {
+        buildChampionsStatusPayload,
+        buildChampionsGroupStandingsPayload,
+        buildChampionsBracketPayload,
+    } = require('./championsNav');
+
+    if (settingsGroup === 'settings') {
+        if (subcommand === 'show') {
+            const { league } = await TournamentService.getTournamentState(guildId, slug);
+            await send(interaction, {
+                tr,
+                variant: 'league',
+                titleKey: 'handlers.champions.settings.title',
+                description: tr('handlers.champions.settings.summary', {
+                    enabled: league.championsLeague?.enabled ? tr('common.yes') : tr('common.no'),
+                    spots: league.championsLeague?.qualifyingSpots || 4,
+                }),
+            });
+            return;
+        }
+
+        if (subcommand === 'enable') {
+            await TournamentService.updateChampionsLeagueSettings(guildId, actorId, slug, {
+                enabled: true,
+            });
+            await send(interaction, {
+                tr,
+                variant: 'league',
+                descriptionKey: 'handlers.champions.settings.enabledSuccess',
+            });
+            return;
+        }
+
+        if (subcommand === 'disable') {
+            await TournamentService.updateChampionsLeagueSettings(guildId, actorId, slug, {
+                enabled: false,
+            });
+            await send(interaction, {
+                tr,
+                variant: 'league',
+                descriptionKey: 'handlers.champions.settings.disabledSuccess',
+            });
+            return;
+        }
+
+        if (subcommand === 'spots') {
+            const spots = interaction.options.getInteger('count', true);
+            await TournamentService.updateChampionsLeagueSettings(guildId, actorId, slug, {
+                qualifyingSpots: spots,
+            });
+            await send(interaction, {
+                tr,
+                variant: 'league',
+                descriptionKey: 'handlers.champions.settings.spotsUpdated',
+                descriptionParams: { spots },
+            });
+        }
+
+        return;
+    }
+
+    if (subcommand === 'status') {
+        const payload = await buildChampionsStatusPayload({ guildId, slug, tr, client });
+        await sendLeagueReply(interaction, payload);
+        return;
+    }
+
+    if (subcommand === 'standings') {
+        const payload = await buildChampionsGroupStandingsPayload({
+            guildId,
+            slug,
+            tr,
+            client,
+            groupIndex: 0,
+        });
+        await sendLeagueReply(interaction, payload);
+        return;
+    }
+
+    if (subcommand === 'bracket') {
+        const payload = await buildChampionsBracketPayload({ guildId, slug, tr, client });
+        await sendLeagueReply(interaction, payload);
+    }
+}
+
+/**
+ * @param {import('discord.js').ChatInputCommandInteraction} interaction
+ * @param {string} subcommand
  * @param {string | null} subcommandGroup
  */
 function lockKeyFor(interaction, subcommand, subcommandGroup) {
@@ -706,7 +806,12 @@ function lockKeyFor(interaction, subcommand, subcommandGroup) {
         || (subcommandGroup === 'team' && ['add', 'remove', 'edit'].includes(subcommand))
         || (subcommandGroup === 'rollback' && subcommand === 'standings')
         || subcommand === 'reset'
-        || (subcommandGroup === 'settings' && ['points', 'permission', 'channel'].includes(subcommand));
+        || (subcommandGroup === 'settings' && ['points', 'permission', 'channel'].includes(subcommand))
+        || (
+            subcommandGroup === 'champions'
+            && interaction.options.getSubcommandGroup(true) === 'settings'
+            && ['enable', 'disable', 'spots'].includes(subcommand)
+        );
 
     if (needsWriteLock) {
         return leagueLockKey(guildId, slug, LEAGUE_WRITE_SCOPE);
@@ -718,8 +823,9 @@ function lockKeyFor(interaction, subcommand, subcommandGroup) {
 /**
  * @param {string} subcommand
  * @param {string | null} subcommandGroup
+ * @param {import('discord.js').ChatInputCommandInteraction} [interaction]
  */
-function needsDefer(subcommand, subcommandGroup) {
+function needsDefer(subcommand, subcommandGroup, interaction = null) {
     if (subcommandGroup === 'fixture' && ['show', 'generate', 'regenerate'].includes(subcommand)) {
         return true;
     }
@@ -729,6 +835,17 @@ function needsDefer(subcommand, subcommandGroup) {
     if (['score', 'score-correct', 'forfeit'].includes(subcommand)) return true;
     if (subcommandGroup === 'rollback') return true;
     if (subcommand === 'reset') return true;
+
+    if (subcommandGroup === 'champions') {
+        if (['status', 'standings', 'bracket'].includes(subcommand)) {
+            return true;
+        }
+
+        if (interaction?.options.getSubcommandGroup(true) === 'settings') {
+            return ['show'].includes(subcommand);
+        }
+    }
+
     return false;
 }
 
@@ -746,6 +863,7 @@ module.exports = {
     handleRollback,
     handleReset,
     handleMatch,
+    handleChampions,
     lockKeyFor,
     needsDefer
 };

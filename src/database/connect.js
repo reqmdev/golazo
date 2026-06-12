@@ -71,6 +71,10 @@ async function connectMongo() {
     mongoose.model('Standing', standingSchema);
     mongoose.model('LeagueAuditLog', leagueAuditLogSchema);
     mongoose.model('LeagueOperationLock', leagueOperationLockSchema);
+    const tournamentSchema = require('../league/models/Tournament');
+    const tournamentStandingSchema = require('../league/models/TournamentStanding');
+    mongoose.model('Tournament', tournamentSchema);
+    mongoose.model('TournamentStanding', tournamentStandingSchema);
 
     const Team = mongoose.model('Team');
     const missingNameLower = await Team.countDocuments({
@@ -85,7 +89,7 @@ async function connectMongo() {
         warn(`${missingNameLower} team(s) missing nameLower — run: npm run migrate:name-lower`);
     }
 
-    success('Golazo MongoDB layer initialized (GuildSettings, League, Team, Match, Standing, LeagueAuditLog, LeagueOperationLock models ready).');
+    success('Golazo MongoDB layer initialized (GuildSettings, League, Team, Match, Standing, Tournament, LeagueAuditLog, LeagueOperationLock models ready).');
   } catch (err) {
     error('Failed to connect to MongoDB:');
     error(err);

@@ -70,6 +70,12 @@ const leagueSchema = new Schema({
         type: Number,
         default: 0
     },
+    championsLeague: {
+        enabled: { type: Boolean, default: false },
+        qualifyingSpots: { type: Number, default: 4, min: 2, max: 16 },
+        twoLeggedKnockout: { type: Boolean, default: true },
+        twoLeggedFinal: { type: Boolean, default: false },
+    },
     createdBy: {
         type: String,
         required: true

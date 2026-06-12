@@ -6,7 +6,9 @@ const COMPETITION_PHASE = {
     LEAGUE: 'league',
     CUP: 'cup',
     PLAYOFF: 'playoff',
-    GROUP: 'group'
+    GROUP: 'group',
+    CHAMPIONS_GROUP: 'champions_group',
+    CHAMPIONS_KNOCKOUT: 'champions_knockout',
 };
 
 /** Match statuses that block fixture regeneration. */

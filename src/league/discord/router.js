@@ -13,6 +13,7 @@ const {
     handleRollback,
     handleReset,
     handleMatch,
+    handleChampions,
     lockKeyFor,
     needsDefer
 } = require('./handlers');
@@ -26,7 +27,7 @@ async function routeLeagueCommand(client, interaction) {
     const subcommand = interaction.options.getSubcommand();
 
     await runLeagueInteraction(interaction, client, {
-        defer: needsDefer(subcommand, subcommandGroup),
+        defer: needsDefer(subcommand, subcommandGroup, interaction),
         lockKey: lockKeyFor(interaction, subcommand, subcommandGroup)
     }, async (ix, ctx) => {
         if (subcommandGroup === 'fixture') {
@@ -51,6 +52,12 @@ async function routeLeagueCommand(client, interaction) {
 
         if (subcommandGroup === 'match') {
             await handleMatch(ix, subcommand, ctx);
+            return;
+        }
+
+        if (subcommandGroup === 'champions') {
+            const innerGroup = ix.options.getSubcommandGroup(true);
+            await handleChampions(ix, subcommand, innerGroup, ctx);
             return;
         }
 

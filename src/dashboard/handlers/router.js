@@ -22,8 +22,11 @@ const {
     MATCH_OPS_ACTIONS,
     ADMIN_ACTIONS,
     STANDINGS_ACTIONS,
+    CHAMPIONS_ACTIONS,
+    CL_SETTINGS_ACTIONS,
     MODAL_IDS,
 } = require('../constants');
+const TournamentService = require('../../league/services/TournamentService');
 const StandingService = require('../../league/services/StandingService');
 const { resolveStandingsNavTarget } = require('../../league/discord/standingsNav');
 const { paginateTable } = require('../../league/render/drawing/paginateTable');
@@ -349,6 +352,11 @@ async function handleDashboardButton(interaction, ctx, parsed) {
         return;
     }
 
+    if (parsed.view === DASHBOARD_VIEWS.CHAMPIONS && parsed.slug) {
+        await handleChampionsButton(interaction, ctx, parsed);
+        return;
+    }
+
     if (parsed.view === DASHBOARD_VIEWS.ADMIN && parsed.slug) {
         await handleAdminButton(interaction, ctx, parsed);
     }
@@ -378,6 +386,37 @@ async function handleStandingsButton(interaction, ctx, parsed) {
     const target = resolveStandingsNavTarget(parsed.action, page, totalPages);
     const payload = await renderPanel(interaction, ctx, slug, DASHBOARD_VIEWS.STANDINGS, {
         page: target.page,
+    });
+
+    await interaction.editReply(payload);
+}
+
+/**
+ * @param {import('discord.js').ButtonInteraction} interaction
+ * @param {Awaited<ReturnType<typeof interactionContext>>} ctx
+ * @param {ReturnType<typeof parseDashboardId>} parsed
+ */
+async function handleChampionsButton(interaction, ctx, parsed) {
+    const { slug, extras } = parsePanelRef(parsed.slug);
+    const groupIndex = Number(extras[0]) || 0;
+
+    if (!slug) {
+        return;
+    }
+
+    await interaction.deferUpdate();
+
+    let subView = CHAMPIONS_ACTIONS.STATUS;
+
+    if (parsed.action === CHAMPIONS_ACTIONS.GROUPS) {
+        subView = CHAMPIONS_ACTIONS.GROUPS;
+    } else if (parsed.action === CHAMPIONS_ACTIONS.BRACKET) {
+        subView = CHAMPIONS_ACTIONS.BRACKET;
+    }
+
+    const payload = await renderPanel(interaction, ctx, slug, DASHBOARD_VIEWS.CHAMPIONS, {
+        subView,
+        groupIndex,
     });
 
     await interaction.editReply(payload);
@@ -454,6 +493,34 @@ async function handleSettingsButton(interaction, ctx, parsed) {
             }),
             ephemeral: true,
         });
+        return;
+    }
+
+    if (parsed.action === SETTINGS_ACTIONS.CL_ENABLE && parsed.slug) {
+        await interaction.deferUpdate();
+        await withDashboardWriteLock(ctx.guild.id, parsed.slug, () =>
+            TournamentService.updateChampionsLeagueSettings(
+                ctx.guild.id,
+                ctx.userId,
+                parsed.slug,
+                { enabled: true },
+            ));
+        const payload = await renderPanel(interaction, ctx, parsed.slug, DASHBOARD_VIEWS.SETTINGS);
+        await interaction.editReply(payload);
+        return;
+    }
+
+    if (parsed.action === SETTINGS_ACTIONS.CL_DISABLE && parsed.slug) {
+        await interaction.deferUpdate();
+        await withDashboardWriteLock(ctx.guild.id, parsed.slug, () =>
+            TournamentService.updateChampionsLeagueSettings(
+                ctx.guild.id,
+                ctx.userId,
+                parsed.slug,
+                { enabled: false },
+            ));
+        const payload = await renderPanel(interaction, ctx, parsed.slug, DASHBOARD_VIEWS.SETTINGS);
+        await interaction.editReply(payload);
     }
 }
 

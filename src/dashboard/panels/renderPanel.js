@@ -6,6 +6,7 @@ const { buildStandingsPanelPayload } = require('./standingsPanel');
 const { buildSettingsPanelPayload } = require('./settingsPanel');
 const { buildMatchOpsPanelPayload } = require('./matchOpsPanel');
 const { buildAdminPanelPayload } = require('./adminPanel');
+const { buildChampionsPanelPayload } = require('./championsPanel');
 
 /**
  * @param {object} input
@@ -61,6 +62,8 @@ async function renderPanelPayload(input) {
             return buildMatchOpsPanelPayload(base);
         case DASHBOARD_VIEWS.ADMIN:
             return buildAdminPanelPayload(base);
+        case DASHBOARD_VIEWS.CHAMPIONS:
+            return buildChampionsPanelPayload(base);
         default:
             throw new Error(`Unknown dashboard panel: ${panel}`);
     }

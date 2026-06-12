@@ -18,7 +18,10 @@ const {
 } = require('../match/matchProcessor');
 const { pickUniqueMatch, assertDistinctTeams } = require('../match/matchLookup');
 const { MATCH_STATUS } = require('../constants/matchStatus');
-const { runWithTransaction } = require('../../database/transactions');
+const { LEAGUE_STATUS } = require('../constants/leagueStatus');
+const TournamentStandingService = require('./TournamentStandingService');
+const TournamentService = require('./TournamentService');
+const TournamentRepository = require('../repositories/TournamentRepository');
 
 const STATUS_ACTION_FROM = {
     postpone: [MATCH_STATUS.SCHEDULED, MATCH_STATUS.LIVE],
@@ -44,6 +47,7 @@ const STATUS_ACTION_TO = {
  * @param {{ guildId: string, actorId: string, action: string, summary: string, metadata?: object }} audit
  */
 async function persistMatchResult(match, update, league, audit) {
+    const isTournamentMatch = Boolean(match.tournamentId);
     const snapshot = {
         status: match.status,
         score: match.score,
@@ -71,12 +75,23 @@ async function persistMatchResult(match, update, league, audit) {
                 meta: snapshot.meta ?? match.meta
             };
 
-            const recalculated = await StandingService.updateAfterMatch(
-                league._id,
-                league,
-                { updatedMatch: persistedMatch, previousMatch },
-                session
-            );
+            let recalculated = null;
+
+            if (isTournamentMatch) {
+                recalculated = await TournamentStandingService.updateAfterMatch(
+                    match.tournamentId,
+                    league,
+                    { updatedMatch: persistedMatch, previousMatch },
+                    session,
+                );
+            } else {
+                recalculated = await StandingService.updateAfterMatch(
+                    league._id,
+                    league,
+                    { updatedMatch: persistedMatch, previousMatch },
+                    session
+                );
+            }
 
             return {
                 updatedMatch: persistedMatch,
@@ -92,7 +107,16 @@ async function persistMatchResult(match, update, league, audit) {
     });
 
     invalidateLeagueRenderCache(league._id.toString());
-    await maybeAdvanceRound(league, match.round);
+
+    if (isTournamentMatch) {
+        const tournament = await TournamentRepository.findById(match.tournamentId);
+
+        if (tournament) {
+            await TournamentService.afterTournamentMatch(tournament, league);
+        }
+    } else {
+        await maybeAdvanceRound(league, match.round);
+    }
 
     await AuditService.record({
         leagueId: league._id,
@@ -113,6 +137,46 @@ async function persistMatchResult(match, update, league, audit) {
 
 /**
  * @param {object} league
+ */
+async function maybeCompleteLeague(league) {
+    if (league.status === LEAGUE_STATUS.COMPLETED) {
+        return;
+    }
+
+    if (!league.totalRounds || league.currentRound < league.totalRounds) {
+        return;
+    }
+
+    const unresolved = await MatchRepository.countUnresolvedInRound(
+        league._id,
+        league.currentRound,
+    );
+
+    if (unresolved > 0) {
+        return;
+    }
+
+    const updated = await LeagueRepository.updateById(league._id, {
+        status: LEAGUE_STATUS.COMPLETED,
+    });
+
+    if (updated) {
+        league.status = updated.status;
+
+        await AuditService.record({
+            leagueId: league._id,
+            guildId: league.guildId,
+            actorId: 'system',
+            action: AUDIT_ACTION.LEAGUE_COMPLETED,
+            summary: `League season ${league.season} completed`,
+        });
+
+        await TournamentService.bootstrapFromCompletedLeague(updated);
+    }
+}
+
+/**
+ * @param {object} league
  * @param {number} completedRound
  */
 async function maybeAdvanceRound(league, completedRound) {
@@ -126,7 +190,12 @@ async function maybeAdvanceRound(league, completedRound) {
         return;
     }
 
-    const nextRound = Math.min(completedRound + 1, league.totalRounds || completedRound + 1);
+    if (completedRound >= league.totalRounds) {
+        await maybeCompleteLeague(league);
+        return;
+    }
+
+    const nextRound = completedRound + 1;
 
     if (nextRound === league.currentRound) {
         return;
@@ -233,14 +302,14 @@ const MatchService = {
         const league = await LeagueService.resolveLeague(guildId, leagueSlug);
         PermissionService.assertCanReportScore(league, actorId);
 
-        if (!league.fixtureGeneratedAt) {
-            throw new LeagueError('NO_FIXTURE_SCORE');
-        }
-
         const match = await MatchRepository.findById(input.matchId);
 
         if (!match || match.leagueId.toString() !== league._id.toString()) {
             throw new LeagueError('MATCH_NOT_FOUND');
+        }
+
+        if (!match.tournamentId && !league.fixtureGeneratedAt) {
+            throw new LeagueError('NO_FIXTURE_SCORE');
         }
 
         assertSubmittable(match);

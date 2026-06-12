@@ -14,7 +14,14 @@ const AUDIT_ACTION = {
     STANDINGS_RECOVER: 'standings.recover',
     LEAGUE_RESET: 'league.reset',
     SETTINGS_UPDATE: 'settings.update',
-    PERMISSIONS_UPDATE: 'permissions.update'
+    PERMISSIONS_UPDATE: 'permissions.update',
+    LEAGUE_COMPLETED: 'league.completed',
+    TOURNAMENT_START: 'tournament.start',
+    TOURNAMENT_DRAW: 'tournament.draw',
+    TOURNAMENT_ADVANCE: 'tournament.advance',
+    TOURNAMENT_COMPLETE: 'tournament.complete',
+    TOURNAMENT_CANCEL: 'tournament.cancel',
+    CL_SETTINGS_UPDATE: 'cl.settings.update',
 };
 
 module.exports = { AUDIT_ACTION };

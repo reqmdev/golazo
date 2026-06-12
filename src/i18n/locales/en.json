@@ -72,6 +72,13 @@
     "INVALID_LOGO_URL_PRIVATE": "Logo URL must point to a public host (private networks are blocked).",
     "OPERATION_LOCKED": "Another league operation is in progress. Please wait a moment and try again.",
     "MATCH_STATUS_NOT_ALLOWED": "This match status change is not supported.",
+    "CL_NOT_ENABLED": "Champions League is not enabled for this league.",
+    "CL_ALREADY_ACTIVE": "Cannot change settings while a Champions League tournament is active.",
+    "CL_LEAGUE_NOT_COMPLETED": "The league season must finish before Champions League starts.",
+    "CL_INSUFFICIENT_TEAMS": "Not enough teams qualified for Champions League (minimum 2).",
+    "CL_TIE_UNRESOLVED": "This knockout tie is not fully resolved yet.",
+    "CL_INVALID_SPOTS": "Qualifying spots must be between 2 and 16.",
+    "CL_NO_GROUP_STAGE": "This tournament has no group stage.",
     "GENERIC_LEAGUE_ERROR": "Something went wrong while processing the league command."
   },
   "handlers": {
@@ -230,6 +237,52 @@
       "success": "League **{name}** has been reset.",
       "stats": "Removed **{matches}** matches · **{teams}** teams kept · Status: `{status}` · Season: **{season}**",
       "nextStep": "Add or remove teams if needed, then run `/league fixture generate league:{slug}`."
+    },
+    "champions": {
+      "settings": {
+        "title": "Champions League settings",
+        "enabled": "Champions League is enabled for top teams when the season ends.",
+        "summary": "Enabled: **{enabled}** · Qualifying spots: **{spots}**",
+        "spots": "Qualifying spots: **{spots}**",
+        "enable": "Enable Champions League",
+        "disable": "Disable Champions League",
+        "enabledSuccess": "Champions League enabled. It will start automatically when the league season completes.",
+        "disabledSuccess": "Champions League disabled.",
+        "spotsUpdated": "Qualifying spots set to **{spots}**."
+      },
+      "status": {
+        "pending": "Pending draw",
+        "group_stage": "Group stage",
+        "knockout": "Knockout phase",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "phase": {
+        "group": "Group stage"
+      },
+      "round": {
+        "playoff": "Play-off",
+        "r16": "Round of 16",
+        "qf": "Quarter-finals",
+        "sf": "Semi-finals",
+        "final": "Final"
+      },
+      "nav": {
+        "status": "Status",
+        "groups": "Groups",
+        "bracket": "Bracket"
+      },
+      "bracket": {
+        "empty": "No knockout bracket yet."
+      },
+      "bye": "bye",
+      "winnerSet": "Champion crowned",
+      "winner": "Champion: **{team}**",
+      "awaitingSeasonEnd": "Starts automatically when the league season ends.",
+      "pendingStart": "Season complete — tournament initializing.",
+      "qualificationPreview": "Current qualification preview:\n{teams}",
+      "notEnabledHint": "Enable Champions League in Settings to qualify top teams after the season.",
+      "groupTitle": "Group {group}"
     }
   },
   "render": {
@@ -460,6 +513,9 @@
     "home": "Home",
     "away": "Away",
     "unknown": "Unknown",
+    "yes": "Yes",
+    "no": "No",
+    "tbd": "TBD",
     "corrected": "Corrected",
     "pleaseWait": "Please wait...",
     "somethingWentWrong": "Something went wrong.",
@@ -807,6 +863,10 @@
         "title": "Audit & recovery",
         "desc": "Audit log, rollback, league reset"
       },
+      "champions": {
+        "title": "Champions League",
+        "desc": "Group stage and knockout tournament"
+      },
       "unknown": "Panel"
     },
     "design": {
@@ -833,6 +893,7 @@
         "teams": "Team limits",
         "permissions": "Permissions",
         "announcements": "Announcements",
+        "championsLeague": "Champions League",
         "panels": "Panels",
         "leagues": "Your leagues"
       },
@@ -886,6 +947,9 @@
       "removeAdmin": "Remove admin",
       "addScorer": "Add scorer",
       "removeScorer": "Remove scorer"
+    },
+    "champions": {
+      "configure": "Configure Champions League"
     },
     "matchOps": {
       "round": "Current round: **{round}/{total}**",

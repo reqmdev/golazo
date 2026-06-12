@@ -9,6 +9,7 @@ const LeagueRepository = require('../repositories/LeagueRepository');
 const TeamRepository = require('../repositories/TeamRepository');
 const MatchRepository = require('../repositories/MatchRepository');
 const StandingRepository = require('../repositories/StandingRepository');
+const TournamentService = require('./TournamentService');
 const { runWithTransaction } = require('../../database/transactions');
 
 const ResetService = {
@@ -48,6 +49,7 @@ const ResetService = {
         const updatedLeague = await runWithTransaction(async (session) => {
             await MatchRepository.deleteAllByLeague(league._id, session);
             await StandingRepository.deleteByLeague(league._id, session);
+            await TournamentService.deleteByLeague(league._id, session);
             return LeagueRepository.updateById(league._id, update, session);
         });
 

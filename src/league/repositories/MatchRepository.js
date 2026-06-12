@@ -7,25 +7,28 @@ function getModel() {
     return mongoose.model('Match');
 }
 
+/** League-only matches (excludes Champions League / tournament fixtures). */
+const LEAGUE_ONLY_FILTER = { tournamentId: null };
+
 const MatchRepository = {
     bulkInsert: (matches, session = null) =>
         getModel().insertMany(matches, { ordered: true, ...sessionOptions(session) }),
 
     countByLeague: (leagueId) =>
-        getModel().countDocuments({ leagueId }).exec(),
+        getModel().countDocuments({ leagueId, ...LEAGUE_ONLY_FILTER }).exec(),
 
     countCompletedByLeague: (leagueId) =>
-        getModel().countDocuments({ leagueId, status: MATCH_STATUS.COMPLETED }).exec(),
+        getModel().countDocuments({ leagueId, ...LEAGUE_ONLY_FILTER, status: MATCH_STATUS.COMPLETED }).exec(),
 
     countByLeagueWithStatuses: (leagueId, statuses) =>
-        getModel().countDocuments({ leagueId, status: { $in: statuses } }).exec(),
+        getModel().countDocuments({ leagueId, ...LEAGUE_ONLY_FILTER, status: { $in: statuses } }).exec(),
 
     deleteByLeagueWithStatuses: (leagueId, statuses, session = null) =>
-        getModel().deleteMany({ leagueId, status: { $in: statuses } }, sessionOptions(session)).exec(),
+        getModel().deleteMany({ leagueId, ...LEAGUE_ONLY_FILTER, status: { $in: statuses } }, sessionOptions(session)).exec(),
 
     listByLeagueWithStatuses: (leagueId, statuses, session = null) =>
         getModel()
-            .find({ leagueId, status: { $in: statuses } })
+            .find({ leagueId, ...LEAGUE_ONLY_FILTER, status: { $in: statuses } })
             .sort({ leg: 1, round: 1 })
             .session(session ?? null)
             .lean()
@@ -34,11 +37,14 @@ const MatchRepository = {
     deleteAllByLeague: (leagueId, session = null) =>
         getModel().deleteMany({ leagueId }, sessionOptions(session)).exec(),
 
+    deleteTournamentByLeague: (leagueId, session = null) =>
+        getModel().deleteMany({ leagueId, tournamentId: { $ne: null } }, sessionOptions(session)).exec(),
+
     findById: (matchId) =>
         getModel().findById(matchId).lean().exec(),
 
     findByLeagueAndRound: (leagueId, round, leg = null) => {
-        const filter = { leagueId, round };
+        const filter = { leagueId, ...LEAGUE_ONLY_FILTER, round };
 
         if (leg !== null) {
             filter.leg = leg;
@@ -50,6 +56,7 @@ const MatchRepository = {
     findBetweenTeams: (leagueId, homeTeamId, awayTeamId, statuses, round = null) => {
         const filter = {
             leagueId,
+            ...LEAGUE_ONLY_FILTER,
             $or: [
                 { homeTeamId, awayTeamId },
                 { homeTeamId: awayTeamId, awayTeamId: homeTeamId }
@@ -71,7 +78,7 @@ const MatchRepository = {
         MatchRepository.findBetweenTeams(leagueId, homeTeamId, awayTeamId, CORRECTABLE_STATUSES, round),
 
     listByLeague: (leagueId, { statuses = null } = {}, session = null) => {
-        const filter = { leagueId };
+        const filter = { leagueId, ...LEAGUE_ONLY_FILTER };
 
         if (statuses) {
             filter.status = { $in: statuses };
@@ -122,9 +129,54 @@ const MatchRepository = {
     countUnresolvedInRound: (leagueId, round) =>
         getModel().countDocuments({
             leagueId,
+            ...LEAGUE_ONLY_FILTER,
             round,
             status: { $in: UNRESOLVED_ROUND_STATUSES }
         }).exec(),
+
+    listByTournament: (tournamentId, { groupId = null, knockoutRound = null } = {}) => {
+        const filter = { tournamentId };
+
+        if (groupId) {
+            filter.groupId = groupId;
+        }
+
+        if (knockoutRound) {
+            filter.knockoutRound = knockoutRound;
+        }
+
+        return getModel().find(filter).sort({ round: 1, leg: 1, groupId: 1 }).lean().exec();
+    },
+
+    findByTournamentAndTie: (tournamentId, tieId) =>
+        getModel().find({ tournamentId, tieId }).sort({ leg: 1 }).lean().exec(),
+
+    findSubmittableByTournament: (tournamentId, statuses = SUBMITTABLE_STATUSES) =>
+        getModel().find({ tournamentId, status: { $in: statuses } })
+            .sort({ round: 1, leg: 1 })
+            .lean()
+            .exec(),
+
+    findByIdInTournament: (matchId, tournamentId) =>
+        getModel().findOne({ _id: matchId, tournamentId }).lean().exec(),
+
+    countUnresolvedInTournamentGroupRound: (tournamentId, groupId, round) =>
+        getModel().countDocuments({
+            tournamentId,
+            groupId,
+            round,
+            status: { $in: UNRESOLVED_ROUND_STATUSES },
+        }).exec(),
+
+    countUnresolvedInTournamentKnockoutRound: (tournamentId, knockoutRound) =>
+        getModel().countDocuments({
+            tournamentId,
+            knockoutRound,
+            status: { $in: UNRESOLVED_ROUND_STATUSES },
+        }).exec(),
+
+    deleteByTournament: (tournamentId, session = null) =>
+        getModel().deleteMany({ tournamentId }, sessionOptions(session)).exec(),
 
     deleteAllByGuild: (guildId) =>
         getModel().deleteMany({ guildId }).exec()
