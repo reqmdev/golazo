@@ -1,0 +1,888 @@
+
+> golazo@1.0.0 test
+> npm run build:graphics && node --test src/database/transactions.test.js src/health/resolveHealthPort.test.js src/health/server.test.js src/metrics/registry.test.js src/utils/lruMap.test.js src/utils/interactionRateLimit.test.js src/utils/interactionError.test.js src/utils/redactSecrets.test.js src/utils/devCommands.test.js src/services/guildLifecycle.test.js src/i18n/i18n.test.js src/help/help.test.js src/dashboard/dashboard.test.js src/dashboard/design/design.test.js src/ui/ui.test.js src/ui/componentsV2.test.js src/canvas/canvas.test.js src/canvas/render.smoke.test.js src/graphics/graphics.smoke.test.js src/graphics/utils/contentBlock.test.js src/league/fixture/fixtureEngine.test.js src/league/match/matchResult.test.js src/league/algorithms/incrementalStandings.test.js src/league/algorithms/standingCalculator.test.js src/league/render/render.test.js src/league/render/constants/cacheConfig.test.js src/league/render/constants/layout.test.js src/league/discord/distributedLock.test.js src/league/discord/operationLock.test.js src/league/discord/interactionGuard.test.js src/league/discord/fixtureNav.test.js src/league/discord/scoreNav.test.js src/league/discord/standingsNav.test.js src/league/discord/teamListNav.test.js src/league/utils/formatAudit.test.js src/league/utils/validateLogoUrl.test.js src/league/utils/resolveTeamLogoUrl.test.js src/league/services/adminService.test.js src/league/constants/cardPageSize.test.js
+
+
+> golazo@1.0.0 build:graphics
+> node scripts/build-graphics.js
+
+[build-graphics] dist/graphics already present — skipping compile
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'dotenv'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\config.js
+- C:\Users\stner\Desktop\Golazo\src\help\renderHelpAssets.js
+- C:\Users\stner\Desktop\Golazo\src\canvas\canvas.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\config.js:1:1)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\config.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\help\\renderHelpAssets.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\canvas\\canvas.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\canvas\canvas.test.js (178.7851ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'discord.js'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\league\render\renderers\BaseRenderer.js
+- C:\Users\stner\Desktop\Golazo\src\league\render\renderers\StandingsRenderer.js
+- C:\Users\stner\Desktop\Golazo\src\canvas\render.smoke.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\league\render\renderers\BaseRenderer.js:1:31)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\render\\renderers\\BaseRenderer.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\render\\renderers\\StandingsRenderer.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\canvas\\render.smoke.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\canvas\render.smoke.test.js (148.2717ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'discord.js'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\dashboard\dashboard.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\dashboard\dashboard.test.js:3:41)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\dashboard\\dashboard.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\dashboard\dashboard.test.js (166.8595ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'discord.js'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\dashboard\design\design.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\dashboard\design\design.test.js:3:27)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\dashboard\\design\\design.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\dashboard\design\design.test.js (172.0172ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'mongoose'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\database\transactions.js
+- C:\Users\stner\Desktop\Golazo\src\database\transactions.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\database\transactions.js:1:18)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\database\\transactions.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\database\\transactions.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\database\transactions.test.js (173.6313ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module '@resvg/resvg-js'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\dist\graphics\renderers\ResvgRenderer.js
+- C:\Users\stner\Desktop\Golazo\dist\graphics\core\RenderPipeline.js
+- C:\Users\stner\Desktop\Golazo\dist\graphics\cards\MatchResultCard.js
+- C:\Users\stner\Desktop\Golazo\dist\graphics\adapters\index.js
+- C:\Users\stner\Desktop\Golazo\src\graphics\graphics.smoke.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\dist\graphics\renderers\ResvgRenderer.js:4:20)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\dist\\graphics\\renderers\\ResvgRenderer.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\dist\\graphics\\core\\RenderPipeline.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\dist\\graphics\\cards\\MatchResultCard.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\dist\\graphics\\adapters\\index.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\graphics\\graphics.smoke.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\graphics\graphics.smoke.test.js (213.1446ms)
+▶ contentBlock
+  ✔ fits data grids inside optically balanced content area (2.0265ms)
+✔ contentBlock (4.2646ms)
+▶ resolveHealthPort
+  ✔ prefers GOLAZO_HEALTH_PORT over PORT (5.4078ms)
+  ✔ falls back to PORT for cloud hosts (3.5498ms)
+  ✔ returns 0 when no port is configured (5.2134ms)
+✔ resolveHealthPort (16.9417ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'mongoose'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\health\server.js
+- C:\Users\stner\Desktop\Golazo\src\health\server.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\health\server.js:2:18)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\health\\server.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\health\\server.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\health\server.test.js (168.941ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'discord.js'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\help\help.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\help\help.test.js:3:41)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ 'C:\\Users\\stner\\Desktop\\Golazo\\src\\help\\help.test.js' ]
+}
+
+Node.js v25.9.0
+✖ src\help\help.test.js (140.4924ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'dotenv'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\config.js
+- C:\Users\stner\Desktop\Golazo\src\i18n\index.js
+- C:\Users\stner\Desktop\Golazo\src\i18n\i18n.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\config.js:1:1)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\config.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\i18n\\index.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\i18n\\i18n.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\i18n\i18n.test.js (172.6386ms)
+▶ incrementalStandings
+  ✔ rejects incremental mode when head_to_head is configured (2.029ms)
+  ✔ applies a completed match delta (7.943ms)
+  ✔ replaces a corrected score incrementally (44.8907ms)
+✔ incrementalStandings (59.7846ms)
+▶ standingCalculator
+  ✔ produces deterministic output for the same input (56.327ms)
+  ✔ ignores postponed, cancelled, and duplicate match ids (10.9682ms)
+  ✔ rolls back corrected scores via full rebuild semantics (1.9517ms)
+  ✔ tracks last-five form in processing order (1.1944ms)
+  ✔ handles walkover forfeits with default score (0.8647ms)
+  ✔ uses head_to_head with league points rules (2.81ms)
+  ✔ breaks ties deterministically with team_id (10.8447ms)
+✔ standingCalculator (90.1793ms)
+▶ cardPageSize
+  ✔ fits full league on a single standings page (3.0885ms)
+  ✔ fits full round of matches on a single fixture page (0.6241ms)
+✔ cardPageSize (11.7252ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'mongoose'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\league\discord\distributedLock.js
+- C:\Users\stner\Desktop\Golazo\src\league\discord\distributedLock.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\league\discord\distributedLock.js:2:18)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\distributedLock.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\distributedLock.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\league\discord\distributedLock.test.js (261.2082ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'discord.js'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\league\discord\fixtureNav.js
+- C:\Users\stner\Desktop\Golazo\src\league\discord\fixtureNav.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\league\discord\fixtureNav.js:5:5)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\fixtureNav.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\fixtureNav.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\league\discord\fixtureNav.test.js (195.3477ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'dotenv'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\config.js
+- C:\Users\stner\Desktop\Golazo\src\league\discord\interactionGuard.js
+- C:\Users\stner\Desktop\Golazo\src\league\discord\interactionGuard.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\config.js:1:1)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\config.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\interactionGuard.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\interactionGuard.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\league\discord\interactionGuard.test.js (277.0455ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'mongoose'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\league\discord\distributedLock.js
+- C:\Users\stner\Desktop\Golazo\src\league\discord\operationLock.js
+- C:\Users\stner\Desktop\Golazo\src\league\discord\operationLock.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\league\discord\distributedLock.js:2:18)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\distributedLock.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\operationLock.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\operationLock.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\league\discord\operationLock.test.js (238.8323ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'discord.js'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\league\discord\scoreNav.js
+- C:\Users\stner\Desktop\Golazo\src\league\discord\scoreNav.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\league\discord\scoreNav.js:9:5)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\scoreNav.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\scoreNav.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\league\discord\scoreNav.test.js (218.5224ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'discord.js'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\league\discord\standingsNav.js
+- C:\Users\stner\Desktop\Golazo\src\league\discord\standingsNav.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\league\discord\standingsNav.js:5:5)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\standingsNav.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\standingsNav.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\league\discord\standingsNav.test.js (204.6141ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'discord.js'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\league\discord\teamListNav.js
+- C:\Users\stner\Desktop\Golazo\src\league\discord\teamListNav.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\league\discord\teamListNav.js:5:5)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\teamListNav.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\discord\\teamListNav.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\league\discord\teamListNav.test.js (240.7022ms)
+▶ fixtureEngine
+  ✔ produces deterministic output for the same input (42.2909ms)
+  ✔ sorts team order internally so input permutation is identical (1.1783ms)
+  ✔ generates correct match counts for single and double round robin (3.8414ms)
+  ✔ has no duplicate pairings per leg (9.3561ms)
+  ✔ keeps home/away balance within one per leg (30.7314ms)
+  ✔ limits consecutive home or away streaks in leg 1 (bye breaks streak) (11.3516ms)
+  ✔ assigns exactly one bye per round for odd team counts (7.5894ms)
+  ✔ leg 2 reverses home and away from leg 1 (1.6527ms)
+  ✔ passes scheduleValidator for all standard sizes (8.2355ms)
+  ✔ passes scheduleValidator for all team counts up to league max (36492.2881ms)
+  ✔ uses stable pairing keys (0.2585ms)
+✔ fixtureEngine (36613.8239ms)
+▶ matchResult
+  ✔ dedupeMatches drops duplicate fixture slots (6.8677ms)
+  ✔ dedupeMatches keeps first occurrence by _id (0.7603ms)
+  ✔ sortMatchesForProcessing orders by round, leg, then _id (28.6232ms)
+  ✔ isStandingsEligible excludes postponed and cancelled (1.2403ms)
+  ✔ resolveMatchGoals returns null for ineligible statuses (1.5141ms)
+  ✔ resolveMatchGoals handles walkover with configured forfeit score (2.8273ms)
+  ✔ resolveMatchGoals rejects invalid completed scores (0.7081ms)
+  ✔ deriveOutcome applies custom points rules (0.6844ms)
+✔ matchResult (48.3056ms)
+▶ matchLookup
+  ✔ pickUniqueMatch returns the only candidate (17.801ms)
+  ✔ pickUniqueMatch filters by round when provided (2.4627ms)
+  ✔ pickUniqueMatch throws when multiple matches and no round (3.4625ms)
+✔ matchLookup (25.4276ms)
+▶ cacheConfig
+  ✖ reads defaults from config.js (8.4762ms)
+  ✖ allows env overrides (7.8903ms)
+✖ cacheConfig (18.8368ms)
+▶ computeCanvasHeight
+  ✔ fits max rows per page including gaps and footer (20.0814ms)
+✔ computeCanvasHeight (23.4854ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'dotenv'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\config.js
+- C:\Users\stner\Desktop\Golazo\src\i18n\index.js
+- C:\Users\stner\Desktop\Golazo\src\league\render\data\standingsView.js
+- C:\Users\stner\Desktop\Golazo\src\league\render\render.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\config.js:1:1)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\config.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\i18n\\index.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\render\\data\\standingsView.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\render\\render.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\league\render\render.test.js (322.5486ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'mongoose'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\league\repositories\LeagueRepository.js
+- C:\Users\stner\Desktop\Golazo\src\league\services\AdminService.js
+- C:\Users\stner\Desktop\Golazo\src\league\services\adminService.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\league\repositories\LeagueRepository.js:1:18)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\repositories\\LeagueRepository.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\services\\AdminService.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\services\\adminService.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\league\services\adminService.test.js (335.9306ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'dotenv'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\config.js
+- C:\Users\stner\Desktop\Golazo\src\i18n\index.js
+- C:\Users\stner\Desktop\Golazo\src\league\utils\formatAudit.js
+- C:\Users\stner\Desktop\Golazo\src\league\utils\formatAudit.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\config.js:1:1)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\config.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\i18n\\index.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\utils\\formatAudit.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\utils\\formatAudit.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\league\utils\formatAudit.test.js (235.4867ms)
+▶ resolveTeamLogoUrl
+  ✔ prefers custom logoUrl over captain avatar (9.8735ms)
+  ✔ falls back to captain avatar when logoUrl is missing (0.5645ms)
+  ✔ returns null when captain fetch fails (0.5634ms)
+  ✔ reuses cached captain avatar URLs without refetching (0.8665ms)
+  ✔ enriches teams with resolved logo URLs (1.6525ms)
+✔ resolveTeamLogoUrl (22.273ms)
+▶ validateLogoUrl
+  ✔ accepts public https urls (5.3076ms)
+  ✔ rejects non-https urls (1.4591ms)
+  ✔ rejects private hosts (1.2731ms)
+  ✔ returns null for empty input (2.5527ms)
+  ✔ rejects redirect targets that resolve to private hosts (6.0933ms)
+  ✔ exports manual redirect fetch helper (2.2302ms)
+✔ validateLogoUrl (26.4983ms)
+▶ metrics registry
+  ✔ renders counters and gauges in Prometheus text format (2.8329ms)
+✔ metrics registry (5.1953ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'mongoose'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\services\guildLifecycle.js
+- C:\Users\stner\Desktop\Golazo\src\services\guildLifecycle.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\services\guildLifecycle.js:1:18)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\services\\guildLifecycle.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\services\\guildLifecycle.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\services\guildLifecycle.test.js (169.6891ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'discord.js'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\ui\componentsV2.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\ui\componentsV2.test.js:3:41)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\ui\\componentsV2.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\ui\componentsV2.test.js (169.0174ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'discord.js'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\ui\ui.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\ui\ui.test.js:3:41)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ 'C:\\Users\\stner\\Desktop\\Golazo\\src\\ui\\ui.test.js' ]
+}
+
+Node.js v25.9.0
+✖ src\ui\ui.test.js (188.7173ms)
+▶ devCommands
+  ✔ disables dev commands by default (2.7749ms)
+  ✔ enables dev commands when GOLAZO_ENABLE_DEV_COMMANDS=true (1.1969ms)
+  ✔ identifies developer command names (3.2445ms)
+✔ devCommands (9.7158ms)
+node:internal/modules/cjs/loader:1478
+  throw err;
+  ^
+
+Error: Cannot find module 'dotenv'
+Require stack:
+- C:\Users\stner\Desktop\Golazo\src\config.js
+- C:\Users\stner\Desktop\Golazo\src\i18n\index.js
+- C:\Users\stner\Desktop\Golazo\src\utils\interactionError.js
+- C:\Users\stner\Desktop\Golazo\src\utils\interactionError.test.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\config.js:1:1)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\config.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\i18n\\index.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\utils\\interactionError.js',
+    'C:\\Users\\stner\\Desktop\\Golazo\\src\\utils\\interactionError.test.js'
+  ]
+}
+
+Node.js v25.9.0
+✖ src\utils\interactionError.test.js (139.3615ms)
+▶ InteractionRateLimiter
+  ✔ allows requests within the window (2.2326ms)
+  ✔ isolates namespaces per user (0.5367ms)
+  ✔ handles 50 concurrent checks on one namespace (3.4953ms)
+✔ InteractionRateLimiter (9.0767ms)
+▶ LruMap
+  ✔ evicts oldest entry when maxSize exceeded (2.9907ms)
+  ✔ refreshes LRU position on get (0.5436ms)
+  ✔ sweepExpired removes stale entries (16.1471ms)
+✔ LruMap (23.6577ms)
+▶ redactSecrets
+  ✔ redacts configured env secrets (3.4978ms)
+  ✔ redacts mongodb URIs (0.7221ms)
+✔ redactSecrets (7.6383ms)
+ℹ tests 87
+ℹ suites 17
+ℹ pass 62
+ℹ fail 25
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 37550.3136
+
+✖ failing tests:
+
+test at src\canvas\canvas.test.js:1:1
+✖ src\canvas\canvas.test.js (178.7851ms)
+  'test failed'
+
+test at src\canvas\render.smoke.test.js:1:1
+✖ src\canvas\render.smoke.test.js (148.2717ms)
+  'test failed'
+
+test at src\dashboard\dashboard.test.js:1:1
+✖ src\dashboard\dashboard.test.js (166.8595ms)
+  'test failed'
+
+test at src\dashboard\design\design.test.js:1:1
+✖ src\dashboard\design\design.test.js (172.0172ms)
+  'test failed'
+
+test at src\database\transactions.test.js:1:1
+✖ src\database\transactions.test.js (173.6313ms)
+  'test failed'
+
+test at src\graphics\graphics.smoke.test.js:1:1
+✖ src\graphics\graphics.smoke.test.js (213.1446ms)
+  'test failed'
+
+test at src\health\server.test.js:1:1
+✖ src\health\server.test.js (168.941ms)
+  'test failed'
+
+test at src\help\help.test.js:1:1
+✖ src\help\help.test.js (140.4924ms)
+  'test failed'
+
+test at src\i18n\i18n.test.js:1:1
+✖ src\i18n\i18n.test.js (172.6386ms)
+  'test failed'
+
+test at src\league\discord\distributedLock.test.js:1:1
+✖ src\league\discord\distributedLock.test.js (261.2082ms)
+  'test failed'
+
+test at src\league\discord\fixtureNav.test.js:1:1
+✖ src\league\discord\fixtureNav.test.js (195.3477ms)
+  'test failed'
+
+test at src\league\discord\interactionGuard.test.js:1:1
+✖ src\league\discord\interactionGuard.test.js (277.0455ms)
+  'test failed'
+
+test at src\league\discord\operationLock.test.js:1:1
+✖ src\league\discord\operationLock.test.js (238.8323ms)
+  'test failed'
+
+test at src\league\discord\scoreNav.test.js:1:1
+✖ src\league\discord\scoreNav.test.js (218.5224ms)
+  'test failed'
+
+test at src\league\discord\standingsNav.test.js:1:1
+✖ src\league\discord\standingsNav.test.js (204.6141ms)
+  'test failed'
+
+test at src\league\discord\teamListNav.test.js:1:1
+✖ src\league\discord\teamListNav.test.js (240.7022ms)
+  'test failed'
+
+test at src\league\render\constants\cacheConfig.test.js:18:5
+✖ reads defaults from config.js (8.4762ms)
+  Error: Cannot find module 'dotenv'
+  Require stack:
+  - C:\Users\stner\Desktop\Golazo\src\config.js
+  - C:\Users\stner\Desktop\Golazo\src\league\render\constants\cacheConfig.js
+  - C:\Users\stner\Desktop\Golazo\src\league\render\constants\cacheConfig.test.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+      at Module._load (node:internal/modules/cjs/loader:1261:25)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+      at Module.require (node:internal/modules/cjs/loader:1575:12)
+      at require (node:internal/modules/helpers:191:16)
+      at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\config.js:1:1)
+      at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'C:\\Users\\stner\\Desktop\\Golazo\\src\\config.js', 'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\render\\constants\\cacheConfig.js', 'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\render\\constants\\cacheConfig.test.js' ]
+  }
+
+test at src\league\render\constants\cacheConfig.test.js:27:5
+✖ allows env overrides (7.8903ms)
+  Error: Cannot find module 'dotenv'
+  Require stack:
+  - C:\Users\stner\Desktop\Golazo\src\config.js
+  - C:\Users\stner\Desktop\Golazo\src\league\render\constants\cacheConfig.js
+  - C:\Users\stner\Desktop\Golazo\src\league\render\constants\cacheConfig.test.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+      at Module._load (node:internal/modules/cjs/loader:1261:25)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+      at Module.require (node:internal/modules/cjs/loader:1575:12)
+      at require (node:internal/modules/helpers:191:16)
+      at Object.<anonymous> (C:\Users\stner\Desktop\Golazo\src\config.js:1:1)
+      at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'C:\\Users\\stner\\Desktop\\Golazo\\src\\config.js', 'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\render\\constants\\cacheConfig.js', 'C:\\Users\\stner\\Desktop\\Golazo\\src\\league\\render\\constants\\cacheConfig.test.js' ]
+  }
+
+test at src\league\render\render.test.js:1:1
+✖ src\league\render\render.test.js (322.5486ms)
+  'test failed'
+
+test at src\league\services\adminService.test.js:1:1
+✖ src\league\services\adminService.test.js (335.9306ms)
+  'test failed'
+
+test at src\league\utils\formatAudit.test.js:1:1
+✖ src\league\utils\formatAudit.test.js (235.4867ms)
+  'test failed'
+
+test at src\services\guildLifecycle.test.js:1:1
+✖ src\services\guildLifecycle.test.js (169.6891ms)
+  'test failed'
+
+test at src\ui\componentsV2.test.js:1:1
+✖ src\ui\componentsV2.test.js (169.0174ms)
+  'test failed'
+
+test at src\ui\ui.test.js:1:1
+✖ src\ui\ui.test.js (188.7173ms)
+  'test failed'
+
+test at src\utils\interactionError.test.js:1:1
+✖ src\utils\interactionError.test.js (139.3615ms)
+  'test failed'

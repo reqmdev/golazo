@@ -27,6 +27,8 @@ const TEAM_ACTIONS = {
     ADD: 'add',
     REMOVE: 'rm',
     GENERATE: 'gen',
+    BULK_ADD: 'bulk',
+    EDIT: 'edit',
 };
 
 const SETTINGS_ACTIONS = {
@@ -63,6 +65,9 @@ const CHAMPIONS_ACTIONS = {
     STATUS: 'st',
     GROUPS: 'gs',
     BRACKET: 'br',
+    FIXTURE: 'fx',
+    SCORE: 'sc',
+    CANCEL: 'can',
     ENABLE: 'en',
     DISABLE: 'dis',
 };
@@ -88,6 +93,8 @@ const MODAL_IDS = {
     CREATE_LEAGUE: `${DASHBOARD_PREFIX}modal:create`,
     ADD_TEAM: `${DASHBOARD_PREFIX}modal:team:add`,
     REMOVE_TEAM: `${DASHBOARD_PREFIX}modal:team:rm`,
+    BULK_ADD_TEAM: `${DASHBOARD_PREFIX}modal:team:bulk`,
+    EDIT_TEAM: `${DASHBOARD_PREFIX}modal:team:edit`,
     EDIT_POINTS: `${DASHBOARD_PREFIX}modal:set:pts`,
     FORFEIT: `${DASHBOARD_PREFIX}modal:mt:ff`,
 };

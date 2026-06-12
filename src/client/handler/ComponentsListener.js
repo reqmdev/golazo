@@ -13,6 +13,7 @@ const RENDER_PREFIX_NAMESPACES = {
     'lst:': 'standings',
     'ltm:': 'team_list',
     'lcl:': 'champions',
+    'lcs:': 'champions_score',
 };
 
 /**
@@ -80,7 +81,8 @@ class ComponentsListener {
                         || interaction.customId.startsWith('lsc:')
                         || interaction.customId.startsWith('lst:')
                         || interaction.customId.startsWith('ltm:')
-                        || interaction.customId.startsWith('lcl:')) {
+                        || interaction.customId.startsWith('lcl:')
+                        || interaction.customId.startsWith('lcs:')) {
                         if (!(await enforceRenderRateLimit(interaction, client, interaction.customId))) {
                             return;
                         }
@@ -122,6 +124,12 @@ class ComponentsListener {
                         return;
                     }
 
+                    if (interaction.customId.startsWith('lcs:')) {
+                        const { handleChampionsScoreNavButton } = require('../../league/discord/championsScoreNav');
+                        await handleChampionsScoreNavButton(client, interaction);
+                        return;
+                    }
+
                     const component = client.collection.components.buttons.get(interaction.customId);
 
                     if (!component) return;
@@ -139,7 +147,7 @@ class ComponentsListener {
                 }
 
                 if (interaction.isAnySelectMenu()) {
-                    if (interaction.customId.startsWith('ldb:') || interaction.customId.startsWith('lsc:')) {
+                    if (interaction.customId.startsWith('ldb:') || interaction.customId.startsWith('lsc:') || interaction.customId.startsWith('lcs:')) {
                         if (!(await enforceRenderRateLimit(interaction, client, interaction.customId))) {
                             return;
                         }
@@ -148,6 +156,18 @@ class ComponentsListener {
                     if (interaction.customId.startsWith('ldb:')) {
                         const { handleDashboardInteraction } = require('../../dashboard/handlers/router');
                         await handleDashboardInteraction(interaction, client);
+                        return;
+                    }
+
+                    if (interaction.customId.startsWith('lcs:ops:')) {
+                        const { handleChampionsOpsMatchSelect } = require('../../league/discord/championsScoreNav');
+                        await handleChampionsOpsMatchSelect(client, interaction);
+                        return;
+                    }
+
+                    if (interaction.customId.startsWith('lcs:sel:')) {
+                        const { handleChampionsScoreMatchSelect } = require('../../league/discord/championsScoreNav');
+                        await handleChampionsScoreMatchSelect(client, interaction);
                         return;
                     }
 
@@ -174,7 +194,7 @@ class ComponentsListener {
                 }
 
                 if (interaction.isModalSubmit()) {
-                    if (interaction.customId.startsWith('ldb:') || interaction.customId.startsWith('lsc:')) {
+                    if (interaction.customId.startsWith('ldb:') || interaction.customId.startsWith('lsc:') || interaction.customId.startsWith('lcs:') || interaction.customId.startsWith('lfx:')) {
                         if (!(await enforceRenderRateLimit(interaction, client, interaction.customId))) {
                             return;
                         }
@@ -186,9 +206,27 @@ class ComponentsListener {
                         return;
                     }
 
+                    if (interaction.customId.startsWith('lfx:')) {
+                        const { handleFixtureNavModalSubmit } = require('../../league/discord/fixtureNav');
+                        await handleFixtureNavModalSubmit(client, interaction);
+                        return;
+                    }
+
                     if (interaction.customId.startsWith('lsc:')) {
                         const { handleScoreModalSubmit } = require('../../league/discord/scoreNav');
                         await handleScoreModalSubmit(client, interaction);
+                        return;
+                    }
+
+                    if (interaction.customId.startsWith('lcs:mdl:')) {
+                        const { handleChampionsScoreModalSubmit } = require('../../league/discord/championsScoreNav');
+                        await handleChampionsScoreModalSubmit(client, interaction);
+                        return;
+                    }
+
+                    if (interaction.customId.startsWith('lcs:pen:')) {
+                        const { handleChampionsPenModalSubmit } = require('../../league/discord/championsScoreNav');
+                        await handleChampionsPenModalSubmit(client, interaction);
                         return;
                     }
 

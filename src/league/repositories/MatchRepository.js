@@ -160,6 +160,23 @@ const MatchRepository = {
     findByIdInTournament: (matchId, tournamentId) =>
         getModel().findOne({ _id: matchId, tournamentId }).lean().exec(),
 
+    findBetweenTeamsInTournament: (tournamentId, homeTeamId, awayTeamId, statuses, round = null) => {
+        const filter = {
+            tournamentId,
+            $or: [
+                { homeTeamId, awayTeamId },
+                { homeTeamId: awayTeamId, awayTeamId: homeTeamId },
+            ],
+            status: { $in: statuses },
+        };
+
+        if (round !== null) {
+            filter.round = round;
+        }
+
+        return getModel().find(filter).sort({ round: 1, leg: 1 }).lean().exec();
+    },
+
     countUnresolvedInTournamentGroupRound: (tournamentId, groupId, round) =>
         getModel().countDocuments({
             tournamentId,

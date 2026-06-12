@@ -39,6 +39,16 @@ const TournamentRepository = {
             { new: true, ...sessionOptions(session) },
         ).lean().exec(),
 
+    updateByIdIf: (tournamentId, conditions, update, session = null) =>
+        getModel().findOneAndUpdate(
+            { _id: tournamentId, ...conditions },
+            { $set: update },
+            { new: true, ...sessionOptions(session) },
+        ).lean().exec(),
+
+    deleteById: (tournamentId, session = null) =>
+        getModel().findByIdAndDelete(tournamentId, sessionOptions(session)).lean().exec(),
+
     deleteByLeague: (leagueId, session = null) =>
         getModel().deleteMany({ leagueId }, sessionOptions(session)).exec(),
 

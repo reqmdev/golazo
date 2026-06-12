@@ -39,6 +39,8 @@ const {
     buildCreateLeagueModal,
     buildAddTeamModal,
     buildRemoveTeamModal,
+    buildBulkAddTeamModal,
+    buildEditTeamModal,
     buildEditPointsModal,
     buildForfeitModal,
     parseModalSlug,
@@ -275,6 +277,18 @@ async function handleDashboardModal(interaction, ctx) {
         return;
     }
 
+    const bulkAddSlug = parseModalSlug(customId, MODAL_IDS.BULK_ADD_TEAM);
+    if (bulkAddSlug) {
+        await handleBulkAddTeamModal(interaction, ctx, bulkAddSlug);
+        return;
+    }
+
+    const editSlug = parseModalSlug(customId, MODAL_IDS.EDIT_TEAM);
+    if (editSlug) {
+        await handleEditTeamModal(interaction, ctx, editSlug);
+        return;
+    }
+
     const pointsSlug = parseModalSlug(customId, MODAL_IDS.EDIT_POINTS);
     if (pointsSlug) {
         await handleEditPointsModal(interaction, ctx, pointsSlug);
@@ -412,6 +426,19 @@ async function handleChampionsButton(interaction, ctx, parsed) {
         subView = CHAMPIONS_ACTIONS.GROUPS;
     } else if (parsed.action === CHAMPIONS_ACTIONS.BRACKET) {
         subView = CHAMPIONS_ACTIONS.BRACKET;
+    } else if (parsed.action === CHAMPIONS_ACTIONS.FIXTURE) {
+        subView = CHAMPIONS_ACTIONS.FIXTURE;
+    } else if (parsed.action === CHAMPIONS_ACTIONS.SCORE) {
+        subView = CHAMPIONS_ACTIONS.SCORE;
+    }
+
+    if (parsed.action === CHAMPIONS_ACTIONS.CANCEL) {
+        await withDashboardWriteLock(ctx.guild.id, slug, () =>
+            TournamentService.cancelTournament(ctx.guild.id, ctx.userId, slug));
+        await interaction.followUp({
+            content: ctx.tr('handlers.champions.cancel.success'),
+            ephemeral: true,
+        });
     }
 
     const payload = await renderPanel(interaction, ctx, slug, DASHBOARD_VIEWS.CHAMPIONS, {
@@ -437,6 +464,16 @@ async function handleTeamsButton(interaction, ctx, parsed) {
 
     if (parsed.action === TEAM_ACTIONS.REMOVE) {
         await interaction.showModal(buildRemoveTeamModal(ctx.tr, slug));
+        return;
+    }
+
+    if (parsed.action === TEAM_ACTIONS.BULK_ADD) {
+        await interaction.showModal(buildBulkAddTeamModal(ctx.tr, slug));
+        return;
+    }
+
+    if (parsed.action === TEAM_ACTIONS.EDIT) {
+        await interaction.showModal(buildEditTeamModal(ctx.tr, slug));
         return;
     }
 
@@ -688,6 +725,26 @@ async function handleDashboardSelect(interaction, ctx, parsed) {
             selectedMatchId: value,
         });
         await interaction.editReply(payload);
+        return;
+    }
+
+    if (parsed.view === DASHBOARD_VIEWS.SETTINGS && parsed.action === CL_SETTINGS_ACTIONS.SPOTS && parsed.slug) {
+        const spots = Number.parseInt(value, 10);
+
+        await withDashboardWriteLock(ctx.guild.id, parsed.slug, () =>
+            TournamentService.updateChampionsLeagueSettings(
+                ctx.guild.id,
+                ctx.userId,
+                parsed.slug,
+                { qualifyingSpots: spots },
+            ));
+
+        const payload = await renderPanel(interaction, ctx, parsed.slug, DASHBOARD_VIEWS.SETTINGS);
+        await interaction.editReply(payload);
+        await interaction.followUp({
+            content: ctx.tr('handlers.champions.settings.spotsUpdated', { spots }),
+            ephemeral: true,
+        });
     }
 }
 
@@ -803,10 +860,41 @@ async function handleCreateLeagueModal(interaction, ctx) {
 async function handleAddTeamModal(interaction, ctx, slug) {
     await interaction.deferUpdate();
 
+    let name = interaction.fields.getTextInputValue('name')?.trim() || '';
+    const captainId = interaction.fields.getTextInputValue('captain')?.trim() || '';
+    const shortName = interaction.fields.getTextInputValue('short_name')?.trim() || undefined;
+
+    let captainUser = null;
+    let captainMember = null;
+    if (captainId) {
+        try {
+            captainUser = await interaction.client.users.fetch(captainId);
+            if (interaction.guild) {
+                captainMember = await interaction.guild.members.fetch(captainId).catch(() => null);
+            }
+        } catch {
+            throw new LeagueError('INVALID_CAPTAIN_ID');
+        }
+    }
+
+    if (!name) {
+        if (!captainUser) {
+            throw new LeagueError('TEAM_NAME_OR_CAPTAIN_REQUIRED');
+        }
+        name = captainMember?.displayName || captainUser.displayName || captainUser.username;
+    }
+
+    let logoUrl = undefined;
+    if (captainUser) {
+        logoUrl = captainUser.displayAvatarURL({ extension: 'png', size: 1024 });
+    }
+
     const team = await withDashboardWriteLock(ctx.guild.id, slug, () =>
         TeamService.addTeam(ctx.guild.id, ctx.userId, slug, {
-            name: interaction.fields.getTextInputValue('name'),
-            shortName: interaction.fields.getTextInputValue('short_name') || undefined,
+            name,
+            shortName,
+            captainId: captainUser?.id || undefined,
+            logoUrl
         }));
 
     const payload = await renderPanel(interaction, ctx, slug, DASHBOARD_VIEWS.TEAMS);
@@ -814,6 +902,82 @@ async function handleAddTeamModal(interaction, ctx, slug) {
 
     await interaction.followUp({
         content: ctx.tr('handlers.team.add.success', { name: team.name, shortName: team.shortName, slug }),
+        ephemeral: true,
+    });
+}
+
+/**
+ * @param {import('discord.js').ModalSubmitInteraction} interaction
+ * @param {Awaited<ReturnType<typeof interactionContext>>} ctx
+ * @param {string} slug
+ */
+async function handleBulkAddTeamModal(interaction, ctx, slug) {
+    await interaction.deferUpdate();
+
+    const rawIds = interaction.fields.getTextInputValue('ids')?.trim() || '';
+    const parsedIds = Array.from(rawIds.matchAll(/\d{17,20}/g), m => m[0]);
+    const uniqueIds = [...new Set(parsedIds)];
+
+    if (uniqueIds.length === 0) {
+        await interaction.followUp({
+            content: ctx.tr('handlers.team.bulkAdd.noIds'),
+            ephemeral: true,
+        });
+        return;
+    }
+
+    const successList = [];
+    const failList = [];
+
+    await withDashboardWriteLock(ctx.guild.id, slug, async () => {
+        for (const id of uniqueIds) {
+            try {
+                let user = ctx.client.users.cache.get(id);
+                if (!user) {
+                    user = await ctx.client.users.fetch(id).catch(() => null);
+                }
+
+                if (!user) {
+                    failList.push(`<@${id}>: User not found`);
+                    continue;
+                }
+
+                let member = ctx.guild?.members.cache.get(id);
+                if (!member) {
+                    member = await ctx.guild?.members.fetch(id).catch(() => null);
+                }
+
+                const name = member?.displayName || user.displayName || user.username;
+                const logoUrl = user.displayAvatarURL({ extension: 'png', size: 1024 }) || undefined;
+
+                const team = await TeamService.addTeam(ctx.guild.id, ctx.userId, slug, {
+                    name,
+                    captainId: id,
+                    logoUrl
+                });
+
+                successList.push(`• **${team.name}** (<@${id}>)`);
+            } catch (err) {
+                let errorMsg = err.message || 'Unknown error';
+                if (err.code) {
+                    errorMsg = ctx.tr(`errors.${err.code}`, err.params || {}) || err.code;
+                }
+                failList.push(`• <@${id}>: ${errorMsg}`);
+            }
+        }
+    });
+
+    const payload = await renderPanel(interaction, ctx, slug, DASHBOARD_VIEWS.TEAMS);
+    await interaction.editReply(payload);
+
+    await interaction.followUp({
+        content: ctx.tr('handlers.team.bulkAdd.summary', {
+            successCount: successList.length,
+            failCount: failList.length,
+            slug
+        }) + '\n\n' +
+        (successList.length > 0 ? `**Success:**\n${successList.slice(0, 15).join('\n')}${successList.length > 15 ? `\n...and ${successList.length - 15} more` : ''}` : '') + '\n\n' +
+        (failList.length > 0 ? `**Failed/Skipped:**\n${failList.slice(0, 15).join('\n')}${failList.length > 15 ? `\n...and ${failList.length - 15} more` : ''}` : ''),
         ephemeral: true,
     });
 }

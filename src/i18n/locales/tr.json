@@ -18,6 +18,8 @@
     "TEAM_EXISTS_NAMED": "Bu ligde **{name}** adında bir takım zaten var.",
     "TEAM_EXISTS_OTHER": "Bu isimde başka bir takım zaten mevcut.",
     "TEAM_NOT_FOUND_NAME": "Bu ligde **{name}** adında aktif bir takım bulunamadı.",
+    "TEAM_NAME_OR_CAPTAIN_REQUIRED": "Bir takım adı girmeli veya adı otomatik belirlemek için bir kaptan seçmelisiniz.",
+    "INVALID_CAPTAIN_ID": "Belirtilen kaptan Discord ID'si geçersiz veya kullanıcı bulunamadı.",
     "TEAM_NOT_FOUND_HOME": "Ev sahibi takım **{name}** bu ligde bulunamadı.",
     "TEAM_NOT_FOUND_AWAY": "Deplasman takımı **{name}** bu ligde bulunamadı.",
     "NO_CHANGES": "Takımı güncellemek için herhangi bir değişiklik belirtilmedi.",
@@ -80,6 +82,9 @@
     "CL_TIE_UNRESOLVED": "Bu eleme eşleşmesi henüz tamamlanmadı.",
     "CL_INVALID_SPOTS": "Kalifikasyon kontenjanı 2 ile 16 arasında olmalı.",
     "CL_NO_GROUP_STAGE": "Bu turnuvada grup aşaması yok.",
+    "CL_NO_TOURNAMENT": "Bu lig için henüz Şampiyonlar Ligi turnuvası yok.",
+    "CL_KNOCKOUT_LOCKED": "Eleme turu ilerledikten sonra bu maç düzeltilemez.",
+    "CL_PENALTIES_DRAW": "Penaltı atışları berabere bitemez — kazananı girin.",
     "GENERIC_LEAGUE_ERROR": "Bir hata oluştu. Tekrar dene."
   },
   "handlers": {
@@ -147,6 +152,12 @@
     "team": {
       "add": {
         "success": "**{name}** (`{shortName}`) takımı `{slug}` ligine eklendi."
+      },
+      "bulkAdd": {
+        "title": "Toplu Takım İçe Aktarma",
+        "summary": "`{slug}` ligi için toplu takım aktarımı tamamlandı:\n• Başarıyla eklenen: **{successCount}**\n• Başarısız/Atlanan: **{failCount}**",
+        "noIds": "Girdi içerisinde geçerli bir Discord Kullanıcı ID'si bulunamadı.",
+        "inputRequired": "Lütfen `ids` seçeneğine ID'leri yazın veya ID'leri içeren bir `file` (dosya) yükleyin."
       },
       "remove": {
         "success": "**{name}** takımı `{slug}` liginden çıkarıldı."
@@ -249,7 +260,8 @@
         "disable": "Şampiyonlar Ligi'ni devre dışı bırak",
         "enabledSuccess": "Şampiyonlar Ligi etkinleştirildi. Lig sezonu bitince otomatik başlayacak.",
         "disabledSuccess": "Şampiyonlar Ligi devre dışı bırakıldı.",
-        "spotsUpdated": "Kalifikasyon kontenjanı **{spots}** olarak ayarlandı."
+        "spotsUpdated": "Kalifikasyon kontenjanı **{spots}** olarak ayarlandı.",
+        "spotsSelect": "Kalifikasyon kontenjanı (2–16)"
       },
       "status": {
         "pending": "Kura bekleniyor",
@@ -271,7 +283,29 @@
       "nav": {
         "status": "Durum",
         "groups": "Gruplar",
-        "bracket": "Ağaç"
+        "bracket": "Ağaç",
+        "fixture": "Fikstür",
+        "score": "Skor"
+      },
+      "fixture": {
+        "title": "Şampiyonlar Ligi fikstürü",
+        "empty": "Gösterilecek fikstür yok.",
+        "groupLine": "Grup {group} · T{round} · {home} - {away} ({status})",
+        "knockoutLine": "{round} · Ayak {leg} · {home} - {away} ({status})"
+      },
+      "score": {
+        "title": "SL skor girişi (sayfa {page}/{totalPages})",
+        "empty": "Bekleyen Şampiyonlar Ligi maçı yok.",
+        "selectMatch": "Skor girmek için maç seçin",
+        "noMatches": "Girilebilir maç yok",
+        "enterPenalties": "Penaltı gir",
+        "penaltiesModalTitle": "Penaltı atışları",
+        "penaltiesSaved": "Penaltılar kaydedildi.",
+        "opsPrompt": "Maç işlemi seçin:"
+      },
+      "cancel": {
+        "success": "Şampiyonlar Ligi turnuvası iptal edildi.",
+        "button": "Turnuvayı iptal et"
       },
       "bracket": {
         "empty": "Henüz eleme ağacı yok."
@@ -510,6 +544,8 @@
     "leg": "devre {leg}",
     "legShort": "D{leg}",
     "bye": "Bay",
+    "prev": "Önceki",
+    "next": "Sonraki",
     "captain": "kaptan",
     "home": "Ev Sahibi",
     "away": "Deplasman",
@@ -936,6 +972,7 @@
     "teams": {
       "add": "Takım ekle",
       "remove": "Takım sil",
+      "bulkAdd": "Toplu ekle",
       "generate": "Fikstür oluştur",
       "generated": "**{name}** fikstürü hazır — **{matchCount}** maç, **{totalRounds}** hafta."
     },
@@ -979,8 +1016,11 @@
       "createFormat": "Format (opsiyonel)",
       "addTeamTitle": "Takım ekle",
       "removeTeamTitle": "Takım sil",
+      "bulkAddTeamTitle": "Toplu Takım Ekle",
       "teamName": "Takım adı",
       "teamShort": "Kısa ad (opsiyonel)",
+      "teamCaptain": "Kaptan (Discord ID)",
+      "teamIds": "Kaptan ID'leri (boşluk/yeni satır ile)",
       "pointsTitle": "Puanları düzenle",
       "pointsWin": "Galibiyet puanı",
       "pointsDraw": "Beraberlik puanı",

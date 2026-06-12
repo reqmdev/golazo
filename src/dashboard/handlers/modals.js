@@ -79,7 +79,7 @@ function buildAddTeamModal(tr, slug) {
                     .setStyle(TextInputStyle.Short)
                     .setMinLength(2)
                     .setMaxLength(64)
-                    .setRequired(true),
+                    .setRequired(false),
             ),
             new ActionRowBuilder().addComponents(
                 new TextInputBuilder()
@@ -87,6 +87,14 @@ function buildAddTeamModal(tr, slug) {
                     .setLabel(tr('dashboard.modal.teamShort'))
                     .setStyle(TextInputStyle.Short)
                     .setMaxLength(8)
+                    .setRequired(false),
+            ),
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId('captain')
+                    .setLabel(tr('dashboard.modal.teamCaptain'))
+                    .setStyle(TextInputStyle.Short)
+                    .setMaxLength(32)
                     .setRequired(false),
             ),
         );
@@ -171,12 +179,80 @@ function buildForfeitModal(tr, matchId, homeName, awayName) {
         );
 }
 
+/**
+ * @param {(key: string) => string} tr
+ * @param {string} slug
+ */
+function buildBulkAddTeamModal(tr, slug) {
+    return new ModalBuilder()
+        .setCustomId(modalIdWithSlug(MODAL_IDS.BULK_ADD_TEAM, slug))
+        .setTitle(tr('dashboard.modal.bulkAddTeamTitle').slice(0, 45))
+        .addComponents(
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId('ids')
+                    .setLabel(tr('dashboard.modal.teamIds').slice(0, 45))
+                    .setStyle(TextInputStyle.Paragraph)
+                    .setPlaceholder('1489973930910289951\n1513653906339795056')
+                    .setMaxLength(4000)
+                    .setRequired(true),
+            ),
+        );
+}
+
+/**
+ * @param {(key: string) => string} tr
+ * @param {string} slug
+ */
+function buildEditTeamModal(tr, slug) {
+    return new ModalBuilder()
+        .setCustomId(modalIdWithSlug(MODAL_IDS.EDIT_TEAM, slug))
+        .setTitle(tr('dashboard.modal.editTeamTitle').slice(0, 45))
+        .addComponents(
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId('name')
+                    .setLabel(tr('dashboard.modal.teamCurrentName').slice(0, 45))
+                    .setStyle(TextInputStyle.Short)
+                    .setMinLength(2)
+                    .setMaxLength(64)
+                    .setRequired(true),
+            ),
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId('new_name')
+                    .setLabel(tr('dashboard.modal.teamNewName').slice(0, 45))
+                    .setStyle(TextInputStyle.Short)
+                    .setMaxLength(64)
+                    .setRequired(false),
+            ),
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId('short_name')
+                    .setLabel(tr('dashboard.modal.teamShort').slice(0, 45))
+                    .setStyle(TextInputStyle.Short)
+                    .setMaxLength(8)
+                    .setRequired(false),
+            ),
+            new ActionRowBuilder().addComponents(
+                new TextInputBuilder()
+                    .setCustomId('captain')
+                    .setLabel(tr('dashboard.modal.teamCaptain').slice(0, 45))
+                    .setStyle(TextInputStyle.Short)
+                    .setMaxLength(32)
+                    .setRequired(false),
+            ),
+        );
+}
+
 module.exports = {
     modalIdWithSlug,
     parseModalSlug,
     buildCreateLeagueModal,
     buildAddTeamModal,
     buildRemoveTeamModal,
+    buildBulkAddTeamModal,
+    buildEditTeamModal,
     buildEditPointsModal,
     buildForfeitModal,
 };

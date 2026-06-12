@@ -4,6 +4,7 @@ const {
     ButtonStyle,
     UserSelectMenuBuilder,
     ChannelSelectMenuBuilder,
+    StringSelectMenuBuilder,
     ChannelType,
 } = require('discord.js');
 const LeagueSettingsService = require('../../league/services/LeagueSettingsService');
@@ -13,7 +14,7 @@ const { buildKeyValueTable } = require('../design/table');
 const { buildDashboardBackRow } = require('../panelBackNav');
 const { buildViewerContext } = require('../permissions');
 const { encodeDashboardId } = require('../ids');
-const { DASHBOARD_VIEWS, SETTINGS_ACTIONS } = require('../constants');
+const { DASHBOARD_VIEWS, SETTINGS_ACTIONS, CL_SETTINGS_ACTIONS } = require('../constants');
 
 /**
  * @param {object} input
@@ -46,6 +47,16 @@ async function buildSettingsPanelPayload(input) {
                     .setLabel(tr('handlers.champions.settings.disable'))
                     .setStyle(ButtonStyle.Danger)
                     .setDisabled(!league.championsLeague?.enabled),
+            ),
+            new ActionRowBuilder().addComponents(
+                new StringSelectMenuBuilder()
+                    .setCustomId(encodeDashboardId(DASHBOARD_VIEWS.SETTINGS, CL_SETTINGS_ACTIONS.SPOTS, slug))
+                    .setPlaceholder(tr('handlers.champions.settings.spotsSelect'))
+                    .addOptions([2, 4, 6, 8, 12, 16].map((spots) => ({
+                        label: String(spots),
+                        value: String(spots),
+                        default: (league.championsLeague?.qualifyingSpots || 4) === spots,
+                    }))),
             ),
             new ActionRowBuilder().addComponents(
                 new UserSelectMenuBuilder()

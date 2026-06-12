@@ -194,15 +194,30 @@ async function handleTeam(interaction, subcommand, ctx) {
     const slug = leagueSlug(interaction);
 
     if (subcommand === 'add') {
+        let name = interaction.options.getString('name');
         const captain = interaction.options.getUser('captain');
         const role = interaction.options.getRole('role');
+
+        if (!name) {
+            if (!captain) {
+                throw new LeagueError('TEAM_NAME_OR_CAPTAIN_REQUIRED');
+            }
+            const member = await interaction.guild?.members.fetch(captain.id).catch(() => null);
+            name = member?.displayName || captain.displayName || captain.username;
+        }
+
+        let logoUrl = interaction.options.getString('logo_url') || undefined;
+        if (!logoUrl && captain) {
+            logoUrl = captain.displayAvatarURL({ extension: 'png', size: 1024 });
+        }
+
         const team = await TeamService.addTeam(guildId, actorId, slug, {
-            name: interaction.options.getString('name', true),
+            name,
             shortName: interaction.options.getString('short_name') || undefined,
             captainId: captain?.id,
             roleId: role?.id,
             primaryColor: interaction.options.getString('primary_color') || undefined,
-            logoUrl: interaction.options.getString('logo_url') || undefined
+            logoUrl
         });
 
         await send(interaction, {
@@ -215,6 +230,104 @@ async function handleTeam(interaction, subcommand, ctx) {
                 slug
             },
 
+        });
+        return;
+    }
+
+    if (subcommand === 'bulk-add') {
+        const idsOption = interaction.options.getString('ids');
+        const fileOption = interaction.options.getAttachment('file');
+
+        if (!idsOption && !fileOption) {
+            await send(interaction, {
+                tr,
+                variant: 'league',
+                description: tr('team.bulkAdd.inputRequired'),
+                tone: 'warning'
+            });
+            return;
+        }
+
+        let rawContent = '';
+        if (idsOption) {
+            rawContent += idsOption + '\n';
+        }
+
+        const failList = [];
+        if (fileOption) {
+            try {
+                const response = await fetch(fileOption.url);
+                if (response.ok) {
+                    rawContent += (await response.text()) + '\n';
+                } else {
+                    failList.push(`File download failed (${response.statusText})`);
+                }
+            } catch (err) {
+                failList.push(`File download error (${err.message})`);
+            }
+        }
+
+        const parsedIds = Array.from(rawContent.matchAll(/\d{17,20}/g), m => m[0]);
+        const uniqueIds = [...new Set(parsedIds)];
+
+        if (uniqueIds.length === 0) {
+            await send(interaction, {
+                tr,
+                variant: 'league',
+                description: tr('team.bulkAdd.noIds'),
+                tone: 'warning'
+            });
+            return;
+        }
+
+        const successList = [];
+
+        for (const id of uniqueIds) {
+            try {
+                let user = client.users.cache.get(id);
+                if (!user) {
+                    user = await client.users.fetch(id).catch(() => null);
+                }
+                if (!user) {
+                    failList.push(`<@${id}>: User not found`);
+                    continue;
+                }
+
+                let member = interaction.guild?.members.cache.get(id);
+                if (!member) {
+                    member = await interaction.guild?.members.fetch(id).catch(() => null);
+                }
+
+                const name = member?.displayName || user.displayName || user.username;
+                const logoUrl = user.displayAvatarURL({ extension: 'png', size: 1024 }) || undefined;
+
+                const team = await TeamService.addTeam(guildId, actorId, slug, {
+                    name,
+                    captainId: id,
+                    logoUrl
+                });
+
+                successList.push(`• **${team.name}** (<@${id}>)`);
+            } catch (err) {
+                let errorMsg = err.message || 'Unknown error';
+                if (err.code) {
+                    errorMsg = tr(`errors.${err.code}`, err.params || {}) || err.code;
+                }
+                failList.push(`• <@${id}>: ${errorMsg}`);
+            }
+        }
+
+        await send(interaction, {
+            tr,
+            variant: 'league',
+            title: tr('team.bulkAdd.title'),
+            description: tr('team.bulkAdd.summary', {
+                successCount: successList.length,
+                failCount: failList.length,
+                slug
+            }) + '\n\n' +
+            (successList.length > 0 ? `**Success:**\n${successList.slice(0, 15).join('\n')}${successList.length > 15 ? `\n...and ${successList.length - 15} more` : ''}` : '') + '\n\n' +
+            (failList.length > 0 ? `**Failed/Skipped:**\n${failList.slice(0, 15).join('\n')}${failList.length > 15 ? `\n...and ${failList.length - 15} more` : ''}` : '')
         });
         return;
     }
@@ -709,7 +822,9 @@ async function handleChampions(interaction, subcommand, settingsGroup, ctx) {
         buildChampionsStatusPayload,
         buildChampionsGroupStandingsPayload,
         buildChampionsBracketPayload,
+        buildChampionsFixturePayload,
     } = require('./championsNav');
+    const { buildChampionsScorePayload } = require('./championsScoreNav');
 
     if (settingsGroup === 'settings') {
         if (subcommand === 'show') {
@@ -773,14 +888,53 @@ async function handleChampions(interaction, subcommand, settingsGroup, ctx) {
     }
 
     if (subcommand === 'standings') {
+        const groupOption = interaction.options.getInteger('group');
         const payload = await buildChampionsGroupStandingsPayload({
             guildId,
             slug,
             tr,
             client,
-            groupIndex: 0,
+            groupIndex: groupOption ? Math.max(0, groupOption - 1) : 0,
         });
         await sendLeagueReply(interaction, payload);
+        return;
+    }
+
+    if (subcommand === 'fixture') {
+        const phase = interaction.options.getString('phase');
+        const group = interaction.options.getString('group');
+        const round = interaction.options.getInteger('round');
+        const payload = await buildChampionsFixturePayload({
+            guildId,
+            slug,
+            tr,
+            phase,
+            groupId: group,
+            round,
+        });
+        await sendLeagueReply(interaction, payload);
+        return;
+    }
+
+    if (subcommand === 'score') {
+        const payload = await buildChampionsScorePayload({
+            guildId,
+            slug,
+            tr,
+            actorId,
+            page: 1,
+        });
+        await sendLeagueReply(interaction, payload);
+        return;
+    }
+
+    if (subcommand === 'cancel') {
+        await TournamentService.cancelTournament(guildId, actorId, slug);
+        await send(interaction, {
+            tr,
+            variant: 'league',
+            descriptionKey: 'handlers.champions.cancel.success',
+        });
         return;
     }
 
@@ -807,11 +961,8 @@ function lockKeyFor(interaction, subcommand, subcommandGroup) {
         || (subcommandGroup === 'rollback' && subcommand === 'standings')
         || subcommand === 'reset'
         || (subcommandGroup === 'settings' && ['points', 'permission', 'channel'].includes(subcommand))
-        || (
-            subcommandGroup === 'champions'
-            && interaction.options.getSubcommandGroup(true) === 'settings'
-            && ['enable', 'disable', 'spots'].includes(subcommand)
-        );
+        || (subcommandGroup === 'champions' && ['score', 'cancel'].includes(subcommand))
+        || (subcommandGroup === 'champions-settings' && ['enable', 'disable', 'spots'].includes(subcommand));
 
     if (needsWriteLock) {
         return leagueLockKey(guildId, slug, LEAGUE_WRITE_SCOPE);
@@ -830,20 +981,24 @@ function needsDefer(subcommand, subcommandGroup, interaction = null) {
         return true;
     }
 
-    if (subcommandGroup === 'team' && subcommand === 'list') return true;
+    if (subcommandGroup === 'team' && ['list', 'bulk-add'].includes(subcommand)) return true;
     if (subcommand === 'standings') return true;
     if (['score', 'score-correct', 'forfeit'].includes(subcommand)) return true;
     if (subcommandGroup === 'rollback') return true;
     if (subcommand === 'reset') return true;
 
     if (subcommandGroup === 'champions') {
-        if (['status', 'standings', 'bracket'].includes(subcommand)) {
+        if (['status', 'standings', 'bracket', 'fixture', 'score'].includes(subcommand)) {
             return true;
         }
 
-        if (interaction?.options.getSubcommandGroup(true) === 'settings') {
-            return ['show'].includes(subcommand);
+        if (subcommand === 'cancel') {
+            return true;
         }
+    }
+
+    if (subcommandGroup === 'champions-settings') {
+        return ['show'].includes(subcommand);
     }
 
     return false;

@@ -3,18 +3,21 @@ const { isStandingsEligible } = require('../match/matchResult');
 const { DEFAULT_FORFEIT_SCORE } = require('../constants/defaults');
 const TeamRepository = require('../repositories/TeamRepository');
 const MatchRepository = require('../repositories/MatchRepository');
+const TournamentRepository = require('../repositories/TournamentRepository');
 const TournamentStandingRepository = require('../repositories/TournamentStandingRepository');
 
 /**
  * @param {string} tournamentId
  * @param {string} groupId
  * @param {object[]} matches
+ * @param {string[]} [seedTeamIds]
  */
-async function resolveTeamsForGroup(tournamentId, groupId, matches) {
+async function resolveTeamsForGroup(tournamentId, groupId, matches, seedTeamIds = []) {
+    const teamIds = new Set(seedTeamIds.map((id) => id.toString()));
+
     const groupMatches = matches.filter(
         (m) => m.groupId === groupId && isStandingsEligible(m),
     );
-    const teamIds = new Set();
 
     for (const match of groupMatches) {
         teamIds.add(match.homeTeamId.toString());
@@ -36,8 +39,14 @@ const TournamentStandingService = {
      * @param {object} league
      */
     recalculateGroup: async (tournamentId, groupId, guildId, league, session = null) => {
-        const matches = await MatchRepository.listByTournament(tournamentId, { groupId });
-        const teams = await resolveTeamsForGroup(tournamentId, groupId, matches);
+        const [matches, tournament] = await Promise.all([
+            MatchRepository.listByTournament(tournamentId, { groupId }),
+            TournamentRepository.findById(tournamentId),
+        ]);
+
+        const group = tournament?.groups?.find((entry) => entry.id === groupId);
+        const seedTeamIds = group?.teamIds || [];
+        const teams = await resolveTeamsForGroup(tournamentId, groupId, matches, seedTeamIds);
 
         const entries = calculateGroupStandings(
             teams,

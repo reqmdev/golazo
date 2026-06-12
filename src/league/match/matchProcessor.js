@@ -126,6 +126,26 @@ function resolveFixtureGoals(match, homeTeam, awayTeam, homeGoals, awayGoals) {
 }
 
 /**
+ * @param {{ penaltiesHome: number, penaltiesAway: number }} input
+ */
+function buildPenaltiesUpdate(input) {
+    assertValidScore(input.penaltiesHome, 'Penalties home');
+    assertValidScore(input.penaltiesAway, 'Penalties away');
+
+    if (input.penaltiesHome === input.penaltiesAway) {
+        throw new LeagueError('CL_PENALTIES_DRAW');
+    }
+
+    return {
+        tieBreak: {
+            penaltiesHome: input.penaltiesHome,
+            penaltiesAway: input.penaltiesAway,
+            decidedBy: 'penalties',
+        },
+    };
+}
+
+/**
  * @param {{ match: object, actorId: string, winnerTeamId: string }} input
  */
 function buildForfeitUpdate(input) {
@@ -163,6 +183,7 @@ module.exports = {
     assertValidScore,
     buildSubmitUpdate,
     buildCorrectionUpdate,
+    buildPenaltiesUpdate,
     buildForfeitUpdate,
     resolveFixtureGoals
 };

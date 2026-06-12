@@ -56,8 +56,12 @@ async function routeLeagueCommand(client, interaction) {
         }
 
         if (subcommandGroup === 'champions') {
-            const innerGroup = ix.options.getSubcommandGroup(true);
-            await handleChampions(ix, subcommand, innerGroup, ctx);
+            await handleChampions(ix, subcommand, null, ctx);
+            return;
+        }
+
+        if (subcommandGroup === 'champions-settings') {
+            await handleChampions(ix, subcommand, 'settings', ctx);
             return;
         }
 

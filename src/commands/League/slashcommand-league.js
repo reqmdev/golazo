@@ -132,7 +132,7 @@ module.exports = new ApplicationCommand({
                         type: ApplicationCommandOptionType.Subcommand,
                         options: [
                             leagueSlugOption,
-                            teamNameOption,
+                            { ...teamNameOption, required: false },
                             {
                                 name: 'short_name',
                                 description: 'Short tag for standings (max 4 chars).',
@@ -236,6 +236,26 @@ module.exports = new ApplicationCommand({
                                 type: ApplicationCommandOptionType.Integer,
                                 required: false,
                                 min_value: 1
+                            }
+                        ]
+                    },
+                    {
+                        name: 'bulk-add',
+                        description: 'Add multiple teams in bulk using captain Discord IDs.',
+                        type: ApplicationCommandOptionType.Subcommand,
+                        options: [
+                            leagueSlugOption,
+                            {
+                                name: 'ids',
+                                description: 'Captain Discord IDs (separated by space, comma, or newline).',
+                                type: ApplicationCommandOptionType.String,
+                                required: false
+                            },
+                            {
+                                name: 'file',
+                                description: 'Text file (.txt) containing captain Discord IDs (one per line).',
+                                type: ApplicationCommandOptionType.Attachment,
+                                required: false
                             }
                         ]
                     }
@@ -532,6 +552,59 @@ module.exports = new ApplicationCommand({
                         name: 'standings',
                         description: 'View group stage standings.',
                         type: ApplicationCommandOptionType.Subcommand,
+                        options: [
+                            leagueSlugOption,
+                            {
+                                name: 'group',
+                                description: 'Group number (1-based).',
+                                type: ApplicationCommandOptionType.Integer,
+                                required: false,
+                                min_value: 1,
+                                max_value: 8,
+                            },
+                        ],
+                    },
+                    {
+                        name: 'fixture',
+                        description: 'View Champions League fixtures.',
+                        type: ApplicationCommandOptionType.Subcommand,
+                        options: [
+                            leagueSlugOption,
+                            {
+                                name: 'phase',
+                                description: 'Tournament phase filter.',
+                                type: ApplicationCommandOptionType.String,
+                                required: false,
+                                choices: [
+                                    { name: 'Group stage', value: 'group' },
+                                    { name: 'Knockout', value: 'knockout' },
+                                ],
+                            },
+                            {
+                                name: 'group',
+                                description: 'Group letter (A, B, …).',
+                                type: ApplicationCommandOptionType.String,
+                                required: false,
+                            },
+                            {
+                                name: 'round',
+                                description: 'Group round number.',
+                                type: ApplicationCommandOptionType.Integer,
+                                required: false,
+                                min_value: 1,
+                            },
+                        ],
+                    },
+                    {
+                        name: 'score',
+                        description: 'Enter Champions League match results.',
+                        type: ApplicationCommandOptionType.Subcommand,
+                        options: [leagueSlugOption],
+                    },
+                    {
+                        name: 'cancel',
+                        description: 'Cancel the active Champions League tournament.',
+                        type: ApplicationCommandOptionType.Subcommand,
                         options: [leagueSlugOption],
                     },
                     {
@@ -540,44 +613,44 @@ module.exports = new ApplicationCommand({
                         type: ApplicationCommandOptionType.Subcommand,
                         options: [leagueSlugOption],
                     },
+                ],
+            },
+            {
+                name: 'champions-settings',
+                description: 'Champions League settings.',
+                type: ApplicationCommandOptionType.SubcommandGroup,
+                options: [
                     {
-                        name: 'settings',
-                        description: 'Champions League settings.',
-                        type: ApplicationCommandOptionType.SubcommandGroup,
+                        name: 'show',
+                        description: 'Show Champions League settings.',
+                        type: ApplicationCommandOptionType.Subcommand,
+                        options: [leagueSlugOption],
+                    },
+                    {
+                        name: 'enable',
+                        description: 'Enable Champions League for this league.',
+                        type: ApplicationCommandOptionType.Subcommand,
+                        options: [leagueSlugOption],
+                    },
+                    {
+                        name: 'disable',
+                        description: 'Disable Champions League (only before tournament starts).',
+                        type: ApplicationCommandOptionType.Subcommand,
+                        options: [leagueSlugOption],
+                    },
+                    {
+                        name: 'spots',
+                        description: 'Set how many top teams qualify (2–16).',
+                        type: ApplicationCommandOptionType.Subcommand,
                         options: [
+                            leagueSlugOption,
                             {
-                                name: 'show',
-                                description: 'Show Champions League settings.',
-                                type: ApplicationCommandOptionType.Subcommand,
-                                options: [leagueSlugOption],
-                            },
-                            {
-                                name: 'enable',
-                                description: 'Enable Champions League for this league.',
-                                type: ApplicationCommandOptionType.Subcommand,
-                                options: [leagueSlugOption],
-                            },
-                            {
-                                name: 'disable',
-                                description: 'Disable Champions League (only before tournament starts).',
-                                type: ApplicationCommandOptionType.Subcommand,
-                                options: [leagueSlugOption],
-                            },
-                            {
-                                name: 'spots',
-                                description: 'Set how many top teams qualify (2–16).',
-                                type: ApplicationCommandOptionType.Subcommand,
-                                options: [
-                                    leagueSlugOption,
-                                    {
-                                        name: 'count',
-                                        description: 'Number of qualifying spots.',
-                                        type: ApplicationCommandOptionType.Integer,
-                                        required: true,
-                                        min_value: 2,
-                                        max_value: 16,
-                                    },
-                                ],
+                                name: 'count',
+                                description: 'Number of qualifying spots.',
+                                type: ApplicationCommandOptionType.Integer,
+                                required: true,
+                                min_value: 2,
+                                max_value: 16,
                             },
                         ],
                     },

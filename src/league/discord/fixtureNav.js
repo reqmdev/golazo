@@ -90,7 +90,7 @@ function buildFixtureNavRows(input) {
             .setCustomId(encodeFixtureNavId(slug, round, page, 'wk'))
             .setLabel(tr('handlers.fixture.nav.weekLabel', { round, total: totalRounds }))
             .setStyle(ButtonStyle.Secondary)
-            .setDisabled(true),
+            .setDisabled(false),
         new ButtonBuilder()
             .setCustomId(encodeFixtureNavId(slug, round, page, ACTIONS.NEXT_ROUND))
             .setEmoji('▶️')
@@ -283,19 +283,40 @@ async function handleFixtureNavButton(client, interaction) {
     }
 
     const parsed = parseFixtureNavId(interaction.customId);
-    if (!parsed || parsed.action === 'wk' || parsed.action === 'pg') {
+    if (!parsed || parsed.action === 'pg') {
         await acknowledgeFixtureNav(interaction).catch(() => {});
+        return;
+    }
+
+    const { createTranslator, resolveLocaleFromInteraction } = require('../../i18n');
+    const { locale } = await resolveLocaleFromInteraction(interaction, client);
+    const tr = createTranslator(locale);
+
+    if (parsed.action === 'wk') {
+        const { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } = require('discord.js');
+        const modal = new ModalBuilder()
+            .setCustomId(`lfx:jump:${parsed.slug}:${parsed.page}`)
+            .setTitle(tr('handlers.fixture.nav.jumpTitle').slice(0, 45))
+            .addComponents(
+                new ActionRowBuilder().addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('round')
+                        .setLabel(tr('handlers.fixture.nav.jumpLabel').slice(0, 45))
+                        .setStyle(TextInputStyle.Short)
+                        .setPlaceholder('1')
+                        .setMinLength(1)
+                        .setMaxLength(4)
+                        .setRequired(true)
+                )
+            );
+        await interaction.showModal(modal);
         return;
     }
 
     await acknowledgeFixtureNav(interaction);
     markInteractionHandled(interaction.id);
 
-    const { createTranslator, resolveLocaleFromInteraction } = require('../../i18n');
-    const { locale } = await resolveLocaleFromInteraction(interaction, client);
-    const tr = createTranslator(locale);
     const guildId = interaction.guild?.id;
-
     if (!guildId) {
         return;
     }
@@ -350,6 +371,69 @@ async function handleFixtureNavButton(client, interaction) {
     }
 }
 
+/**
+ * @param {import('../../client/DiscordBot')} client
+ * @param {import('discord.js').ModalSubmitInteraction} interaction
+ */
+async function handleFixtureNavModalSubmit(client, interaction) {
+    const customId = interaction.customId;
+    if (!customId.startsWith('lfx:jump:')) return;
+
+    const parts = customId.slice('lfx:jump:'.length).split(':');
+    const slug = parts[0];
+    const page = Number(parts[1] || 1);
+
+    const { createTranslator, resolveLocaleFromInteraction } = require('../../i18n');
+    const { locale } = await resolveLocaleFromInteraction(interaction, client);
+    const tr = createTranslator(locale);
+    const guildId = interaction.guild?.id;
+
+    if (!guildId) return;
+
+    const roundInput = interaction.fields.getTextInputValue('round')?.trim();
+    const roundNumber = Number(roundInput);
+
+    await interaction.deferUpdate();
+
+    try {
+        const fixtureData = await FixtureService.getFixture(guildId, slug);
+        const { league } = fixtureData;
+        const totalRounds = league.totalRounds || 1;
+
+        if (isNaN(roundNumber) || roundNumber < 1 || roundNumber > totalRounds) {
+            throw new LeagueError('INVALID_ROUND', { totalRounds });
+        }
+
+        const payload = await buildFixtureShowPayload({
+            guildId,
+            slug,
+            round: roundNumber,
+            page: 1, // reset page to 1 on round jump
+            locale,
+            tr,
+            client,
+            useVisual: true,
+        });
+
+        await editFixtureNavMessage(interaction, payload);
+    } catch (err) {
+        console.warn('[fixtureNav] modal submit failed:', err?.stack || err?.message || err);
+
+        const content = err instanceof LeagueError
+            ? tr(`errors.${err.code}`, err.params)
+            : tr('errors.GENERIC_LEAGUE_ERROR');
+
+        try {
+            await interaction.followUp({
+                content,
+                ephemeral: true,
+            });
+        } catch {
+            // ignore
+        }
+    }
+}
+
 module.exports = {
     FIXTURE_NAV_PREFIX,
     ACTIONS,
@@ -359,4 +443,5 @@ module.exports = {
     buildFixtureNavRows,
     buildFixtureShowPayload,
     handleFixtureNavButton,
+    handleFixtureNavModalSubmit,
 };

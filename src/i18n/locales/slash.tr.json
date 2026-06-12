@@ -147,6 +147,14 @@
               "page": { "description": "Çok takım varsa sayfa numarası." },
               "visual": { "description": "Görsel kart ekle." }
             }
+          },
+          "bulk-add": {
+            "description": "Kaptanların Discord ID'lerini kullanarak toplu takım ekle.",
+            "options": {
+              "league": { "description": "Lig kodu." },
+              "ids": { "description": "Kaptan Discord ID'leri (boşluk, virgül veya alt alta)." },
+              "file": { "description": "ID'leri içeren metin dosyası (.txt)." }
+            }
           }
         }
       },

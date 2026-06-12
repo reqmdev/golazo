@@ -18,6 +18,8 @@
     "TEAM_EXISTS_NAMED": "A team named **{name}** already exists in this league.",
     "TEAM_EXISTS_OTHER": "Another team with that name already exists in this league.",
     "TEAM_NOT_FOUND_NAME": "No active team named **{name}** was found in this league.",
+    "TEAM_NAME_OR_CAPTAIN_REQUIRED": "You must provide a team name or specify a captain to automatically resolve the name.",
+    "INVALID_CAPTAIN_ID": "The provided captain Discord ID is invalid or the user could not be found.",
     "TEAM_NOT_FOUND_HOME": "Home team **{name}** not found in this league.",
     "TEAM_NOT_FOUND_AWAY": "Away team **{name}** not found in this league.",
     "NO_CHANGES": "No changes were provided to update the team.",
@@ -79,6 +81,9 @@
     "CL_TIE_UNRESOLVED": "This knockout tie is not fully resolved yet.",
     "CL_INVALID_SPOTS": "Qualifying spots must be between 2 and 16.",
     "CL_NO_GROUP_STAGE": "This tournament has no group stage.",
+    "CL_NO_TOURNAMENT": "No Champions League tournament exists for this league yet.",
+    "CL_KNOCKOUT_LOCKED": "This match can no longer be corrected after knockout advancement.",
+    "CL_PENALTIES_DRAW": "Penalty shootout cannot end in a draw — enter a winner.",
     "GENERIC_LEAGUE_ERROR": "Something went wrong while processing the league command."
   },
   "handlers": {
@@ -146,6 +151,12 @@
     "team": {
       "add": {
         "success": "Team **{name}** (`{shortName}`) added to league `{slug}`."
+      },
+      "bulkAdd": {
+        "title": "Bulk Team Import",
+        "summary": "Processed team import for league `{slug}`:\n• Successfully added: **{successCount}**\n• Failed/Skipped: **{failCount}**",
+        "noIds": "No valid Discord User IDs found in the input.",
+        "inputRequired": "You must provide either the `ids` string option or upload a `file` containing IDs."
       },
       "remove": {
         "success": "Team **{name}** removed from league `{slug}`."
@@ -248,7 +259,8 @@
         "disable": "Disable Champions League",
         "enabledSuccess": "Champions League enabled. It will start automatically when the league season completes.",
         "disabledSuccess": "Champions League disabled.",
-        "spotsUpdated": "Qualifying spots set to **{spots}**."
+        "spotsUpdated": "Qualifying spots set to **{spots}**.",
+        "spotsSelect": "Qualifying spots (2–16)"
       },
       "status": {
         "pending": "Pending draw",
@@ -270,7 +282,29 @@
       "nav": {
         "status": "Status",
         "groups": "Groups",
-        "bracket": "Bracket"
+        "bracket": "Bracket",
+        "fixture": "Fixture",
+        "score": "Score"
+      },
+      "fixture": {
+        "title": "Champions League fixtures",
+        "empty": "No fixtures to show.",
+        "groupLine": "Group {group} · R{round} · {home} vs {away} ({status})",
+        "knockoutLine": "{round} · Leg {leg} · {home} vs {away} ({status})"
+      },
+      "score": {
+        "title": "Enter CL scores (page {page}/{totalPages})",
+        "empty": "No pending Champions League matches.",
+        "selectMatch": "Select a match to score",
+        "noMatches": "No submittable matches",
+        "enterPenalties": "Enter penalties",
+        "penaltiesModalTitle": "Penalty shootout",
+        "penaltiesSaved": "Penalties saved.",
+        "opsPrompt": "Choose a match operation:"
+      },
+      "cancel": {
+        "success": "Champions League tournament cancelled.",
+        "button": "Cancel tournament"
       },
       "bracket": {
         "empty": "No knockout bracket yet."
@@ -509,6 +543,8 @@
     "leg": "leg {leg}",
     "legShort": "L{leg}",
     "bye": "Bye",
+    "prev": "Previous",
+    "next": "Next",
     "captain": "captain",
     "home": "Home",
     "away": "Away",
@@ -935,6 +971,7 @@
     "teams": {
       "add": "Add team",
       "remove": "Remove team",
+      "bulkAdd": "Bulk add",
       "generate": "Generate fixture",
       "generated": "**{name}** fixture ready — **{matchCount}** matches, **{totalRounds}** rounds."
     },
@@ -978,8 +1015,11 @@
       "createFormat": "Format (optional)",
       "addTeamTitle": "Add team",
       "removeTeamTitle": "Remove team",
+      "bulkAddTeamTitle": "Bulk Add Teams",
       "teamName": "Team name",
       "teamShort": "Short name (optional)",
+      "teamCaptain": "Captain (Discord ID)",
+      "teamIds": "Captain IDs (space or newline separated)",
       "pointsTitle": "Edit points",
       "pointsWin": "Win points",
       "pointsDraw": "Draw points",

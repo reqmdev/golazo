@@ -1,6 +1,5 @@
 const LeagueService = require('../../league/services/LeagueService');
 const TournamentService = require('../../league/services/TournamentService');
-const TeamRepository = require('../../league/repositories/TeamRepository');
 const { buildDashboardShell, wrapVisualPanel } = require('../design/shell');
 const { buildPanelChrome } = require('../design/context');
 const { buildDashboardBackRow } = require('../panelBackNav');
@@ -17,7 +16,9 @@ const {
     buildChampionsStatusPayload,
     buildChampionsGroupStandingsPayload,
     buildChampionsBracketPayload,
+    buildChampionsFixturePayload,
 } = require('../../league/discord/championsNav');
+const { buildChampionsScorePayload } = require('../../league/discord/championsScoreNav');
 
 /**
  * @param {object} input
@@ -75,6 +76,19 @@ async function buildChampionsPanelPayload(input) {
             tr,
             client,
         });
+    } else if (subView === CHAMPIONS_ACTIONS.FIXTURE && tournament) {
+        leaguePayload = await buildChampionsFixturePayload({
+            guildId,
+            slug,
+            tr,
+        });
+    } else if (subView === CHAMPIONS_ACTIONS.SCORE && tournament) {
+        leaguePayload = await buildChampionsScorePayload({
+            guildId,
+            slug,
+            tr,
+            actorId: userId,
+        });
     } else {
         leaguePayload = await buildChampionsStatusPayload({
             guildId,
@@ -86,18 +100,13 @@ async function buildChampionsPanelPayload(input) {
 
     const manageRows = [];
 
-    if (viewer.canManage && !tournament) {
+    if (viewer.canManage && tournament && tournament.status !== 'completed' && tournament.status !== 'cancelled') {
         manageRows.push(
             new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
-                    .setCustomId(encodeDashboardId(
-                        DASHBOARD_VIEWS.CHAMPIONS,
-                        CHAMPIONS_ACTIONS.ENABLE,
-                        slug,
-                    ))
-                    .setLabel(tr('dashboard.champions.configure'))
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(true),
+                    .setCustomId(encodeDashboardId(DASHBOARD_VIEWS.CHAMPIONS, CHAMPIONS_ACTIONS.CANCEL, slug))
+                    .setLabel(tr('handlers.champions.cancel.button'))
+                    .setStyle(ButtonStyle.Danger),
             ),
         );
     }
@@ -119,6 +128,14 @@ async function buildChampionsPanelPayload(input) {
             .setCustomId(encodeDashboardId(DASHBOARD_VIEWS.CHAMPIONS, CHAMPIONS_ACTIONS.BRACKET, slug))
             .setLabel(tr('handlers.champions.nav.bracket'))
             .setStyle(subView === CHAMPIONS_ACTIONS.BRACKET ? ButtonStyle.Primary : ButtonStyle.Secondary),
+        new ButtonBuilder()
+            .setCustomId(encodeDashboardId(DASHBOARD_VIEWS.CHAMPIONS, CHAMPIONS_ACTIONS.FIXTURE, slug))
+            .setLabel(tr('handlers.champions.nav.fixture'))
+            .setStyle(subView === CHAMPIONS_ACTIONS.FIXTURE ? ButtonStyle.Primary : ButtonStyle.Secondary),
+        new ButtonBuilder()
+            .setCustomId(encodeDashboardId(DASHBOARD_VIEWS.CHAMPIONS, CHAMPIONS_ACTIONS.SCORE, slug))
+            .setLabel(tr('handlers.champions.nav.score'))
+            .setStyle(subView === CHAMPIONS_ACTIONS.SCORE ? ButtonStyle.Primary : ButtonStyle.Secondary),
     );
 
     const statusLine = tournament

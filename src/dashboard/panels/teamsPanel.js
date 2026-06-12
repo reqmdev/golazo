@@ -36,6 +36,16 @@ function buildTeamsActionRow(input) {
             .setLabel(tr('dashboard.teams.remove'))
             .setStyle(ButtonStyle.Danger)
             .setEmoji('➖'),
+        new ButtonBuilder()
+            .setCustomId(encodeDashboardId(DASHBOARD_VIEWS.TEAMS, TEAM_ACTIONS.BULK_ADD, slug))
+            .setLabel(tr('dashboard.teams.bulkAdd'))
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji('📥'),
+        new ButtonBuilder()
+            .setCustomId(encodeDashboardId(DASHBOARD_VIEWS.TEAMS, TEAM_ACTIONS.EDIT, slug))
+            .setLabel(tr('dashboard.teams.edit'))
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji('✏️'),
     );
 }
 

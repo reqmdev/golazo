@@ -13,6 +13,7 @@ const {
     assertCorrectable,
     buildSubmitUpdate,
     buildCorrectionUpdate,
+    buildPenaltiesUpdate,
     buildForfeitUpdate,
     resolveFixtureGoals
 } = require('../match/matchProcessor');
@@ -22,6 +23,8 @@ const { LEAGUE_STATUS } = require('../constants/leagueStatus');
 const TournamentStandingService = require('./TournamentStandingService');
 const TournamentService = require('./TournamentService');
 const TournamentRepository = require('../repositories/TournamentRepository');
+const { runWithTransaction } = require('../../database/transactions');
+const { needsPenalties } = require('../tournament/tieResolver');
 
 const STATUS_ACTION_FROM = {
     postpone: [MATCH_STATUS.SCHEDULED, MATCH_STATUS.LIVE],
@@ -375,6 +378,11 @@ const MatchService = {
 
         assertCorrectable(match);
 
+        if (match.tournamentId) {
+            const tournament = await TournamentRepository.findById(match.tournamentId);
+            TournamentService.assertTournamentMatchCorrectable(match, tournament);
+        }
+
         const { homeGoals, awayGoals } = resolveFixtureGoals(
             match,
             homeTeam,
@@ -546,6 +554,230 @@ const MatchService = {
         });
 
         return { match: updatedMatch, league, homeTeam, awayTeam };
+    },
+
+    /**
+     * @param {string} guildId
+     * @param {string} actorId
+     * @param {string} leagueSlug
+     * @param {{ matchId: string, homeGoals: number, awayGoals: number, reason?: string }} input
+     */
+    correctResultByMatchId: async (guildId, actorId, leagueSlug, input) => {
+        const league = await LeagueService.resolveLeague(guildId, leagueSlug);
+        PermissionService.assertCanManageLeague(league, actorId);
+
+        const match = await MatchRepository.findById(input.matchId);
+
+        if (!match || match.leagueId.toString() !== league._id.toString()) {
+            throw new LeagueError('MATCH_NOT_FOUND');
+        }
+
+        assertCorrectable(match);
+
+        const tournament = match.tournamentId
+            ? await TournamentRepository.findById(match.tournamentId)
+            : null;
+        TournamentService.assertTournamentMatchCorrectable(match, tournament);
+
+        const update = buildCorrectionUpdate({
+            match,
+            actorId,
+            homeGoals: input.homeGoals,
+            awayGoals: input.awayGoals,
+            reason: input.reason,
+        });
+
+        const [homeTeam, awayTeam] = await Promise.all([
+            TeamRepository.findById(match.homeTeamId),
+            TeamRepository.findById(match.awayTeamId),
+        ]);
+
+        return persistMatchResult(match, update, league, {
+            guildId,
+            actorId,
+            action: AUDIT_ACTION.MATCH_CORRECT,
+            summary: `Corrected to ${input.homeGoals}-${input.awayGoals}: ${homeTeam?.name || 'Home'} vs ${awayTeam?.name || 'Away'}`,
+            metadata: { reason: input.reason || null },
+        });
+    },
+
+    /**
+     * @param {string} guildId
+     * @param {string} actorId
+     * @param {string} leagueSlug
+     * @param {{ matchId: string, penaltiesHome: number, penaltiesAway: number }} input
+     */
+    submitPenalties: async (guildId, actorId, leagueSlug, input) => {
+        const league = await LeagueService.resolveLeague(guildId, leagueSlug);
+        PermissionService.assertCanReportScore(league, actorId);
+
+        const match = await MatchRepository.findById(input.matchId);
+
+        if (!match?.tournamentId || match.leagueId.toString() !== league._id.toString()) {
+            throw new LeagueError('MATCH_NOT_FOUND');
+        }
+
+        if (!['completed', 'walkover'].includes(match.status)) {
+            throw new LeagueError('CL_TIE_UNRESOLVED');
+        }
+
+        const tournament = await TournamentRepository.findById(match.tournamentId);
+
+        if (!tournament || !match.tieId) {
+            throw new LeagueError('CL_TIE_UNRESOLVED');
+        }
+
+        const tie = tournament.knockoutTies?.find((entry) => entry.tieId === match.tieId);
+
+        if (!tie) {
+            throw new LeagueError('CL_TIE_UNRESOLVED');
+        }
+
+        const tieMatches = await MatchRepository.findByTournamentAndTie(match.tournamentId, match.tieId);
+
+        if (!needsPenalties(tie, tieMatches)) {
+            throw new LeagueError('CL_TIE_UNRESOLVED');
+        }
+
+        const update = buildPenaltiesUpdate({
+            penaltiesHome: input.penaltiesHome,
+            penaltiesAway: input.penaltiesAway,
+        });
+
+        const updatedMatch = await MatchRepository.updateWithVersion(
+            match._id,
+            match.resultVersion ?? 0,
+            update,
+        );
+
+        if (!updatedMatch) {
+            throw new LeagueError('CONCURRENT_UPDATE');
+        }
+
+        invalidateLeagueRenderCache(league._id.toString());
+
+        await AuditService.record({
+            leagueId: league._id,
+            guildId,
+            actorId,
+            action: AUDIT_ACTION.MATCH_SUBMIT,
+            summary: `Penalties ${input.penaltiesHome}-${input.penaltiesAway} for tie ${match.tieId}`,
+            metadata: {
+                matchId: updatedMatch._id.toString(),
+                tieId: match.tieId,
+                tieBreak: updatedMatch.tieBreak,
+            },
+        });
+
+        if (tournament) {
+            await TournamentService.afterTournamentMatch(tournament, league);
+        }
+
+        return { match: updatedMatch, league };
+    },
+
+    /**
+     * @param {string} guildId
+     * @param {string} actorId
+     * @param {string} leagueSlug
+     * @param {{ matchId: string, action: 'postpone' | 'cancel' | 'resume' }} input
+     */
+    setMatchStatusByMatchId: async (guildId, actorId, leagueSlug, input) => {
+        const league = await LeagueService.resolveLeague(guildId, leagueSlug);
+        PermissionService.assertCanManageLeague(league, actorId);
+
+        const action = input.action;
+        const allowedFrom = STATUS_ACTION_FROM[action];
+
+        if (!allowedFrom) {
+            throw new LeagueError('MATCH_STATUS_NOT_ALLOWED');
+        }
+
+        const match = await MatchRepository.findById(input.matchId);
+
+        if (!match?.tournamentId || match.leagueId.toString() !== league._id.toString()) {
+            throw new LeagueError('MATCH_NOT_FOUND');
+        }
+
+        if (!allowedFrom.includes(match.status)) {
+            throw new LeagueError('MATCH_STATUS_NOT_ALLOWED');
+        }
+
+        const updatedMatch = await MatchRepository.updateWithVersion(
+            match._id,
+            match.resultVersion ?? 0,
+            { status: STATUS_ACTION_TO[action] },
+        );
+
+        if (!updatedMatch) {
+            throw new LeagueError('CONCURRENT_UPDATE');
+        }
+
+        invalidateLeagueRenderCache(league._id.toString());
+
+        const [homeTeam, awayTeam] = await Promise.all([
+            TeamRepository.findById(match.homeTeamId),
+            TeamRepository.findById(match.awayTeamId),
+        ]);
+
+        const auditAction = action === 'postpone'
+            ? AUDIT_ACTION.MATCH_POSTPONE
+            : action === 'cancel'
+                ? AUDIT_ACTION.MATCH_CANCEL
+                : AUDIT_ACTION.MATCH_RESUME;
+
+        await AuditService.record({
+            leagueId: league._id,
+            guildId,
+            actorId,
+            action: auditAction,
+            summary: `${action}: ${homeTeam?.name || 'Home'} vs ${awayTeam?.name || 'Away'}`,
+            metadata: {
+                matchId: updatedMatch._id.toString(),
+                round: updatedMatch.round,
+                status: updatedMatch.status,
+                tournamentId: match.tournamentId.toString(),
+            },
+        });
+
+        return { match: updatedMatch, league, homeTeam, awayTeam };
+    },
+
+    /**
+     * @param {string} guildId
+     * @param {string} actorId
+     * @param {string} leagueSlug
+     * @param {{ matchId: string, winnerTeamId: string }} input
+     */
+    recordForfeitByMatchId: async (guildId, actorId, leagueSlug, input) => {
+        const league = await LeagueService.resolveLeague(guildId, leagueSlug);
+        PermissionService.assertCanManageLeague(league, actorId);
+
+        const match = await MatchRepository.findById(input.matchId);
+
+        if (!match?.tournamentId || match.leagueId.toString() !== league._id.toString()) {
+            throw new LeagueError('MATCH_NOT_FOUND');
+        }
+
+        assertSubmittable(match);
+
+        const update = buildForfeitUpdate({
+            match,
+            actorId,
+            winnerTeamId: input.winnerTeamId,
+        });
+
+        const [homeTeam, awayTeam] = await Promise.all([
+            TeamRepository.findById(match.homeTeamId),
+            TeamRepository.findById(match.awayTeamId),
+        ]);
+
+        return persistMatchResult(match, update, league, {
+            guildId,
+            actorId,
+            action: AUDIT_ACTION.MATCH_FORFEIT,
+            summary: `Forfeit winner: ${input.winnerTeamId} (${homeTeam?.name || 'Home'} vs ${awayTeam?.name || 'Away'})`,
+        });
     },
 };
 
