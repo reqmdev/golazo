@@ -141,10 +141,14 @@ const StandingService = {
             return { league, standing: null, teams: [], teamMap: new Map() };
         }
 
-        const [standing, teams] = await Promise.all([
+        let [standing, teams] = await Promise.all([
             StandingRepository.findByLeague(league._id),
             TeamRepository.listActiveByLeague(league._id)
         ]);
+
+        if (!standing) {
+            standing = await StandingService.recalculate(league._id, league);
+        }
 
         const teamMap = new Map(teams.map((team) => [team._id.toString(), team]));
 

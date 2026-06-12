@@ -21,8 +21,12 @@ const {
     SETTINGS_ACTIONS,
     MATCH_OPS_ACTIONS,
     ADMIN_ACTIONS,
+    STANDINGS_ACTIONS,
     MODAL_IDS,
 } = require('../constants');
+const StandingService = require('../../league/services/StandingService');
+const { resolveStandingsNavTarget } = require('../../league/discord/standingsNav');
+const { paginateTable } = require('../../league/render/drawing/paginateTable');
 const { buildGuildHubPayload } = require('../views/guildHub');
 const { buildLeagueHubPayload } = require('../views/leagueHub');
 const { renderPanelPayload } = require('../panels/renderPanel');
@@ -340,9 +344,43 @@ async function handleDashboardButton(interaction, ctx, parsed) {
         return;
     }
 
+    if (parsed.view === DASHBOARD_VIEWS.STANDINGS && parsed.slug) {
+        await handleStandingsButton(interaction, ctx, parsed);
+        return;
+    }
+
     if (parsed.view === DASHBOARD_VIEWS.ADMIN && parsed.slug) {
         await handleAdminButton(interaction, ctx, parsed);
     }
+}
+
+/**
+ * @param {import('discord.js').ButtonInteraction} interaction
+ * @param {Awaited<ReturnType<typeof interactionContext>>} ctx
+ * @param {ReturnType<typeof parseDashboardId>} parsed
+ */
+async function handleStandingsButton(interaction, ctx, parsed) {
+    if (parsed.action === STANDINGS_ACTIONS.PAGE_LABEL) {
+        return;
+    }
+
+    const { slug, extras } = parsePanelRef(parsed.slug);
+    const page = Number(extras[0]) || 1;
+
+    if (!slug) {
+        return;
+    }
+
+    await interaction.deferUpdate();
+
+    const { standing } = await StandingService.getStandings(ctx.guild.id, slug);
+    const totalPages = paginateTable(standing?.entries ?? [], { page }).totalPages;
+    const target = resolveStandingsNavTarget(parsed.action, page, totalPages);
+    const payload = await renderPanel(interaction, ctx, slug, DASHBOARD_VIEWS.STANDINGS, {
+        page: target.page,
+    });
+
+    await interaction.editReply(payload);
 }
 
 /**

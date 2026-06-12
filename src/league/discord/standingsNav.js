@@ -76,7 +76,9 @@ function resolveStandingsNavTarget(action, page, totalPages) {
  * @param {object} input
  */
 function buildStandingsNavRows(input) {
-    const { tr, slug, page, totalPages } = input;
+    const { tr, slug, page, totalPages, encodeNavId } = input;
+    const encode = encodeNavId || ((valueSlug, valuePage, action) =>
+        encodeStandingsNavId(valueSlug, valuePage, action));
 
     if (totalPages <= 1) {
         return [];
@@ -85,17 +87,17 @@ function buildStandingsNavRows(input) {
     return [
         new ActionRowBuilder().addComponents(
             new ButtonBuilder()
-                .setCustomId(encodeStandingsNavId(slug, page, ACTIONS.PREV_PAGE))
+                .setCustomId(encode(slug, page, ACTIONS.PREV_PAGE))
                 .setEmoji('◀️')
                 .setStyle(ButtonStyle.Primary)
                 .setDisabled(page <= 1),
             new ButtonBuilder()
-                .setCustomId(encodeStandingsNavId(slug, page, 'pg'))
+                .setCustomId(encode(slug, page, 'pg'))
                 .setLabel(tr('handlers.standings.nav.pageLabel', { page, total: totalPages }))
                 .setStyle(ButtonStyle.Secondary)
                 .setDisabled(true),
             new ButtonBuilder()
-                .setCustomId(encodeStandingsNavId(slug, page, ACTIONS.NEXT_PAGE))
+                .setCustomId(encode(slug, page, ACTIONS.NEXT_PAGE))
                 .setEmoji('▶️')
                 .setStyle(ButtonStyle.Primary)
                 .setDisabled(page >= totalPages),
@@ -114,6 +116,7 @@ async function buildStandingsShowPayload(input) {
         tr,
         client,
         page: inputPage = 1,
+        encodeNavId,
     } = input;
 
     const { league, standing, teamMap } = await StandingService.getStandings(guildId, slug);
@@ -122,11 +125,11 @@ async function buildStandingsShowPayload(input) {
         throw new LeagueError('NO_FIXTURE_VIEW');
     }
 
-    const pageInfo = paginateTable(standing.entries ?? [], { page: inputPage });
+    const pageInfo = paginateTable(standing?.entries ?? [], { page: inputPage });
     const page = pageInfo.page;
     const totalPages = pageInfo.totalPages;
 
-    const navRows = buildStandingsNavRows({ tr, slug, page, totalPages });
+    const navRows = buildStandingsNavRows({ tr, slug, page, totalPages, encodeNavId });
     const pageLabel = page > 1 ? tr('common.pageLabel', { page }) : '';
     const titleParams = { name: league.name, pageLabel };
 

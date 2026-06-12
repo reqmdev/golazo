@@ -26,7 +26,9 @@ async function renderMatchVisual(league, match, options = {}) {
  * @param {{ page?: number, locale?: string, tr?: Function }} [options]
  */
 async function renderStandingsVisual(league, standing, teamMap, options = {}) {
-    if (!standing) return null;
+    if (!standing?.entries?.length) {
+        return null;
+    }
 
     return tryRender(() =>
         RenderService.renderStandings(league, standing, teamMap, {

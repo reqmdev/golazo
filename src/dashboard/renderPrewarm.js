@@ -68,6 +68,11 @@ async function prewarmFixtureRender(input) {
 async function prewarmStandingsRender(input) {
     const { guildId, slug, locale, tr, client } = input;
     const { league, standing, teamMap } = await StandingService.getStandings(guildId, slug);
+
+    if (!standing) {
+        return;
+    }
+
     const enrichedTeamMap = await enrichTeamMap(teamMap, client);
 
     await RenderService.renderStandings(league, standing, enrichedTeamMap, {

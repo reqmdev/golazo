@@ -50,6 +50,12 @@ const ADMIN_ACTIONS = {
     RESET_CONFIRM: 'rstc',
 };
 
+const STANDINGS_ACTIONS = {
+    PREV_PAGE: 'pp',
+    NEXT_PAGE: 'np',
+    PAGE_LABEL: 'pg',
+};
+
 const PANEL_OPTIONS = [
     DASHBOARD_VIEWS.LEAGUE,
     DASHBOARD_VIEWS.TEAMS,
@@ -78,6 +84,7 @@ module.exports = {
     SETTINGS_ACTIONS,
     MATCH_OPS_ACTIONS,
     ADMIN_ACTIONS,
+    STANDINGS_ACTIONS,
     PANEL_OPTIONS,
     MODAL_IDS,
 };

@@ -2,7 +2,14 @@ const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const { MessageFlags, ComponentType } = require('discord.js');
 const { encodeDashboardId, parseDashboardId } = require('./ids');
-const { DASHBOARD_VIEWS, HUB_ACTIONS, LEAGUE_ACTIONS, TEAM_ACTIONS } = require('./constants');
+const {
+    DASHBOARD_VIEWS,
+    HUB_ACTIONS,
+    LEAGUE_ACTIONS,
+    TEAM_ACTIONS,
+    STANDINGS_ACTIONS,
+} = require('./constants');
+const { encodeDashboardStandingsNavId } = require('./panels/standingsPanel');
 const { parsePanelRef, encodePanelRef } = require('./panelBackNav');
 const { parseModalSlug } = require('./handlers/modals');
 const { MODAL_IDS } = require('./constants');
@@ -102,6 +109,17 @@ describe('dashboard', () => {
     it('parses slugged modal custom ids', () => {
         const customId = `${MODAL_IDS.ADD_TEAM}:test-lig`;
         assert.equal(parseModalSlug(customId, MODAL_IDS.ADD_TEAM), 'test-lig');
+    });
+
+    it('encodes dashboard standings nav ids with page ref', () => {
+        const id = encodeDashboardStandingsNavId('super-lig', 2, STANDINGS_ACTIONS.NEXT_PAGE);
+        const parsed = parseDashboardId(id);
+        const ref = parsePanelRef(parsed.slug);
+
+        assert.equal(parsed?.view, DASHBOARD_VIEWS.STANDINGS);
+        assert.equal(parsed?.action, STANDINGS_ACTIONS.NEXT_PAGE);
+        assert.equal(ref.slug, 'super-lig');
+        assert.equal(ref.extras[0], '2');
     });
 
     it('encodes team panel action ids', () => {
